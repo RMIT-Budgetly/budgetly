@@ -18,7 +18,8 @@ samples, guidance on mobile development, and a full API reference.
 ## Requirements
 
 ### Branch naming convention: 
-<Feature>-<FeatureName>-<Name>
+[Feature]-[FeatureName]-[Name]
+
 Examples: `UI-homePage-Phuc` `Feature-counter-Phuc` `BugFix-counter-Phuc`
 
 ### Commits:
