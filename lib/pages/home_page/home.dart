@@ -6,11 +6,29 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      bottomNavigationBar: BottomNavigationBar(
-        items: [
-          const BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home')
+      bottomNavigationBar: NavigationBar(
+        destinations: const [
+          NavigationDestination(
+            icon: Icon(Icons.home),
+            label: 'Home',
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.calendar_today_outlined),
+            label: 'Calendar',
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.add_circle),
+            label: 'Add',
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.wallet),
+            label: 'Wallet',
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.perm_identity),
+            label: 'User profile',
+          ),
         ],
-        backgroundColor: Colors.blue,
       ),
     );
   }
