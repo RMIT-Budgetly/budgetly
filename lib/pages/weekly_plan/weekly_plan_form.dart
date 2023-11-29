@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:personal_finance/models/category.dart';
+import 'package:personal_finance/pages/weekly_plan/category_picker.dart';
+import 'package:personal_finance/models/plan.dart';
 
 var formatter = DateFormat.yMd();
+var currencyFormatter = NumberFormat.currency(locale: 'vi_VN', symbol: '₫');
 
 class WeeklyPlanForm extends StatefulWidget {
   const WeeklyPlanForm({super.key});
@@ -16,6 +20,8 @@ class WeeklyPlanFormState extends State<WeeklyPlanForm> {
   var _inputTaskName = '';
   var _inputBudget = '0';
   DateTime? _selectedDate;
+  Category? _selectedCategory;
+  Priority? _selectedPriority = Priority.High;
 
   void onDatePicker() async {
     DateTime now = DateTime.now();
@@ -29,12 +35,38 @@ class WeeklyPlanFormState extends State<WeeklyPlanForm> {
     }
   }
 
+  void onShowCategoriesPicker() async {
+    final selectedCategory = await showModalBottomSheet<Category>(
+      useSafeArea: true,
+      isScrollControlled: true,
+      context: context,
+      builder: (context) {
+        return CategoryPicker(
+          onCategorySelected: (category) {
+            Navigator.pop(context, category); // Pass selected category back
+          },
+        );
+      },
+    );
+
+    if (selectedCategory != null) {
+      // Handle the selected category
+      setState(() {
+        _selectedCategory = selectedCategory;
+      });
+    }
+  }
+
   void onSubmit() {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
-      print(_inputTaskName);
-      print(_inputBudget);
-      print(_selectedDate);
+      var a = Plan(
+        taskName: _inputTaskName,
+        budget: double.tryParse(_inputBudget)!,
+        date: _selectedDate!,
+        category: _selectedCategory!,
+        priority: _selectedPriority!,
+      );
     }
   }
 
@@ -113,7 +145,113 @@ class WeeklyPlanFormState extends State<WeeklyPlanForm> {
                   )
                 ],
               ),
-              ElevatedButton(onPressed: onSubmit, child: const Text("Save"))
+              const SizedBox(
+                height: 10,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  SizedBox(
+                    width: 120,
+                    child: DropdownButtonFormField<Priority>(
+                      value: _selectedPriority,
+                      items: [
+                        DropdownMenuItem(
+                          value: Priority.High,
+                          child: Row(
+                            children: [
+                              const Icon(
+                                Icons.flag,
+                                color: Colors.red,
+                              ),
+                              const SizedBox(width: 8),
+                              Text(
+                                Priority.High.name,
+                              ),
+                            ],
+                          ),
+                        ),
+                        DropdownMenuItem(
+                          value: Priority.Medium,
+                          child: Row(
+                            children: [
+                              const Icon(
+                                Icons.flag,
+                                color: Colors.yellow,
+                              ),
+                              const SizedBox(width: 8),
+                              Text(
+                                Priority.Medium.name,
+                              ),
+                            ],
+                          ),
+                        ),
+                        DropdownMenuItem(
+                          value: Priority.Low,
+                          child: Row(
+                            children: [
+                              const Icon(
+                                Icons.flag,
+                                color: Colors.green,
+                              ),
+                              const SizedBox(width: 8),
+                              Text(
+                                Priority.Low.name,
+                              ),
+                            ],
+                          ),
+                        )
+                      ],
+                      onChanged: (value) {
+                        setState(() {
+                          _selectedPriority = value;
+                        });
+                        // Perform any actions based on the selected priority level
+                      },
+                    ),
+                  ),
+                  const SizedBox(
+                    width: 50,
+                  ),
+                  // Open the Category Page
+                  OutlinedButton(
+                    onPressed: onShowCategoriesPicker,
+                    child: Row(
+                      children: [
+                        _selectedCategory == null
+                            ? const Icon(Icons.category)
+                            : _selectedCategory!.getIcon(),
+                        const SizedBox(
+                          width: 6,
+                        ),
+                        Text(
+                          _selectedCategory == null
+                              ? "Category"
+                              : (_selectedCategory!.name.length >
+                                      12 // Set your maximum character count
+                                  ? '${_selectedCategory!.name.substring(0, 12)}...' // Truncate text if longer than 15 characters
+                                  : _selectedCategory!.name),
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 1, // Display in a single line
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              ElevatedButton(
+                onPressed: onSubmit,
+                style: ElevatedButton.styleFrom(
+                  minimumSize: const Size.fromHeight(40),
+                ),
+                child: const Text(
+                  "Save",
+                  style: TextStyle(fontSize: 17),
+                ),
+              )
             ],
           ),
         ),
