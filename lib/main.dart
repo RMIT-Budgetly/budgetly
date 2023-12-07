@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:personal_finance/pages/home_page/home.dart';
+import 'package:personal_finance/pages/add_expenses_page/add_expenses.dart';
+// import 'package:personal_finance/pages/home_page/home.dart';
 
 void main() {
   runApp(const MyApp());
@@ -12,6 +13,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(
         // This is the theme of your application.
@@ -32,7 +34,11 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const HomePage(),
+      // home: HomePage(),
+      initialRoute: "add_expenses",
+      routes: {
+        'add_expenses': (context) => const AddExpensesPage(),
+      },
     );
   }
 }
