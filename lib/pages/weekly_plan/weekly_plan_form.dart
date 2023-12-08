@@ -1,8 +1,11 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:personal_finance/models/category.dart';
 import 'package:personal_finance/pages/weekly_plan/category_picker.dart';
 import 'package:personal_finance/models/plan.dart';
+import 'package:http/http.dart' as http;
 
 var formatter = DateFormat.yMd();
 var currencyFormatter = NumberFormat.currency(locale: 'vi_VN', symbol: '₫');
@@ -60,12 +63,25 @@ class WeeklyPlanFormState extends State<WeeklyPlanForm> {
   void onSubmit() {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
-      var a = Plan(
+      var plan = Plan(
         taskName: _inputTaskName,
         budget: double.tryParse(_inputBudget)!,
         date: _selectedDate!,
         category: _selectedCategory!,
         priority: _selectedPriority!,
+      );
+      final url = Uri.https("budgetly-76ec9-default-rtdb.firebaseio.com","weekly-plan.json");
+      http.post(url,
+        headers: {
+          'ContentType' : 'application/json'
+        },
+        body: json.encode({
+          'taskName' : _inputTaskName,
+          'budget' : double.tryParse(_inputBudget)!,
+          'date' : formatter.format(_selectedDate!),
+          'category' : _selectedCategory!.name,
+          'priority' : _selectedPriority!.name,
+        })
       );
     }
   }
