@@ -1,6 +1,10 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:path/path.dart' as path; // For extracting file name from path
+// Firebase imports
+// import 'package:firebase_storage/firebase_storage.dart';
+// import 'package:cloud_firestore/cloud_firestore.dart';
 // Import your navigation bar components here
 // import 'components/TopNavBar.dart';
 // import 'components/BottomNavBar.dart';
@@ -27,6 +31,49 @@ class _AddSavingGoalScreenState extends State<AddSavingGoalScreen> {
 
     setState(() {
       _image = image;
+    });
+  }
+
+  Future<void> saveGoal() async {
+    // Collecting data from the fields
+    String productName = productNameController.text;
+    String price = priceController.text;
+    String timeToBuy = timeToBuyController.text;
+    String url = urlController.text;
+    String notes = notesController.text;
+    String? imagePath = _image?.path;
+
+    // TODO: Upload the image to Firebase Storage and get the URL
+    String imageUrl = ''; // Placeholder for image URL
+    if (imagePath != null) {
+      // Upload logic goes here
+      // FirebaseStorage storage = FirebaseStorage.instance;
+      // String fileName = path.basename(imagePath);
+      // Reference ref = storage.ref().child('product_images/$fileName');
+      // UploadTask uploadTask = ref.putFile(File(imagePath));
+      // imageUrl = await (await uploadTask).ref.getDownloadURL();
+    }
+
+    // TODO: Save data to Firebase Database
+    // FirebaseFirestore firestore = FirebaseFirestore.instance;
+    // firestore.collection('saving_goals').add({
+    //   'product_name': productName,
+    //   'price': price,
+    //   'time_to_buy': timeToBuy,
+    //   'url': url,
+    //   'notes': notes,
+    //   'selected_date': selectedDate.toString(),
+    //   'image_url': imageUrl,
+    // });
+
+    // Clear the fields after saving
+    productNameController.clear();
+    priceController.clear();
+    timeToBuyController.clear();
+    urlController.clear();
+    notesController.clear();
+    setState(() {
+      _image = null;
     });
   }
 
@@ -142,9 +189,7 @@ class _AddSavingGoalScreenState extends State<AddSavingGoalScreen> {
               width: double.infinity,
               height: 48,
               child: ElevatedButton(
-                onPressed: () {
-                  // Add save logic
-                },
+                onPressed: saveGoal,
                 child: Text(
                   'Save',
                   style: TextStyle(
