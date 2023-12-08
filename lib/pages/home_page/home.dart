@@ -1,10 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    var iconMoney = Container(
+        width: 50,
+        height: 50,
+        decoration: const ShapeDecoration(
+          color: Color(0x7F0000FF),
+          shape: OvalBorder(),
+        ),
+        child: SvgPicture.asset(
+          'assets/icons/icon_money.svg',
+          // color: Colors.blue,
+        ));
+
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -23,10 +36,108 @@ class HomePage extends StatelessWidget {
         // color: Colors.black,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: <Widget>[myWallet(), financeStatus()],
+          children: <Widget>[
+            myWallet(),
+            financeStatus(),
+            introductionCard(iconMoney),
+            Card(
+              color: Colors.white,
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Padding(
+                        padding: const EdgeInsets.all(4.0), child: iconMoney),
+                    const Flexible(
+                      child: Padding(
+                        padding: EdgeInsets.all(6.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Create your monthly plan',
+                              textAlign: TextAlign.left,
+                              style: TextStyle(
+                                color: Color(0xFF030303),
+                                fontSize: 12,
+                                fontWeight: FontWeight.w600,
+                                height: 0.09,
+                              ),
+                            ),
+                            SizedBox(height: 20.0),
+                            Text(
+                              'We can support you in managing your budget daily',
+                              textAlign: TextAlign.left,
+                              style: TextStyle(
+                                color: Color(0xFF818181),
+                                fontSize: 10,
+                                fontWeight: FontWeight.w400,
+                                height: 0.12,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: () => {},
+                      child: const Padding(
+                          padding: EdgeInsets.all(4.0),
+                          child: Icon(Icons.arrow_forward_ios_rounded)),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
         ),
       ),
       bottomNavigationBar: navigationBar(),
+    );
+  }
+
+  Card introductionCard(Container iconMoney) {
+    return Card(
+      color: Colors.white,
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            const Expanded(
+              child: Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Create a Saving goal',
+                      textAlign: TextAlign.left,
+                      style: TextStyle(
+                        color: Color(0xFF030303),
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
+                        height: 0.09,
+                      ),
+                    ),
+                    SizedBox(height: 20.0),
+                    Text(
+                      'We can support you in managing your budget daily',
+                      style: TextStyle(
+                        color: Color(0xFF818181),
+                        fontSize: 13,
+                        fontWeight: FontWeight.w400,
+                        height: 0.12,
+                      ),
+                    )
+                  ],
+                ),
+              ),
+            ),
+            Padding(padding: const EdgeInsets.all(4.0), child: iconMoney),
+          ],
+        ),
+      ),
     );
   }
 
