@@ -1,63 +1,98 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class ReminderButton extends StatefulWidget {
+  final DateTime initialDate;
+  final Function(DateTime)? onDateSelected;
+  final Function(TimeOfDay)? onTimeSelected;
+
+  const ReminderButton({
+    Key? key,
+    required this.initialDate,
+    this.onDateSelected,
+    this.onTimeSelected,
+  }) : super(key: key);
+
   @override
   _ReminderButtonState createState() => _ReminderButtonState();
 }
 
 class _ReminderButtonState extends State<ReminderButton> {
-  DateTime selectedDate = DateTime.now();
-  TimeOfDay selectedTime = TimeOfDay.now();
+  DateTime? _selectedDate;
+  TimeOfDay? _selectedTime;
 
-  Future<void> _selectDate(BuildContext context) async {
-    final DateTime? pickedDate = await showDatePicker(
+  Future<void> _selectDateTime() async {
+    final DateTime? chosenDateTime = await showDatePicker(
       context: context,
-      initialDate: selectedDate,
-      firstDate: DateTime.now(),
-      lastDate: DateTime(2101),
+      initialDate: widget.initialDate,
+      firstDate: DateTime(1900),
+      lastDate: DateTime(2100),
     );
 
-    if (pickedDate != null && pickedDate != selectedDate)
-      setState(() {
-        selectedDate = pickedDate;
-      });
-  }
+    if (chosenDateTime != null) {
+      final TimeOfDay? chosenTime = await showTimePicker(
+        context: context,
+        initialTime: TimeOfDay.now(),
+      );
 
-  Future<void> _selectTime(BuildContext context) async {
-    final TimeOfDay? pickedTime = await showTimePicker(
-      context: context,
-      initialTime: selectedTime,
-    );
+      if (chosenTime != null) {
+        setState(
+          () {
+            _selectedDate = DateTime(
+              chosenDateTime.year,
+              chosenDateTime.month,
+              chosenDateTime.day,
+              chosenTime.hour,
+              chosenTime.minute,
+            );
+            _selectedTime = chosenTime;
+          },
+        );
+      }
+    }
 
-    if (pickedTime != null && pickedTime != selectedTime)
-      setState(() {
-        selectedTime = pickedTime;
-      });
+    if (_selectedDate != null && widget.onDateSelected != null) {
+      widget.onDateSelected!(_selectedDate!);
+    } else if (widget.onDateSelected != null) {
+      widget.onDateSelected!(widget.initialDate);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
+    final hintColor = _selectedDate != null && _selectedTime != null
+        ? Colors.black // Color when date and time are selected
+        : Colors.black38; // Color when date and time are not selected
+
     return Container(
-      width: double.infinity,
-      margin: const EdgeInsets.all(4.0),
-      child: OutlinedButton(
-        style: OutlinedButton.styleFrom(
-          backgroundColor: const Color(0x990000FF),
-          shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(10.0)),
+      margin: const EdgeInsets.symmetric(vertical: 2.0, horizontal: 4.0),
+      child: Row(
+        children: [
+          Expanded(
+            flex: 1,
+            child: IconButton(
+              color: Colors.black,
+              icon: const Icon(Icons.access_time_outlined),
+              onPressed: _selectDateTime,
+            ),
           ),
-        ),
-        onPressed: () {
-          _selectDate(context);
-        },
-        child: const Text(
-          'Set Reminder',
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 16,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
+          Expanded(
+            flex: 5,
+            child: Container(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                _selectedDate != null
+                    ? '${DateFormat('dd-MM-yyyy').format(_selectedDate!)} ${_selectedTime!.format(context)}'
+                    : 'Select a date and time for reminder',
+                style: TextStyle(
+                  fontSize: 14,
+                  color: hintColor,
+                ),
+                textAlign: TextAlign.start,
+              ),
+            ),
+          )
+        ],
       ),
     );
   }
