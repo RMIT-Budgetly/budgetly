@@ -20,6 +20,10 @@ class _CalendarButtonState extends State<CalendarButton> {
 
   @override
   Widget build(BuildContext context) {
+    final hintColor = _chosenDate != null
+        ? Colors.black // Color when date and time are selected
+        : Colors.black38; // Color when date and time are not selected
+
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 2.0, horizontal: 4.0),
       child: Row(
@@ -58,9 +62,9 @@ class _CalendarButtonState extends State<CalendarButton> {
                 _chosenDate != null
                     ? DateFormat('dd-MM-yyyy').format(_chosenDate!).toString()
                     : 'Select a date',
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 14,
-                  color: Colors.black38,
+                  color: hintColor,
                 ),
                 textAlign: TextAlign.start,
               ),

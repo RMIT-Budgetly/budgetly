@@ -1,6 +1,8 @@
 import "package:flutter/material.dart";
+import "package:personal_finance/components/add_contacts.dart";
 import "package:personal_finance/components/input_field.dart";
 import 'package:personal_finance/components/calendar_button.dart';
+import "package:personal_finance/components/reminder_button.dart";
 import "package:personal_finance/components/select_photo.dart";
 import "package:personal_finance/components/submit_button.dart";
 import 'package:personal_finance/models/category.dart';
@@ -58,68 +60,88 @@ class _AddExpensesPageState extends State<AddExpensesPage> {
           },
         ),
       ),
-      body: SingleChildScrollView(
-        child: Form(
-          key: _formKey,
-          child: Container(
-            margin: const EdgeInsets.all(8.0),
-            padding: const EdgeInsets.all(2.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Column(
-                  children: <Widget>[
-                    OutlinedButton(
-                      onPressed: onShowCategoriesPicker,
-                      child: Row(
-                        children: [
-                          _selectedCategory == null
-                              ? const Icon(Icons.category)
-                              : _selectedCategory!.getIcon(),
-                          const SizedBox(
-                            width: 6,
-                          ),
-                          Text(
+      body: PageView(
+        children: [
+          Form(
+            key: _formKey,
+            child: Container(
+              margin: const EdgeInsets.all(8.0),
+              padding: const EdgeInsets.all(2.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Column(
+                    children: <Widget>[
+                      OutlinedButton(
+                        onPressed: onShowCategoriesPicker,
+                        child: Row(
+                          children: [
                             _selectedCategory == null
-                                ? "Category"
-                                : (_selectedCategory!.name.length >
-                                        20 // Set your maximum character count
-                                    ? '${_selectedCategory!.name.substring(0, 12)}...' // Truncate text if longer than 15 characters
-                                    : _selectedCategory!.name),
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 1, // Display in a single line
-                          ),
-                        ],
+                                ? const Icon(Icons.category)
+                                : _selectedCategory!.getIcon(),
+                            const SizedBox(
+                              width: 6,
+                            ),
+                            Text(
+                              _selectedCategory == null
+                                  ? "Category"
+                                  : (_selectedCategory!.name.length >
+                                          20 // Set your maximum character count
+                                      ? '${_selectedCategory!.name.substring(0, 12)}...' // Truncate text if longer than 15 characters
+                                      : _selectedCategory!.name),
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 1, // Display in a single line
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                    const InputField(
-                      prefixIcon: Icon(Icons.monetization_on_outlined),
-                      hintText: "0.00",
-                      keyboardType: TextInputType.number,
-                      // validator: null,
-                    ),
-                    const InputField(
-                      prefixIcon: Icon(Icons.note_add),
-                      hintText: "Write a note",
-                    ),
-                    CalendarButton(
-                      initialDate: DateTime.now(),
-                    ),
-                    Container(
-                      margin: const EdgeInsets.only(top: 8.0),
-                      child: const PhotoUploadButton(),
-                    ),
-                  ],
-                ),
-                Column(
-                  children: <Widget>[
-                    SaveButton(),
-                  ],
-                ),
-              ],
+                      const InputField(
+                        prefixIcon: Icon(Icons.monetization_on_outlined),
+                        hintText: "0.00",
+                        keyboardType: TextInputType.number,
+                        // validator: null,
+                      ),
+                      const InputField(
+                        prefixIcon: Icon(Icons.note_add),
+                        hintText: "Write a note",
+                      ),
+                      CalendarButton(
+                        initialDate: DateTime.now(),
+                      ),
+                      ReminderButton(
+                        initialDate: DateTime.now(),
+                      ),
+                      AddContactButton(
+                        onContactSelected: (contacts) {
+                          // Handle selected contacts
+                          setState(
+                            () {
+                              for (var contact in contacts) {
+                                '${(contact.displayName)}';
+                              }
+                            },
+                          );
+                        },
+                      ),
+                      const Padding(
+                        padding: EdgeInsets.symmetric(vertical: 16.0),
+                      ),
+                      Container(
+                        margin: const EdgeInsets.only(top: 8.0),
+                        child: const PhotoUploadButton(),
+                      ),
+                    ],
+                  ),
+                  Column(
+                    children: <Widget>[
+                      SaveButton(),
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
-        ),
+        ],
       ),
     );
   }

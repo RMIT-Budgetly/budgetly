@@ -107,9 +107,7 @@ class _CategoryPickerState extends State<CategoryPicker> {
                         onSelectedCategory(categoryByType[index]);
                       },
                       child: Container(
-                        margin: const EdgeInsets.all(
-                          4,
-                        ),
+                        margin: const EdgeInsets.all(8),
                         decoration: BoxDecoration(
                           border: Border.all(
                             width: 0.2,
