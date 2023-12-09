@@ -1,10 +1,10 @@
 import "package:flutter/material.dart";
-import "package:personal_finance/components/category_button.dart";
 import "package:personal_finance/components/input_field.dart";
 import 'package:personal_finance/components/calendar_button.dart';
 import "package:personal_finance/components/select_photo.dart";
 import "package:personal_finance/components/submit_button.dart";
-import "package:personal_finance/pages/home_page/home.dart";
+import 'package:personal_finance/models/category.dart';
+import 'package:personal_finance/pages/add_expenses_page/category_picker.dart';
 
 class AddExpensesPage extends StatefulWidget {
   const AddExpensesPage({Key? key}) : super(key: key);
@@ -16,9 +16,29 @@ class AddExpensesPage extends StatefulWidget {
 class _AddExpensesPageState extends State<AddExpensesPage> {
   DateTime selectedDate = DateTime.now();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  Category? _selectedCategory;
 
-// class AddExpensesPage extends StatelessWidget {
-//   const AddExpensesPage({Key? key}) : super(key: key);
+  void onShowCategoriesPicker() async {
+    final selectedCategory = await showModalBottomSheet<Category>(
+      useSafeArea: true,
+      isScrollControlled: true,
+      context: context,
+      builder: (context) {
+        return CategoryPicker(
+          onCategorySelected: (category) {
+            Navigator.pop(context, category); // Pass selected category back
+          },
+        );
+      },
+    );
+
+    if (selectedCategory != null) {
+      // Handle the selected category
+      setState(() {
+        _selectedCategory = selectedCategory;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -49,19 +69,31 @@ class _AddExpensesPageState extends State<AddExpensesPage> {
               children: [
                 Column(
                   children: <Widget>[
-                    CategoryButton(
-                      prefixIcon: const Icon(Icons.category_sharp),
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const HomePage(),
+                    OutlinedButton(
+                      onPressed: onShowCategoriesPicker,
+                      child: Row(
+                        children: [
+                          _selectedCategory == null
+                              ? const Icon(Icons.category)
+                              : _selectedCategory!.getIcon(),
+                          const SizedBox(
+                            width: 6,
                           ),
-                        );
-                      },
+                          Text(
+                            _selectedCategory == null
+                                ? "Category"
+                                : (_selectedCategory!.name.length >
+                                        20 // Set your maximum character count
+                                    ? '${_selectedCategory!.name.substring(0, 12)}...' // Truncate text if longer than 15 characters
+                                    : _selectedCategory!.name),
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1, // Display in a single line
+                          ),
+                        ],
+                      ),
                     ),
                     const InputField(
-                      prefixIcon: Icon(Icons.attach_money),
+                      prefixIcon: Icon(Icons.monetization_on_outlined),
                       hintText: "0.00",
                       keyboardType: TextInputType.number,
                       // validator: null,

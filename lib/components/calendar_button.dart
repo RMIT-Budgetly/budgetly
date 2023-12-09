@@ -59,9 +59,8 @@ class _CalendarButtonState extends State<CalendarButton> {
                     ? DateFormat('dd-MM-yyyy').format(_chosenDate!).toString()
                     : 'Select a date',
                 style: const TextStyle(
-                  fontSize: 12.0,
-                  color: Colors.black,
-                  fontStyle: FontStyle.italic,
+                  fontSize: 14,
+                  color: Colors.black38,
                 ),
                 textAlign: TextAlign.start,
               ),
