@@ -13,7 +13,7 @@ class HomePage extends StatelessWidget {
           color: Color(0x7F0000FF),
           shape: OvalBorder(),
         ),
-        padding: const EdgeInsets.all(4.0),
+        padding: const EdgeInsets.all(6.0),
         child: SvgPicture.asset(
           'assets/icons/icon_money.svg',
         ));
@@ -38,7 +38,8 @@ class HomePage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
             myWallet(),
-            financeStatus(),
+            // financeStatus(),
+            const FinancialStatusCard(),
             introductionCard(iconMoney),
             callToAction(iconMoney),
           ],
@@ -141,74 +142,6 @@ class HomePage extends StatelessWidget {
     );
   }
 
-  Card financeStatus() {
-    return Card(
-      color: const Color(0xFF242424),
-      child: Padding(
-          padding: const EdgeInsets.all(12.0),
-          child: IntrinsicHeight(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: <Widget>[
-                financeStatusComponent(
-                    const Icon(
-                      Icons.arrow_downward,
-                      size: 30,
-                      color: Color.fromARGB(255, 18, 206, 24),
-                    ),
-                    'Income',
-                    20000),
-                const VerticalDivider(
-                  color: Colors.white,
-                  thickness: 1,
-                ),
-                financeStatusComponent(
-                    const Icon(
-                      Icons.arrow_upward,
-                      size: 30,
-                      color: Colors.red,
-                    ),
-                    'Outcome',
-                    17000),
-              ],
-            ),
-          )),
-    );
-  }
-
-  Row financeStatusComponent(Icon icon, String title, int value) {
-    return Row(
-      children: [
-        icon,
-        const SizedBox(width: 8.0),
-        Column(
-          children: [
-            Text(
-              title,
-              textAlign: TextAlign.left,
-              style: const TextStyle(
-                color: Color(0xFFF2F2F2),
-                fontSize: 12,
-                fontWeight: FontWeight.w400,
-                height: 0.12,
-              ),
-            ),
-            const SizedBox(height: 20.0),
-            Text(
-              '\$ $value',
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 18,
-                fontWeight: FontWeight.w600,
-                height: 0.08,
-              ),
-            )
-          ],
-        )
-      ],
-    );
-  }
-
   Card myWallet() {
     return Card(
       color: const Color(0x943066BE),
@@ -308,6 +241,99 @@ class HomePage extends StatelessWidget {
           icon: Icon(Icons.perm_identity),
           label: 'Profile',
         ),
+      ],
+    );
+  }
+}
+
+class FinancialStatusCard extends StatefulWidget {
+  const FinancialStatusCard({super.key});
+
+  @override
+  State<FinancialStatusCard> createState() => _FinancialStatusCardState();
+}
+
+class _FinancialStatusCardState extends State<FinancialStatusCard> {
+  int _incomeMoney = 0;
+  int _outcomeMoney = 0;
+
+  void changeIncome(int amount) {
+    setState(() {
+      _incomeMoney += amount;
+    });
+  }
+
+  void changeOutcome(int amount) {
+    setState(() {
+      _outcomeMoney += amount;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      color: const Color(0xFF242424),
+      child: Padding(
+          padding: const EdgeInsets.all(12.0),
+          child: IntrinsicHeight(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: <Widget>[
+                financeStatusComponent(
+                    const Icon(
+                      Icons.arrow_downward,
+                      size: 30,
+                      color: Color.fromARGB(255, 18, 206, 24),
+                    ),
+                    'Income',
+                    _incomeMoney),
+                const VerticalDivider(
+                  color: Colors.white,
+                  thickness: 1,
+                ),
+                financeStatusComponent(
+                    const Icon(
+                      Icons.arrow_upward,
+                      size: 30,
+                      color: Colors.red,
+                    ),
+                    'Outcome',
+                    _outcomeMoney),
+              ],
+            ),
+          )),
+    );
+  }
+
+  Row financeStatusComponent(Icon icon, String title, int value) {
+    return Row(
+      children: [
+        icon,
+        const SizedBox(width: 8.0),
+        Column(
+          children: [
+            Text(
+              title,
+              textAlign: TextAlign.left,
+              style: const TextStyle(
+                color: Color(0xFFF2F2F2),
+                fontSize: 12,
+                fontWeight: FontWeight.w400,
+                height: 0.12,
+              ),
+            ),
+            const SizedBox(height: 20.0),
+            Text(
+              '\$ $value',
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 18,
+                fontWeight: FontWeight.w600,
+                height: 0.08,
+              ),
+            )
+          ],
+        )
       ],
     );
   }
