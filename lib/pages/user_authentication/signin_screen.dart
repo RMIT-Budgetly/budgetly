@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:personal_finance/pages/user_authentication/signup_screen.dart';
 
 class SignInScreen extends StatefulWidget {
   const SignInScreen({super.key});
@@ -18,7 +19,6 @@ class _SignInScreenState extends State<SignInScreen> {
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
             child: Column(
-              mainAxisSize: MainAxisSize.min,
               children: [
                 Image.asset(
                   'assets/images/signin_banner.png',
@@ -29,10 +29,10 @@ class _SignInScreenState extends State<SignInScreen> {
                 ),
                 Container(
                   alignment: Alignment.center,
-                  child: const Text(
+                  child: Text(
                     'BUDGETLY',
                     style: TextStyle(
-                      color: Color.fromARGB(255, 48, 102, 190),
+                      color: Theme.of(context).colorScheme.primary,
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
                     ),
@@ -42,82 +42,88 @@ class _SignInScreenState extends State<SignInScreen> {
                   height: 20,
                 ),
                 SingleChildScrollView(
-                  child: Padding(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
-                    child: Form(
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          TextFormField(
-                            decoration: InputDecoration(
-                              prefixIcon: const Icon(Icons.person_outline),
-                              labelText: 'Email Address',
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(30.0),
-                                borderSide: const BorderSide(
-                                  width: 2,
-                                  style: BorderStyle.solid,
-                                ),
-                              ),
-                              enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(30.0),
-                                borderSide: const BorderSide(
-                                  width: 2,
-                                  style: BorderStyle.solid,
-                                  color: Color.fromARGB(255, 48, 102, 190),
-                                ),
+                  child: Form(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        TextFormField(
+                          decoration: InputDecoration(
+                            prefixIcon: Icon(
+                              Icons.mail,
+                              color: Theme.of(context).colorScheme.primary,
+                            ),
+                            labelText: 'Email Address',
+                            labelStyle: TextStyle(
+                                color: Theme.of(context).colorScheme.primary),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(30.0),
+                              borderSide: const BorderSide(
+                                width: 2,
+                                style: BorderStyle.solid,
                               ),
                             ),
-                            keyboardType: TextInputType.emailAddress,
-                            autocorrect: false,
-                            textCapitalization: TextCapitalization.none,
-                            validator: (value) {
-                              if (value == null ||
-                                  value.trim().isEmpty ||
-                                  !value.contains('@')) {
-                                return 'Please enter a valid email address.';
-                              }
-                              return null;
-                            },
-                            onSaved: (value) {},
-                          ),
-                          const SizedBox(
-                            height: 10,
-                          ),
-                          TextFormField(
-                            decoration: InputDecoration(
-                              prefixIcon: const Icon(Icons.lock_outline),
-                              labelText: 'Password',
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(30.0),
-                                borderSide: const BorderSide(
-                                  width: 2,
-                                  style: BorderStyle.solid,
-                                ),
-                              ),
-                              enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(30.0),
-                                borderSide: const BorderSide(
-                                  width: 2,
-                                  style: BorderStyle.solid,
-                                  color: Color.fromARGB(255, 48, 102, 190),
-                                ),
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(30.0),
+                              borderSide: BorderSide(
+                                width: 2,
+                                style: BorderStyle.solid,
+                                color: Theme.of(context).colorScheme.primary,
                               ),
                             ),
-                            obscureText: true,
-                            validator: (value) {
-                              if (value == null ||
-                                  value.trim().isEmpty ||
-                                  !value.contains('@')) {
-                                return 'Please enter a valid email address.';
-                              }
-                              return null;
-                            },
-                            onSaved: (value) {},
                           ),
-                        ],
-                      ),
+                          keyboardType: TextInputType.emailAddress,
+                          autocorrect: false,
+                          textCapitalization: TextCapitalization.none,
+                          validator: (value) {
+                            if (value == null ||
+                                value.trim().isEmpty ||
+                                !value.contains('@')) {
+                              return 'Please enter a valid email address.';
+                            }
+                            return null;
+                          },
+                          onSaved: (value) {},
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        TextFormField(
+                          decoration: InputDecoration(
+                            prefixIcon: Icon(
+                              Icons.lock,
+                              color: Theme.of(context).colorScheme.primary,
+                            ),
+                            labelText: 'Password',
+                            labelStyle: TextStyle(
+                                color: Theme.of(context).colorScheme.primary),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(30.0),
+                              borderSide: const BorderSide(
+                                width: 2,
+                                style: BorderStyle.solid,
+                              ),
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(30.0),
+                              borderSide: BorderSide(
+                                width: 2,
+                                style: BorderStyle.solid,
+                                color: Theme.of(context).colorScheme.primary,
+                              ),
+                            ),
+                          ),
+                          obscureText: true,
+                          validator: (value) {
+                            if (value == null ||
+                                value.trim().isEmpty ||
+                                !value.contains('@')) {
+                              return 'Please enter a valid email address.';
+                            }
+                            return null;
+                          },
+                          onSaved: (value) {},
+                        ),
+                      ],
                     ),
                   ),
                 ),
@@ -126,10 +132,10 @@ class _SignInScreenState extends State<SignInScreen> {
                   height: 35,
                   alignment: Alignment.bottomRight,
                   child: TextButton(
-                    child: const Text(
+                    child: Text(
                       "Forgot Password?",
-                      style:
-                          TextStyle(color: Color.fromARGB(255, 48, 102, 190)),
+                      style: TextStyle(
+                          color: Theme.of(context).colorScheme.primary),
                       textAlign: TextAlign.right,
                     ),
                     onPressed: () => {},
@@ -143,11 +149,11 @@ class _SignInScreenState extends State<SignInScreen> {
                   child: ElevatedButton(
                     style: ButtonStyle(
                       backgroundColor: MaterialStateColor.resolveWith(
-                          (states) => const Color.fromARGB(255, 48, 102, 190)),
+                          (states) => Theme.of(context).colorScheme.primary),
                     ),
                     onPressed: () {},
                     child: const Text(
-                      'Sign in',
+                      'Sign In',
                       style: TextStyle(
                           color: Colors.white,
                           fontSize: 16,
@@ -162,7 +168,7 @@ class _SignInScreenState extends State<SignInScreen> {
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(90),
                       border: Border.all(
-                        color: const Color.fromARGB(255, 48, 102, 190),
+                        color: Theme.of(context).colorScheme.primary,
                         width: 2,
                       )),
                   child: ElevatedButton(
@@ -196,22 +202,27 @@ class _SignInScreenState extends State<SignInScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Text(
+                    Text(
                       "Don't have account ?",
                       style: TextStyle(
-                        color: Color.fromARGB(255, 48, 102, 190),
+                        color: Theme.of(context).colorScheme.primary,
                       ),
                     ),
                     const SizedBox(
                       width: 20,
                     ),
                     GestureDetector(
-                      onTap: () {},
-                      child: const Text(
-                        'Sign up',
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const SignUpScreen()));
+                      },
+                      child: Text(
+                        'Sign Up',
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
-                          color: Color.fromARGB(255, 48, 102, 190),
+                          color: Theme.of(context).colorScheme.primary,
                         ),
                       ),
                     ),

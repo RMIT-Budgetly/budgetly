@@ -13,7 +13,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Personal Finance App',
       theme: ThemeData().copyWith(
-        colorScheme: ColorScheme.fromSeed(seedColor: const Color.fromARGB(255, 255, 255, 255),),
+        colorScheme: ColorScheme.fromSeed(seedColor: const Color.fromARGB(255, 48, 102, 190),),
       ),
       home: const SignInScreen(),
     );
