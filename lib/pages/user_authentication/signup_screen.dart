@@ -1,5 +1,8 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:personal_finance/widgets/user_image_picker.dart';
+
+final _firebase = FirebaseAuth.instance;
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
@@ -11,6 +14,38 @@ class SignUpScreen extends StatefulWidget {
 }
 
 class _SignUpScreenState extends State<SignUpScreen> {
+  final _form = GlobalKey<FormState>();
+
+  var _enteredUsername = '';
+  var _enteredEmail = '';
+  var _enteredPassword = '';
+
+  void _submit() async {
+    final isValid = _form.currentState!.validate();
+
+    if (!isValid) {
+      return;
+    }
+
+    _form.currentState!.save();
+
+    try {
+      final UserCredential = await _firebase.createUserWithEmailAndPassword(
+          email: _enteredEmail, password: _enteredPassword);
+      print(UserCredential);
+    } on FirebaseAuthException catch (error) {
+      if (error.code == 'email-already-in-use') {
+        //...
+      }
+      ScaffoldMessenger.of(context).clearSnackBars();
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(error.message ?? 'Authentication failed.'),
+        ),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -55,6 +90,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 ),
                 SingleChildScrollView(
                   child: Form(
+                    key: _form,
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
@@ -92,7 +128,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             }
                             return null;
                           },
-                          onSaved: (value) {},
+                          onSaved: (value) {
+                            _enteredUsername = value!;
+                          },
                         ),
                         const SizedBox(
                           height: 10,
@@ -133,7 +171,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             }
                             return null;
                           },
-                          onSaved: (value) {},
+                          onSaved: (value) {
+                            _enteredEmail = value!;
+                          },
                         ),
                         const SizedBox(
                           height: 10,
@@ -165,53 +205,17 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           ),
                           obscureText: true,
                           validator: (value) {
-                            if (value == null ||
-                                value.trim().isEmpty ||
-                                !value.contains('@')) {
-                              return 'Please enter a valid email address.';
+                            if (value == null || value.trim().length < 6) {
+                              return 'Password must be at least 6 characters long.';
                             }
                             return null;
                           },
-                          onSaved: (value) {},
+                          onSaved: (value) {
+                            _enteredPassword = value!;
+                          },
                         ),
                         const SizedBox(
                           height: 10,
-                        ),
-                        TextFormField(
-                          decoration: InputDecoration(
-                            prefixIcon: Icon(
-                              Icons.lock,
-                              color: Theme.of(context).colorScheme.primary,
-                            ),
-                            labelText: 'Confirm Password',
-                            labelStyle: TextStyle(
-                                color: Theme.of(context).colorScheme.primary),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(30.0),
-                              borderSide: const BorderSide(
-                                width: 2,
-                                style: BorderStyle.solid,
-                              ),
-                            ),
-                            enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(30.0),
-                              borderSide: BorderSide(
-                                width: 2,
-                                style: BorderStyle.solid,
-                                color: Theme.of(context).colorScheme.primary,
-                              ),
-                            ),
-                          ),
-                          obscureText: true,
-                          validator: (value) {
-                            if (value == null ||
-                                value.trim().isEmpty ||
-                                !value.contains('@')) {
-                              return 'Please enter a valid email address.';
-                            }
-                            return null;
-                          },
-                          onSaved: (value) {},
                         ),
                         const SizedBox(
                           height: 20,
@@ -227,7 +231,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                   (states) =>
                                       Theme.of(context).colorScheme.primary),
                             ),
-                            onPressed: () {},
+                            onPressed: _submit,
                             child: const Text(
                               'Sign Up',
                               style: TextStyle(
