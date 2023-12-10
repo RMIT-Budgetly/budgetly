@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class SignOutScreen extends StatelessWidget {
   const SignOutScreen({super.key});
@@ -19,6 +20,7 @@ class SignOutScreen extends StatelessWidget {
           IconButton(
             onPressed: () {
               FirebaseAuth.instance.signOut();
+              GoogleSignIn().signOut();
             },
             icon: Icon(
               Icons.exit_to_app,

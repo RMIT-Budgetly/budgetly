@@ -5,9 +5,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:personal_finance/widgets/user_image_picker.dart';
 
 final _firebase = FirebaseAuth.instance;
+final _googleSignIn = GoogleSignIn();
 
 class AuthScreen extends StatefulWidget {
   const AuthScreen({super.key});
@@ -65,6 +67,28 @@ class _AuthScreenState extends State<AuthScreen> {
       if (error.code == 'email-already-in-use') {
         //...
       }
+      ScaffoldMessenger.of(context).clearSnackBars();
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(error.message ?? 'Authentication failed.'),
+        ),
+      );
+    }
+  }
+
+  void signInWithGoogle() async {
+    try {
+      final GoogleSignInAccount? googleSignInAccount =
+          await _googleSignIn.signIn();
+      if (googleSignInAccount != null) {
+        final GoogleSignInAuthentication googleSignInAuthentication =
+            await googleSignInAccount.authentication;
+        final AuthCredential authCredential = GoogleAuthProvider.credential(
+            accessToken: googleSignInAuthentication.accessToken,
+            idToken: googleSignInAuthentication.idToken,);
+        await _firebase.signInWithCredential(authCredential);
+      }
+    } on FirebaseAuthException catch (error) {
       ScaffoldMessenger.of(context).clearSnackBars();
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -260,7 +284,7 @@ class _AuthScreenState extends State<AuthScreen> {
                         backgroundColor: MaterialStateColor.resolveWith(
                             (states) => Colors.white),
                       ),
-                      onPressed: () {},
+                      onPressed: signInWithGoogle,
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -552,7 +576,7 @@ class _AuthScreenState extends State<AuthScreen> {
                                 backgroundColor: MaterialStateColor.resolveWith(
                                     (states) => Colors.white),
                               ),
-                              onPressed: () {},
+                              onPressed: signInWithGoogle,
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
