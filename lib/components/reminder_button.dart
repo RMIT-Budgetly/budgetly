@@ -30,6 +30,7 @@ class _ReminderButtonState extends State<ReminderButton> {
     );
 
     if (chosenDateTime != null) {
+      // ignore: use_build_context_synchronously
       final TimeOfDay? chosenTime = await showTimePicker(
         context: context,
         initialTime: TimeOfDay.now(),
@@ -83,7 +84,7 @@ class _ReminderButtonState extends State<ReminderButton> {
               child: Text(
                 _selectedDate != null
                     ? '${DateFormat('dd-MM-yyyy').format(_selectedDate!)} ${_selectedTime!.format(context)}'
-                    : 'Select a date and time for reminder',
+                    : 'Select a reminder',
                 style: TextStyle(
                   fontSize: 14,
                   color: hintColor,

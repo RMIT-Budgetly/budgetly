@@ -11,6 +11,7 @@ class AddContactButton extends StatefulWidget {
   }) : super(key: key);
 
   @override
+  // ignore: library_private_types_in_public_api
   _AddContactButtonState createState() => _AddContactButtonState();
 }
 
@@ -24,7 +25,10 @@ class _AddContactButtonState extends State<AddContactButton> {
   }
 
   Future<void> _getContacts() async {
-    if (await Permission.contacts.request().isGranted) {
+    final PermissionStatus permissionStatus =
+        await Permission.contacts.request();
+
+    if (permissionStatus.isGranted) {
       Iterable<Contact> contacts = await ContactsService.getContacts(
         androidLocalizedLabels: true,
       );
@@ -34,6 +38,8 @@ class _AddContactButtonState extends State<AddContactButton> {
         },
       );
       widget.onContactSelected(_contacts);
+    } else if (permissionStatus.isPermanentlyDenied) {
+      openAppSettings();
     } else {
       setState(
         () {
@@ -41,39 +47,6 @@ class _AddContactButtonState extends State<AddContactButton> {
         },
       );
     }
-  }
-
-  void _showSelectedContactsDialog() {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Selected Contacts'),
-          content: _contacts.isEmpty
-              ? const Text('No contacts selected.')
-              : Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: _contacts.map((contact) {
-                    return ListTile(
-                      title: Text(contact.displayName ?? ''),
-                      subtitle: Text(contact.phones?.isNotEmpty == true
-                          ? contact.phones!.first.value ?? ''
-                          : ''),
-                      // You can display more contact details here
-                    );
-                  }).toList(),
-                ),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text('Close'),
-            ),
-          ],
-        );
-      },
-    );
   }
 
   @override
@@ -91,19 +64,15 @@ class _AddContactButtonState extends State<AddContactButton> {
             child: IconButton(
               color: Colors.black,
               icon: const Icon(Icons.person_add_alt_1_rounded),
-              onPressed: () async {
-                _getContacts();
-              },
+              onPressed: _getContacts,
             ),
           ),
           Expanded(
             flex: 5,
-            child: TextButton(
-              onPressed: () async {
-                _showSelectedContactsDialog();
-              },
+            child: Container(
+              padding: const EdgeInsets.all(8.0),
               child: Text(
-                _contacts.isNotEmpty ? "Contacts Selected" : "Select Contacts",
+                _contacts.isNotEmpty ? "Contacts selected" : "Select contacts",
                 style: TextStyle(
                   color: hintColor,
                   fontSize: 14,
@@ -111,7 +80,7 @@ class _AddContactButtonState extends State<AddContactButton> {
                 textAlign: TextAlign.start,
               ),
             ),
-          )
+          ),
         ],
       ),
     );
