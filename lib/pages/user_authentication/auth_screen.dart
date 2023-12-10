@@ -1,6 +1,9 @@
-// ignore_for_file: use_build_context_synchronously
+// ignore_for_file: use_build_context_synchronously, unused_field, unused_local_variable
 
+import 'dart:io';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:personal_finance/widgets/user_image_picker.dart';
 
@@ -22,11 +25,12 @@ class _AuthScreenState extends State<AuthScreen> {
   var _enteredUsername = '';
   var _enteredEmail = '';
   var _enteredPassword = '';
+  File? _selectedImage;
 
   void _submit() async {
     final isValid = _form.currentState!.validate();
 
-    if (!isValid) {
+    if (!isValid || !_isSignin && _selectedImage == null) {
       return;
     }
 
@@ -39,6 +43,23 @@ class _AuthScreenState extends State<AuthScreen> {
       } else {
         final userCredentials = await _firebase.createUserWithEmailAndPassword(
             email: _enteredEmail, password: _enteredPassword);
+
+        final storageRef = FirebaseStorage.instance
+            .ref()
+            .child('user_images')
+            .child('${userCredentials.user!.uid}.jpg');
+
+        await storageRef.putFile(_selectedImage!);
+        final imageUrl = await storageRef.getDownloadURL();
+
+        await FirebaseFirestore.instance
+            .collection('users')
+            .doc(userCredentials.user!.uid)
+            .set({
+          'username': _enteredUsername,
+          'email': _enteredEmail,
+          'image_url': imageUrl,
+        });
       }
     } on FirebaseAuthException catch (error) {
       if (error.code == 'email-already-in-use') {
@@ -304,7 +325,16 @@ class _AuthScreenState extends State<AuthScreen> {
         appBar: AppBar(
           backgroundColor: Colors.white,
           elevation: 0,
-          leading: const Icon(Icons.arrow_back),
+          leading: IconButton(
+            onPressed: () {
+              setState(() {
+                _isSignin = true;
+              });
+            },
+            icon: const Icon(
+              Icons.arrow_back,
+            ),
+          ),
           title: Text(
             'Sign Up',
             style: TextStyle(
@@ -334,15 +364,17 @@ class _AuthScreenState extends State<AuthScreen> {
                   const SizedBox(
                     height: 20,
                   ),
-                  UserImagePicker(
-                    onPickImage: (pickedImage) {},
-                  ),
                   SingleChildScrollView(
                     child: Form(
                       key: _form,
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
+                          UserImagePicker(
+                            onPickImage: (pickedImage) {
+                              _selectedImage = pickedImage;
+                            },
+                          ),
                           TextFormField(
                             decoration: InputDecoration(
                               prefixIcon: Icon(
