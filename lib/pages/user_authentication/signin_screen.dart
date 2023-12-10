@@ -53,12 +53,20 @@ class _SignInScreenState extends State<SignInScreen> {
                             decoration: InputDecoration(
                               prefixIcon: const Icon(Icons.person_outline),
                               labelText: 'Email Address',
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(30.0),
+                                borderSide: const BorderSide(
+                                  width: 2,
+                                  style: BorderStyle.solid,
+                                ),
+                              ),
                               enabledBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(30.0),
                                 borderSide: const BorderSide(
-                                    width: 2,
-                                    style: BorderStyle.solid,
-                                    color: Color.fromARGB(255, 48, 102, 190)),
+                                  width: 2,
+                                  style: BorderStyle.solid,
+                                  color: Color.fromARGB(255, 48, 102, 190),
+                                ),
                               ),
                             ),
                             keyboardType: TextInputType.emailAddress,
@@ -81,12 +89,20 @@ class _SignInScreenState extends State<SignInScreen> {
                             decoration: InputDecoration(
                               prefixIcon: const Icon(Icons.lock_outline),
                               labelText: 'Password',
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(30.0),
+                                borderSide: const BorderSide(
+                                  width: 2,
+                                  style: BorderStyle.solid,
+                                ),
+                              ),
                               enabledBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(30.0),
                                 borderSide: const BorderSide(
-                                    width: 2,
-                                    style: BorderStyle.solid,
-                                    color: Color.fromARGB(255, 48, 102, 190)),
+                                  width: 2,
+                                  style: BorderStyle.solid,
+                                  color: Color.fromARGB(255, 48, 102, 190),
+                                ),
                               ),
                             ),
                             obscureText: true,
