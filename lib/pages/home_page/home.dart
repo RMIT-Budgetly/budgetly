@@ -7,15 +7,15 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var iconMoney = Container(
-        width: 50,
-        height: 50,
+        width: 40,
+        height: 40,
         decoration: const ShapeDecoration(
           color: Color(0x7F0000FF),
           shape: OvalBorder(),
         ),
+        padding: const EdgeInsets.all(4.0),
         child: SvgPicture.asset(
           'assets/icons/icon_money.svg',
-          // color: Colors.blue,
         ));
 
     return Scaffold(
@@ -40,60 +40,61 @@ class HomePage extends StatelessWidget {
             myWallet(),
             financeStatus(),
             introductionCard(iconMoney),
-            Card(
-              color: Colors.white,
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Padding(
-                        padding: const EdgeInsets.all(4.0), child: iconMoney),
-                    const Flexible(
-                      child: Padding(
-                        padding: EdgeInsets.all(6.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Create your monthly plan',
-                              textAlign: TextAlign.left,
-                              style: TextStyle(
-                                color: Color(0xFF030303),
-                                fontSize: 12,
-                                fontWeight: FontWeight.w600,
-                                height: 0.09,
-                              ),
-                            ),
-                            SizedBox(height: 20.0),
-                            Text(
-                              'We can support you in managing your budget daily',
-                              textAlign: TextAlign.left,
-                              style: TextStyle(
-                                color: Color(0xFF818181),
-                                fontSize: 10,
-                                fontWeight: FontWeight.w400,
-                                height: 0.12,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    GestureDetector(
-                      onTap: () => {},
-                      child: const Padding(
-                          padding: EdgeInsets.all(4.0),
-                          child: Icon(Icons.arrow_forward_ios_rounded)),
-                    ),
-                  ],
-                ),
-              ),
-            ),
+            callToAction(iconMoney),
           ],
         ),
       ),
       bottomNavigationBar: navigationBar(),
+    );
+  }
+
+  Card callToAction(Container iconMoney) {
+    return Card(
+      color: Colors.white,
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Container(
+                padding: const EdgeInsets.all(4.0),
+                margin: const EdgeInsets.only(right: 6.0),
+                child: iconMoney),
+            const Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Create your monthly plan',
+                    textAlign: TextAlign.left,
+                    style: TextStyle(
+                      color: Color(0xFF030303),
+                      fontSize: 12,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  // SizedBox(height: 10.0),
+                  Text(
+                    'We can support you in managing your budget daily',
+                    textAlign: TextAlign.left,
+                    style: TextStyle(
+                      color: Color(0xFF818181),
+                      fontSize: 10,
+                      fontWeight: FontWeight.w400,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            GestureDetector(
+              onTap: () => {},
+              child: const Padding(
+                  padding: EdgeInsets.all(4.0),
+                  child: Icon(Icons.arrow_forward_ios_rounded)),
+            ),
+          ],
+        ),
+      ),
     );
   }
 
@@ -104,37 +105,36 @@ class HomePage extends StatelessWidget {
         padding: const EdgeInsets.all(16.0),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          // crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             const Expanded(
-              child: Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Create a Saving goal',
-                      textAlign: TextAlign.left,
-                      style: TextStyle(
-                        color: Color(0xFF030303),
-                        fontSize: 14,
-                        fontWeight: FontWeight.w600,
-                        height: 0.09,
-                      ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Create a Saving goal',
+                    textAlign: TextAlign.left,
+                    style: TextStyle(
+                      color: Color(0xFF030303),
+                      fontSize: 12,
+                      fontWeight: FontWeight.w600,
                     ),
-                    SizedBox(height: 20.0),
-                    Text(
-                      'We can support you in managing your budget daily',
-                      style: TextStyle(
-                        color: Color(0xFF818181),
-                        fontSize: 13,
-                        fontWeight: FontWeight.w400,
-                        height: 0.12,
-                      ),
-                    )
-                  ],
-                ),
+                  ),
+                  Text(
+                    'We can support you in managing your budget daily',
+                    style: TextStyle(
+                      color: Color(0xFF818181),
+                      fontSize: 10,
+                      fontWeight: FontWeight.w400,
+                    ),
+                  )
+                ],
               ),
             ),
-            Padding(padding: const EdgeInsets.all(4.0), child: iconMoney),
+            Container(
+                padding: const EdgeInsets.all(4.0),
+                margin: const EdgeInsets.only(left: 6.0),
+                child: iconMoney),
           ],
         ),
       ),
