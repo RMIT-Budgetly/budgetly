@@ -56,6 +56,8 @@ class _AuthScreenState extends State<AuthScreen> {
   @override
   Widget build(BuildContext context) {
     if (_isSignin) {
+      // Sign In Screen
+
       return Scaffold(
         body: Center(
           child: SingleChildScrollView(
@@ -280,29 +282,21 @@ class _AuthScreenState extends State<AuthScreen> {
         ),
       );
     } else {
+      // Sign Up Screen
+
       return Scaffold(
         extendBodyBehindAppBar: true,
         appBar: AppBar(
           backgroundColor: Colors.white,
           elevation: 0,
-          title: Row(
-            children: [
-              IconButton(
-                  onPressed: () {
-                    setState(() {
-                      _isSignin = true;
-                    });
-                  },
-                  icon: const Icon(Icons.arrow_back)),
-              Text(
-                'Sign Up',
-                style: TextStyle(
-                  color: Theme.of(context).colorScheme.primary,
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ],
+          leading: const Icon(Icons.arrow_back),
+          title: Text(
+            'Sign Up',
+            style: TextStyle(
+              color: Theme.of(context).colorScheme.primary,
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+            ),
           ),
         ),
         body: Center(
