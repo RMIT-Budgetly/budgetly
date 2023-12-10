@@ -209,7 +209,22 @@ class _AuthScreenState extends State<AuthScreen> {
                       ),
                     ),
                   ),
-                  const SizedBox(height: 10),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  const Row(
+                    children: [
+                      Expanded(child: Divider()),
+                      Text(
+                        ' or ',
+                        style: TextStyle(fontSize: 14),
+                      ),
+                      Expanded(child: Divider()),
+                    ],
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
                   Container(
                     width: MediaQuery.of(context).size.width,
                     height: 50,
@@ -472,6 +487,56 @@ class _AuthScreenState extends State<AuthScreen> {
                                     color: Colors.white,
                                     fontSize: 16,
                                     fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          const Row(
+                            children: [
+                              Expanded(child: Divider()),
+                              Text(
+                                ' or ',
+                                style: TextStyle(fontSize: 14),
+                              ),
+                              Expanded(child: Divider()),
+                            ],
+                          ),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          Container(
+                            width: MediaQuery.of(context).size.width,
+                            height: 50,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(90),
+                                border: Border.all(
+                                  color: Theme.of(context).colorScheme.primary,
+                                  width: 2,
+                                )),
+                            child: ElevatedButton(
+                              style: ButtonStyle(
+                                backgroundColor: MaterialStateColor.resolveWith(
+                                    (states) => Colors.white),
+                              ),
+                              onPressed: () {},
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Image.asset(
+                                    'assets/images/google_icon.png',
+                                    width: 20,
+                                  ),
+                                  const SizedBox(width: 10),
+                                  const Text(
+                                    'Sign up with Google Account',
+                                    style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                ],
                               ),
                             ),
                           ),
