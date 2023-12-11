@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:personal_finance/components/side_bar.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -19,6 +20,7 @@ class HomePage extends StatelessWidget {
         ));
 
     return Scaffold(
+      drawer: const SideBar(),
       appBar: AppBar(
         title: const Text(
           'Dashboard',
@@ -26,10 +28,10 @@ class HomePage extends StatelessWidget {
         ),
         centerTitle: true,
         shadowColor: Theme.of(context).colorScheme.shadow,
-        leading: IconButton(
-          icon: const Icon(Icons.menu),
-          onPressed: () {},
-        ),
+        // leading: IconButton(
+        //   icon: const Icon(Icons.menu),
+        //   onPressed: () {},
+        // ),
       ),
       body: Container(
         margin: const EdgeInsets.all(16.0),
@@ -254,7 +256,7 @@ class FinancialStatusCard extends StatefulWidget {
 }
 
 class _FinancialStatusCardState extends State<FinancialStatusCard> {
-  int _incomeMoney = 0;
+  int _incomeMoney = 10;
   int _outcomeMoney = 0;
 
   void changeIncome(int amount) {
