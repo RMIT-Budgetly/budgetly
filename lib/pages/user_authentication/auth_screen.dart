@@ -84,8 +84,9 @@ class _AuthScreenState extends State<AuthScreen> {
         final GoogleSignInAuthentication googleSignInAuthentication =
             await googleSignInAccount.authentication;
         final AuthCredential authCredential = GoogleAuthProvider.credential(
-            accessToken: googleSignInAuthentication.accessToken,
-            idToken: googleSignInAuthentication.idToken,);
+          accessToken: googleSignInAuthentication.accessToken,
+          idToken: googleSignInAuthentication.idToken,
+        );
         await _firebase.signInWithCredential(authCredential);
       }
     } on FirebaseAuthException catch (error) {
@@ -96,6 +97,15 @@ class _AuthScreenState extends State<AuthScreen> {
         ),
       );
     }
+
+    await FirebaseFirestore.instance
+        .collection('users')
+        .doc(_firebase.currentUser!.uid)
+        .set({
+      'username': '${_firebase.currentUser!.displayName}',
+      'email': '${_firebase.currentUser!.email}',
+      'image_url': _firebase.currentUser!.photoURL!,
+    });
   }
 
   @override
