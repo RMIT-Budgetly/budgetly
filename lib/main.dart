@@ -9,7 +9,6 @@ import 'firebase_options.dart';
 import 'package:personal_finance/pages/home_page/home.dart';
 import 'package:personal_finance/pages/weekly_plan/weekly_plan_form.dart';
 
-
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
@@ -44,6 +43,11 @@ class MyApp extends StatelessWidget {
           return const AuthScreen();
         },
       ),
+      routes: {
+        '/home': (context) => const HomePage(),
+        '/add_expenses': (context) => const AddExpensesPage(),
+        '/weekly_plan_form': (context) => const WeeklyPlanForm(),
+      },
     );
   }
 }
