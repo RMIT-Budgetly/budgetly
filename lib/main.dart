@@ -5,6 +5,9 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:personal_finance/pages/user_authentication/signout_screen.dart';
 import 'package:personal_finance/pages/user_authentication/splash.dart';
 import 'firebase_options.dart';
+import 'package:personal_finance/pages/home_page/home.dart';
+import 'package:personal_finance/pages/weekly_plan/weekly_plan_form.dart';
+
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
