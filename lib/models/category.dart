@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
 
-var uuid = Uuid();
+var uuid = const Uuid();
 
 enum Type { Expense, Income, Debts }
 
@@ -48,8 +48,38 @@ var categories = [
     type: Type.Expense,
   ),
   Category(
-    name: "Healthcare",
+    name: "Healthcare services",
     iconData: Icons.medical_information.codePoint,
+    type: Type.Expense,
+  ),
+  Category(
+    name: "Family",
+    iconData: Icons.family_restroom.codePoint,
+    type: Type.Expense,
+  ),
+  Category(
+    name: "Entertainment",
+    iconData: Icons.games_outlined.codePoint,
+    type: Type.Expense,
+  ),
+  Category(
+    name: "Education",
+    iconData: Icons.school.codePoint,
+    type: Type.Expense,
+  ),
+  Category(
+    name: "Insurances",
+    iconData: Icons.assignment.codePoint,
+    type: Type.Expense,
+  ),
+  Category(
+    name: "Investments",
+    iconData: Icons.monetization_on.codePoint,
+    type: Type.Expense,
+  ),
+  Category(
+    name: "Other expenses",
+    iconData: Icons.wallet.codePoint,
     type: Type.Expense,
   ),
   Category(
@@ -58,8 +88,38 @@ var categories = [
     type: Type.Income,
   ),
   Category(
-    name: "Loan",
+    name: "Collect interest",
+    iconData: Icons.insert_chart_rounded.codePoint,
+    type: Type.Income,
+  ),
+  Category(
+    name: "Incoming transfer",
+    iconData: Icons.money.codePoint,
+    type: Type.Income,
+  ),
+  Category(
+    name: "Sell something",
+    iconData: Icons.sell.codePoint,
+    type: Type.Income,
+  ),
+  Category(
+    name: "Other income",
+    iconData: Icons.wallet_membership.codePoint,
+    type: Type.Income,
+  ),
+  Category(
+    name: "Loans",
     iconData: Icons.confirmation_number_sharp.codePoint,
+    type: Type.Debts,
+  ),
+  Category(
+    name: "Debts",
+    iconData: Icons.balance.codePoint,
+    type: Type.Debts,
+  ),
+  Category(
+    name: "Other debts",
+    iconData: Icons.money_off.codePoint,
     type: Type.Debts,
   )
 ];

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:personal_finance/pages/add_expenses_page/add_expenses.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:personal_finance/pages/user_authentication/auth_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
