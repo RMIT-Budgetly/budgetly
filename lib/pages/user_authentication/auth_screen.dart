@@ -57,9 +57,11 @@ class _AuthScreenState extends State<AuthScreen> {
         await FirebaseFirestore.instance
             .collection('users')
             .doc(userCredentials.user!.uid)
-            .set({
+            .collection('userDetails')
+            .add({
           'username': _enteredUsername,
           'email': _enteredEmail,
+          'password': _enteredPassword,
           'image_url': imageUrl,
         });
       }
@@ -101,7 +103,8 @@ class _AuthScreenState extends State<AuthScreen> {
     await FirebaseFirestore.instance
         .collection('users')
         .doc(_firebase.currentUser!.uid)
-        .set({
+        .collection('userDetails')
+        .add({
       'username': '${_firebase.currentUser!.displayName}',
       'email': '${_firebase.currentUser!.email}',
       'image_url': _firebase.currentUser!.photoURL!,

@@ -44,7 +44,7 @@ class InputField extends StatelessWidget {
             child: TextFormField(
               validator: (value) {
                 if (value == null || value.isEmpty) {
-                  return 'Please enter the requried field';
+                  return 'Please enter the required field';
                 }
                 return null;
               },
