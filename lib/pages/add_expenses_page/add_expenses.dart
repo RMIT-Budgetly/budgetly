@@ -18,16 +18,43 @@ class AddExpensesPage extends StatefulWidget {
 }
 
 class _AddExpensesPageState extends State<AddExpensesPage> {
-  DateTime selectedDate = DateTime.now();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  DateTime? selectedDate;
+  DateTime? reminderDate;
   Category? _selectedCategory;
   List<Contact> _contacts = [];
-
+  var inputBudget = '0';
+  var note = "";
   void _onContactSelected(List<Contact> contacts) {
     // Handle selected contacts
     setState(() {
       _contacts = contacts;
     });
+  }
+
+  void onSaved() {
+    _formKey.currentState!.save();
+    print(_selectedCategory!.name);
+    print(double.tryParse(inputBudget));
+    print(note);
+    print(selectedDate);
+    print(reminderDate);
+  }
+
+  void onBudgetInput(String value) {
+    inputBudget = value;
+  }
+
+  void onNoteInput(String value) {
+    note = value;
+  }
+
+  void onSelectedDate(DateTime value) {
+    selectedDate = value;
+  }
+
+  void onReminderDate(DateTime value) {
+    reminderDate = value;
   }
 
   void onShowCategoriesPicker() async {
@@ -106,21 +133,26 @@ class _AddExpensesPageState extends State<AddExpensesPage> {
                             ],
                           ),
                         ),
-                        const InputField(
-                          prefixIcon: Icon(Icons.monetization_on_outlined),
-                          hintText: "0.00",
+                        InputField(
+                          prefixIcon:
+                              const Icon(Icons.monetization_on_outlined),
+                          hintText: "budget",
                           keyboardType: TextInputType.number,
+                          onSaveInputValue: onBudgetInput,
                           // validator: null,
                         ),
-                        const InputField(
+                        InputField(
                           prefixIcon: Icon(Icons.note_add),
                           hintText: "Write a note",
+                          onSaveInputValue: onNoteInput,
                         ),
                         CalendarButton(
+                          onDateSelected: onSelectedDate,
                           initialDate: DateTime.now(),
                         ),
                         ReminderButton(
                           initialDate: DateTime.now(),
+                          onDateSelected: onReminderDate,
                         ),
                         AddContactButton(
                           onContactSelected: _onContactSelected,
@@ -139,7 +171,7 @@ class _AddExpensesPageState extends State<AddExpensesPage> {
                     ),
                     Column(
                       children: <Widget>[
-                        SaveButton(),
+                        SaveButton(onSaved: onSaved),
                       ],
                     ),
                   ],
