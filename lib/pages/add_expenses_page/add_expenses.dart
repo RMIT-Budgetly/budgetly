@@ -1,7 +1,6 @@
+import "package:cloud_firestore/cloud_firestore.dart";
+import "package:firebase_auth/firebase_auth.dart";
 import "package:flutter/material.dart";
-import 'package:contacts_service/contacts_service.dart';
-import 'package:permission_handler/permission_handler.dart';
-import "package:personal_finance/components/add_contacts.dart";
 import "package:personal_finance/components/input_field.dart";
 import 'package:personal_finance/components/calendar_button.dart';
 import "package:personal_finance/components/reminder_button.dart";
@@ -10,11 +9,15 @@ import "package:personal_finance/components/submit_button.dart";
 import 'package:personal_finance/models/category.dart';
 import 'package:personal_finance/pages/add_expenses_page/category_picker.dart';
 
+final _firebase = FirebaseAuth.instance;
+
 class AddExpensesPage extends StatefulWidget {
   const AddExpensesPage({Key? key}) : super(key: key);
 
   @override
-  _AddExpensesPageState createState() => _AddExpensesPageState();
+  State<AddExpensesPage> createState() {
+    return _AddExpensesPageState();
+  }
 }
 
 class _AddExpensesPageState extends State<AddExpensesPage> {
@@ -22,23 +25,48 @@ class _AddExpensesPageState extends State<AddExpensesPage> {
   DateTime? selectedDate;
   DateTime? reminderDate;
   Category? _selectedCategory;
-  List<Contact> _contacts = [];
   var inputBudget = '0';
   var note = "";
-  void _onContactSelected(List<Contact> contacts) {
-    // Handle selected contacts
-    setState(() {
-      _contacts = contacts;
-    });
-  }
 
-  void onSaved() {
+  void onSaved() async {
     _formKey.currentState!.save();
-    print(_selectedCategory!.name);
-    print(double.tryParse(inputBudget));
-    print(note);
-    print(selectedDate);
-    print(reminderDate);
+    if (_selectedCategory!.type == Type.Expense) {
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(_firebase.currentUser!.uid)
+          .collection('expenses')
+          .add({
+        'category': _selectedCategory!.name,
+        'amount': double.tryParse(inputBudget),
+        'description': note,
+        'selectedDate': selectedDate,
+        'reminderDate': reminderDate,
+      });
+    } else if (_selectedCategory!.type == Type.Income) {
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(_firebase.currentUser!.uid)
+          .collection('incomes')
+          .add({
+        'category': _selectedCategory!.name,
+        'amount': double.tryParse(inputBudget),
+        'description': note,
+        'selectedDate': selectedDate,
+        'reminderDate': reminderDate,
+      });
+    } else {
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(_firebase.currentUser!.uid)
+          .collection('debts')
+          .add({
+        'category': _selectedCategory!.name,
+        'amount': double.tryParse(inputBudget),
+        'description': note,
+        'selectedDate': selectedDate,
+        'reminderDate': reminderDate,
+      });
+    }
   }
 
   void onBudgetInput(String value) {
@@ -136,14 +164,14 @@ class _AddExpensesPageState extends State<AddExpensesPage> {
                         InputField(
                           prefixIcon:
                               const Icon(Icons.monetization_on_outlined),
-                          hintText: "budget",
+                          hintText: "Amount",
                           keyboardType: TextInputType.number,
                           onSaveInputValue: onBudgetInput,
                           // validator: null,
                         ),
                         InputField(
-                          prefixIcon: Icon(Icons.note_add),
-                          hintText: "Write a note",
+                          prefixIcon: const Icon(Icons.note_add),
+                          hintText: "Description",
                           onSaveInputValue: onNoteInput,
                         ),
                         CalendarButton(
@@ -153,9 +181,6 @@ class _AddExpensesPageState extends State<AddExpensesPage> {
                         ReminderButton(
                           initialDate: DateTime.now(),
                           onDateSelected: onReminderDate,
-                        ),
-                        AddContactButton(
-                          onContactSelected: _onContactSelected,
                         ),
                         const Padding(
                           padding: EdgeInsets.symmetric(vertical: 16.0),
