@@ -7,7 +7,7 @@ class CalendarButton extends StatefulWidget {
 
   const CalendarButton({
     Key? key,
-    this.onDateSelected,
+    required this.onDateSelected,
     required this.initialDate,
   }) : super(key: key);
 
@@ -42,6 +42,7 @@ class _CalendarButtonState extends State<CalendarButton> {
                   lastDate: DateTime(2025),
                 );
                 if (chosenDate != null) {
+                  widget.onDateSelected!(chosenDate);
                   setState(() {
                     _chosenDate = chosenDate;
                   });

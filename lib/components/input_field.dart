@@ -7,15 +7,17 @@ class InputField extends StatelessWidget {
   final Function()? onTap;
   final DateTime? selectedDate;
   final TextFormField? validator;
-
-  const InputField(
-      {super.key,
-      this.prefixIcon,
-      this.hintText,
-      this.keyboardType,
-      this.selectedDate,
-      this.validator,
-      this.onTap});
+  void Function(String value) onSaveInputValue;
+  InputField({
+    super.key,
+    this.prefixIcon,
+    this.hintText,
+    this.keyboardType,
+    this.selectedDate,
+    this.validator,
+    this.onTap,
+    required this.onSaveInputValue,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -44,7 +46,7 @@ class InputField extends StatelessWidget {
             child: TextFormField(
               validator: (value) {
                 if (value == null || value.isEmpty) {
-                  return 'Please enter the requried field';
+                  return 'Please enter the required field';
                 }
                 return null;
               },
@@ -58,6 +60,9 @@ class InputField extends StatelessWidget {
                   fontWeight: FontWeight.normal,
                 ),
               ),
+              onSaved: (value) {
+                onSaveInputValue(value!);
+              },
             ),
           ),
         ),
