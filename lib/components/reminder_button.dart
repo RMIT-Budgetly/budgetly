@@ -9,7 +9,7 @@ class ReminderButton extends StatefulWidget {
   const ReminderButton({
     Key? key,
     required this.initialDate,
-    this.onDateSelected,
+    required this.onDateSelected,
     this.onTimeSelected,
   }) : super(key: key);
 
@@ -49,6 +49,7 @@ class _ReminderButtonState extends State<ReminderButton> {
             _selectedTime = chosenTime;
           },
         );
+        widget.onDateSelected!(_selectedDate!);
       }
     }
 

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class SaveButton extends StatefulWidget {
+  SaveButton({super.key, required this.onSaved});
+  void Function() onSaved;
   @override
   _SaveButtonState createState() => _SaveButtonState();
 }
@@ -9,6 +11,7 @@ class _SaveButtonState extends State<SaveButton> {
   bool isSaved = false;
 
   void onPressed() {
+    widget.onSaved();
     setState(() {
       isSaved = !isSaved;
     });

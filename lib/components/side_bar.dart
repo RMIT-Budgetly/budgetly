@@ -1,4 +1,6 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class SideBar extends StatelessWidget {
   const SideBar({super.key});
@@ -63,8 +65,8 @@ class SideBar extends StatelessWidget {
             leading: const Icon(Icons.exit_to_app_rounded),
             title: const Text('Exit'),
             onTap: () {
-              // Navigator.pop(context);
-              print('Exit');
+              FirebaseAuth.instance.signOut();
+              GoogleSignIn().signOut();
             },
           ),
         ],
