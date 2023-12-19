@@ -1,6 +1,8 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:path/path.dart' as path;
 
 class AddSavingGoalScreen extends StatefulWidget {
@@ -165,17 +167,29 @@ class _AddSavingGoalScreenState extends State<AddSavingGoalScreen> {
   }
 
   Future<void> _saveGoal() async {
-    // Implement your saving logic here
-    // After saving, clear the form
-    productNameController.clear();
-    priceController.clear();
-    timeToBuyController.clear();
-    urlController.clear();
-    notesController.clear();
-    setState(() {
-      _image = null;
-    });
-  }
+  final FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+  // Create a new document in 'saving_goals' collection
+  await firestore.collection('saving_goals').add({
+    'productName': productNameController.text,
+    'price': priceController.text,
+    'timeToBuy': selectedDate,
+    'url': urlController.text,
+    'notes': notesController.text,
+    'imagePath': _image?.path  // Optional: handle image storage separately
+  });
+
+  // Clear the form after saving
+  productNameController.clear();
+  priceController.clear();
+  timeToBuyController.clear();
+  urlController.clear();
+  notesController.clear();
+  setState(() {
+    _image = null;
+  });
+}
+
 }
 
 void main() => runApp(MaterialApp(home: AddSavingGoalScreen()));
