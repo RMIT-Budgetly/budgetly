@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:personal_finance/components/side_bar.dart';
+import 'package:personal_finance/components/tracking_selection.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -42,103 +43,113 @@ class HomePage extends StatelessWidget {
             myWallet(),
             // financeStatus(),
             const FinancialStatusCard(),
-            introductionCard(iconMoney),
-            callToAction(iconMoney),
+            introductionCard(iconMoney, context),
+            callToAction(iconMoney, context),
           ],
         ),
       ),
-      bottomNavigationBar: navigationBar(),
+      bottomNavigationBar: navigationBar(context),
     );
   }
 
-  Card callToAction(Container iconMoney) {
-    return Card(
-      color: Colors.white,
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Container(
-                padding: const EdgeInsets.all(4.0),
-                margin: const EdgeInsets.only(right: 6.0),
-                child: iconMoney),
-            const Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Create your monthly plan',
-                    textAlign: TextAlign.left,
-                    style: TextStyle(
-                      color: Color(0xFF030303),
-                      fontSize: 12,
-                      fontWeight: FontWeight.w600,
+  InkWell callToAction(Container iconMoney, BuildContext context) {
+    return InkWell(
+      onTap: () {
+        Navigator.pushNamed(context, '/weekly_plan_form');
+      },
+      child: Card(
+        color: Colors.white,
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Container(
+                  padding: const EdgeInsets.all(4.0),
+                  margin: const EdgeInsets.only(right: 6.0),
+                  child: iconMoney),
+              const Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Create your monthly plan',
+                      textAlign: TextAlign.left,
+                      style: TextStyle(
+                        color: Color(0xFF030303),
+                        fontSize: 12,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
-                  ),
-                  // SizedBox(height: 10.0),
-                  Text(
-                    'We can support you in managing your budget daily',
-                    textAlign: TextAlign.left,
-                    style: TextStyle(
-                      color: Color(0xFF818181),
-                      fontSize: 10,
-                      fontWeight: FontWeight.w400,
+                    // SizedBox(height: 10.0),
+                    Text(
+                      'We can support you in managing your budget daily',
+                      textAlign: TextAlign.left,
+                      style: TextStyle(
+                        color: Color(0xFF818181),
+                        fontSize: 10,
+                        fontWeight: FontWeight.w400,
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-            GestureDetector(
-              onTap: () => {},
-              child: const Padding(
-                  padding: EdgeInsets.all(4.0),
-                  child: Icon(Icons.arrow_forward_ios_rounded)),
-            ),
-          ],
+              GestureDetector(
+                onTap: () => {},
+                child: const Padding(
+                    padding: EdgeInsets.all(4.0),
+                    child: Icon(Icons.arrow_forward_ios_rounded)),
+              ),
+            ],
+          ),
         ),
       ),
     );
   }
 
-  Card introductionCard(Container iconMoney) {
-    return Card(
-      color: Colors.white,
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          // crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            const Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Create a Saving goal',
-                    textAlign: TextAlign.left,
-                    style: TextStyle(
-                      color: Color(0xFF030303),
-                      fontSize: 12,
-                      fontWeight: FontWeight.w600,
+  InkWell introductionCard(Container iconMoney, BuildContext context) {
+    return InkWell(
+      onTap: () {
+        Navigator.pushNamed(context, '/add_goal');
+      },
+      child: Card(
+        color: Colors.white,
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            // crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              const Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Create a Saving goal',
+                      textAlign: TextAlign.left,
+                      style: TextStyle(
+                        color: Color(0xFF030303),
+                        fontSize: 12,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
-                  ),
-                  Text(
-                    'We can support you in managing your budget daily',
-                    style: TextStyle(
-                      color: Color(0xFF818181),
-                      fontSize: 10,
-                      fontWeight: FontWeight.w400,
-                    ),
-                  )
-                ],
+                    Text(
+                      'We can support you in managing your budget daily',
+                      style: TextStyle(
+                        color: Color(0xFF818181),
+                        fontSize: 10,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    )
+                  ],
+                ),
               ),
-            ),
-            Container(
-                padding: const EdgeInsets.all(4.0),
-                margin: const EdgeInsets.only(left: 6.0),
-                child: iconMoney),
-          ],
+              Container(
+                  padding: const EdgeInsets.all(4.0),
+                  margin: const EdgeInsets.only(left: 6.0),
+                  child: iconMoney),
+            ],
+          ),
         ),
       ),
     );
@@ -220,26 +231,36 @@ class HomePage extends StatelessWidget {
     );
   }
 
-  NavigationBar navigationBar() {
+  NavigationBar navigationBar(BuildContext context) {
     return NavigationBar(
-      destinations: const [
-        NavigationDestination(
+      destinations: [
+        const NavigationDestination(
           icon: Icon(Icons.home),
           label: 'Home',
         ),
-        NavigationDestination(
+        const NavigationDestination(
           icon: Icon(Icons.calendar_today_outlined),
           label: 'Calendar',
         ),
         NavigationDestination(
-          icon: Icon(Icons.add_circle),
+          icon: IconButton(
+            icon: const Icon(Icons.add_circle),
+            onPressed: () {
+              // Navigator.pushNamed(context, '/add_expenses');
+              showDialog(
+                  context: context,
+                  builder: (context) {
+                    return const TrackingSelection();
+                  });
+            },
+          ),
           label: 'Add',
         ),
-        NavigationDestination(
+        const NavigationDestination(
           icon: Icon(Icons.wallet),
           label: 'Wallet',
         ),
-        NavigationDestination(
+        const NavigationDestination(
           icon: Icon(Icons.perm_identity),
           label: 'Profile',
         ),
