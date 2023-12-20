@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:personal_finance/components/side_bar.dart';
 import 'package:personal_finance/components/tracking_selection.dart';
+import 'package:personal_finance/pages/home_page/tracking_section.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -34,18 +35,39 @@ class HomePage extends StatelessWidget {
         //   onPressed: () {},
         // ),
       ),
-      body: Container(
-        margin: const EdgeInsets.all(16.0),
-        // color: Colors.black,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: <Widget>[
-            myWallet(),
-            // financeStatus(),
-            const FinancialStatusCard(),
-            introductionCard(iconMoney, context),
-            callToAction(iconMoney, context),
-          ],
+      body: SingleChildScrollView(
+        child: Container(
+          margin: const EdgeInsets.all(16.0),
+          // color: Colors.black,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: <Widget>[
+              myWallet(),
+              // financeStatus(),
+              const FinancialStatusCard(),
+              introductionCard(iconMoney, context),
+              callToAction(iconMoney, context),
+
+              // Data added here is tested only, remove this on production
+              const TrackingSection(
+                sectionName: 'Saving Goals',
+                items: <TrackingSectionItem>[
+                  TrackingSectionItem(
+                    itemTitle: 'Iphone 13 mini',
+                    amount: 1000,
+                  ),
+                  TrackingSectionItem(
+                    itemTitle: 'BPhone 16 pro max',
+                    amount: 1000,
+                  ),
+                  TrackingSectionItem(
+                    itemTitle: 'Samsung Andromeda 7',
+                    amount: 1000,
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
       bottomNavigationBar: navigationBar(context),
