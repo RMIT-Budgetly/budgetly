@@ -1,12 +1,20 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:personal_finance/components/side_bar.dart';
 import 'package:personal_finance/components/tracking_selection.dart';
+import 'package:personal_finance/pages/home_page/display_tracking.dart';
 import 'package:personal_finance/pages/home_page/tracking_section.dart';
 
-class HomePage extends StatelessWidget {
-  const HomePage({super.key});
+class HomePage extends StatefulWidget {
+  HomePage({super.key});
 
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     var iconMoney = Container(
@@ -47,25 +55,12 @@ class HomePage extends StatelessWidget {
               const FinancialStatusCard(),
               introductionCard(iconMoney, context),
               callToAction(iconMoney, context),
-
-              // Data added here is tested only, remove this on production
-              const TrackingSection(
-                sectionName: 'Saving Goals',
-                items: <TrackingSectionItem>[
-                  TrackingSectionItem(
-                    itemTitle: 'Iphone 13 mini',
-                    amount: 1000,
-                  ),
-                  TrackingSectionItem(
-                    itemTitle: 'BPhone 16 pro max',
-                    amount: 1000,
-                  ),
-                  TrackingSectionItem(
-                    itemTitle: 'Samsung Andromeda 7',
-                    amount: 1000,
-                  ),
-                ],
+              // display the goal of user
+              const DisplayTracking(
+                collectionName: "goals",
+                title: "Saving Goal",
               ),
+              const DisplayTracking(collectionName: "plans", title: "Plan")
             ],
           ),
         ),

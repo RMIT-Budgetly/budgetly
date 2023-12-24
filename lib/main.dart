@@ -37,14 +37,14 @@ class MyApp extends StatelessWidget {
           }
 
           if (snapshot.hasData) {
-            return const HomePage();
+            return HomePage();
           }
 
           return const AuthScreen();
         },
       ),
       routes: {
-        '/home': (context) => const HomePage(),
+        '/home': (context) => HomePage(),
         '/add_expenses': (context) => const AddExpensesPage(),
         '/add_goal': (context) => AddSavingGoalScreen(),
         '/weekly_plan_form': (context) => const WeeklyPlanForm(),
