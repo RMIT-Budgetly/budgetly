@@ -1,9 +1,12 @@
 import 'dart:io';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:path/path.dart' as path;
+
+final _firebase = FirebaseAuth.instance;
 
 class AddSavingGoalScreen extends StatefulWidget {
   @override
@@ -31,7 +34,8 @@ class _AddSavingGoalScreenState extends State<AddSavingGoalScreen> {
 
   AppBar _buildAppBar() {
     return AppBar(
-      title: const Text('Add Saving Goal', style: TextStyle(fontWeight: FontWeight.bold)),
+      title: const Text('Add Saving Goal',
+          style: TextStyle(fontWeight: FontWeight.bold)),
       centerTitle: true,
       shadowColor: Theme.of(context).colorScheme.shadow,
       leading: IconButton(icon: const Icon(Icons.menu), onPressed: () {}),
@@ -44,7 +48,8 @@ class _AddSavingGoalScreenState extends State<AddSavingGoalScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          _buildTextField(productNameController, 'Add the product\'s name', Icons.shopping_cart),
+          _buildTextField(productNameController, 'Add the product\'s name',
+              Icons.shopping_cart),
           SizedBox(height: 10),
           _buildTextField(priceController, 'Price', Icons.attach_money),
           SizedBox(height: 10),
@@ -62,7 +67,8 @@ class _AddSavingGoalScreenState extends State<AddSavingGoalScreen> {
     );
   }
 
-  TextField _buildTextField(TextEditingController controller, String label, IconData icon) {
+  TextField _buildTextField(
+      TextEditingController controller, String label, IconData icon) {
     return TextField(
       controller: controller,
       decoration: InputDecoration(
@@ -85,7 +91,8 @@ class _AddSavingGoalScreenState extends State<AddSavingGoalScreen> {
         if (picked != null && picked != selectedDate)
           setState(() {
             selectedDate = picked;
-            timeToBuyController.text = "${selectedDate.toLocal()}".split(' ')[0];
+            timeToBuyController.text =
+                "${selectedDate.toLocal()}".split(' ')[0];
           });
       },
       child: AbsorbPointer(
@@ -140,7 +147,8 @@ class _AddSavingGoalScreenState extends State<AddSavingGoalScreen> {
         ),
         style: ElevatedButton.styleFrom(
           backgroundColor: Theme.of(context).primaryColor,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         ),
       ),
     );
@@ -150,10 +158,12 @@ class _AddSavingGoalScreenState extends State<AddSavingGoalScreen> {
     return NavigationBar(
       destinations: const [
         NavigationDestination(icon: Icon(Icons.home), label: 'Home'),
-        NavigationDestination(icon: Icon(Icons.calendar_today_outlined), label: 'Calendar'),
+        NavigationDestination(
+            icon: Icon(Icons.calendar_today_outlined), label: 'Calendar'),
         NavigationDestination(icon: Icon(Icons.add_circle), label: 'Add'),
         NavigationDestination(icon: Icon(Icons.wallet), label: 'Wallet'),
-        NavigationDestination(icon: Icon(Icons.perm_identity), label: 'Profile'),
+        NavigationDestination(
+            icon: Icon(Icons.perm_identity), label: 'Profile'),
       ],
     );
   }
@@ -167,29 +177,32 @@ class _AddSavingGoalScreenState extends State<AddSavingGoalScreen> {
   }
 
   Future<void> _saveGoal() async {
-  final FirebaseFirestore firestore = FirebaseFirestore.instance;
+    final FirebaseFirestore firestore = FirebaseFirestore.instance;
 
-  // Create a new document in 'saving_goals' collection
-  await firestore.collection('saving_goals').add({
-    'productName': productNameController.text,
-    'price': priceController.text,
-    'timeToBuy': selectedDate,
-    'url': urlController.text,
-    'notes': notesController.text,
-    'imagePath': _image?.path  // Optional: handle image storage separately
-  });
+    // Create a new document in 'saving_goals' collection
+    await firestore
+        .collection('users')
+        .doc(_firebase.currentUser!.uid)
+        .collection('goals')
+        .add({
+      'productName': productNameController.text,
+      'price': double.tryParse(priceController.text),
+      'timeToBuy': selectedDate,
+      'url': urlController.text,
+      'notes': notesController.text,
+      'imagePath': _image?.path // Optional: handle image storage separately
+    });
 
-  // Clear the form after saving
-  productNameController.clear();
-  priceController.clear();
-  timeToBuyController.clear();
-  urlController.clear();
-  notesController.clear();
-  setState(() {
-    _image = null;
-  });
-}
-
+    // Clear the form after saving
+    productNameController.clear();
+    priceController.clear();
+    timeToBuyController.clear();
+    urlController.clear();
+    notesController.clear();
+    setState(() {
+      _image = null;
+    });
+  }
 }
 
 void main() => runApp(MaterialApp(home: AddSavingGoalScreen()));

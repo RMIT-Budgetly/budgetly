@@ -1,8 +1,9 @@
-import 'package:flutter/material.dart';
+// ignore_for_file: constant_identifier_names
+
 import 'package:personal_finance/models/category.dart';
 import 'package:uuid/uuid.dart';
 
-var uuid = Uuid();
+var uuid = const Uuid();
 
 enum Priority {
   High,

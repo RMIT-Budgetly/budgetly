@@ -5,7 +5,6 @@ import 'package:personal_finance/pages/weekly_plan/category_picker.dart';
 import 'package:personal_finance/models/plan.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 
 var formatter = DateFormat.yMd();
 var currencyFormatter = NumberFormat.currency(locale: 'vi_VN', symbol: '₫');
@@ -71,18 +70,22 @@ class WeeklyPlanFormState extends State<WeeklyPlanForm> {
         category: _selectedCategory!,
         priority: _selectedPriority!,
       );
-      FirebaseFirestore.instance.collection('users').doc(user!.uid).collection('plans').add({
-        'taskName': a.taskName,
-        'budget': a.budget,
+      FirebaseFirestore.instance
+          .collection('users')
+          .doc(user!.uid)
+          .collection('plans')
+          .add({
+        'productName': a.taskName,
+        'price': a.budget,
         'date': a.date,
         'category': a.category.name,
         'priority': a.priority.name,
       });
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Save successfully!'), 
+          content: Text('Save successfully!'),
           duration: Duration(seconds: 2),
-          ),
+        ),
       );
       Navigator.pop(context);
     }

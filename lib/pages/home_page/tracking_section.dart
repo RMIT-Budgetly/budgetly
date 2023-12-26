@@ -1,3 +1,5 @@
+// ignore_for_file: unused_field, unused_element
+
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
@@ -54,20 +56,20 @@ class _TrackingSectionState extends State<TrackingSection> {
 
 class TrackingSectionItem extends StatefulWidget {
   final String itemTitle;
-  final int? amount;
+  final double? amount;
   final double? progress;
   const TrackingSectionItem(
-      {super.key, required this.itemTitle, this.amount = 0, this.progress = 0});
+      {super.key, required this.itemTitle, this.amount, this.progress});
 
   @override
   State<TrackingSectionItem> createState() => _TrackingSectionItemState();
 }
 
 class _TrackingSectionItemState extends State<TrackingSectionItem> {
-  int _amount = 0;
+  double _amount = 0;
   double _progress = 0;
 
-  void _changeAmount(int amount) {
+  void _changeAmount(double amount) {
     setState(() {
       _amount = amount;
     });
@@ -120,7 +122,7 @@ class _TrackingSectionItemState extends State<TrackingSectionItem> {
                 ],
               ),
               Text(
-                "\$$_amount",
+                "\$${widget.amount}",
                 textAlign: TextAlign.left,
                 style: Theme.of(context).textTheme.titleSmall,
               ),
