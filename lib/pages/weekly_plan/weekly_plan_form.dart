@@ -5,7 +5,6 @@ import 'package:personal_finance/pages/weekly_plan/category_picker.dart';
 import 'package:personal_finance/models/plan.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 
 var formatter = DateFormat.yMd();
 var currencyFormatter = NumberFormat.currency(locale: 'vi_VN', symbol: '₫');
