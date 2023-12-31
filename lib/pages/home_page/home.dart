@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:personal_finance/api/debt-api.dart';
+import 'package:personal_finance/api/expense-api.dart';
+import 'package:personal_finance/api/income-api.dart';
 import 'package:personal_finance/components/side_bar.dart';
 import 'package:personal_finance/components/tracking_selection.dart';
+import 'package:personal_finance/models/expense.dart';
 import 'package:personal_finance/pages/home_page/display_tracking.dart';
+import 'package:rxdart/rxdart.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -12,8 +17,24 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  final ValueNotifier<double> _incomeMoneyNotifier = ValueNotifier<double>(0.0);
+  final ValueNotifier<double> _outcomeMoneyNotifier =
+      ValueNotifier<double>(0.0);
+
+  @override
+  void dispose() {
+    _incomeMoneyNotifier.dispose();
+    _outcomeMoneyNotifier.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
+    double totalAmount = 0;
+    setState(() {
+      totalAmount = _incomeMoneyNotifier.value - _outcomeMoneyNotifier.value;
+    });
+    print(totalAmount);
     var iconMoney = Container(
         width: 40,
         height: 40,
@@ -47,9 +68,12 @@ class _HomePageState extends State<HomePage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
-              myWallet(),
+              myWallet(amount: totalAmount),
               // financeStatus(),
-              const FinancialStatusCard(),
+              FinancialStatusCard(
+                incomeMoneyNotifier: _incomeMoneyNotifier,
+                outcomeMoneyNotifier: _outcomeMoneyNotifier,
+              ),
               introductionCard(iconMoney, context),
               callToAction(iconMoney, context),
               // display the goal of user
@@ -169,7 +193,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Card myWallet() {
+  Card myWallet({required double amount}) {
     return Card(
       color: const Color(0x943066BE),
       child: Padding(
@@ -221,15 +245,15 @@ class _HomePageState extends State<HomePage> {
                       color: Colors.white,
                     ),
                   ),
-                  const Expanded(
+                  Expanded(
                       child: Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       Padding(
                         padding: EdgeInsets.all(8.0),
                         child: Text(
-                          '0đ',
-                          style: TextStyle(
+                          '$amount\$',
+                          style: const TextStyle(
                             color: Colors.white,
                             fontSize: 14,
                             fontWeight: FontWeight.w700,
@@ -284,26 +308,22 @@ class _HomePageState extends State<HomePage> {
 }
 
 class FinancialStatusCard extends StatefulWidget {
-  const FinancialStatusCard({super.key});
+  FinancialStatusCard({
+    super.key,
+    required this.incomeMoneyNotifier,
+    required this.outcomeMoneyNotifier,
+  });
+  ValueNotifier<double> incomeMoneyNotifier;
+  ValueNotifier<double> outcomeMoneyNotifier;
 
   @override
   State<FinancialStatusCard> createState() => _FinancialStatusCardState();
 }
 
 class _FinancialStatusCardState extends State<FinancialStatusCard> {
-  int _incomeMoney = 10;
-  int _outcomeMoney = 0;
-
-  void changeIncome(int amount) {
-    setState(() {
-      _incomeMoney += amount;
-    });
-  }
-
-  void changeOutcome(int amount) {
-    setState(() {
-      _outcomeMoney += amount;
-    });
+  Future<List<Expense>> fetchExpenses() async {
+    List<Expense> expenses = await getAllIncomes().first;
+    return expenses;
   }
 
   @override
@@ -311,38 +331,141 @@ class _FinancialStatusCardState extends State<FinancialStatusCard> {
     return Card(
       color: const Color(0xFF242424),
       child: Padding(
-          padding: const EdgeInsets.all(12.0),
-          child: IntrinsicHeight(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: <Widget>[
-                financeStatusComponent(
-                    const Icon(
-                      Icons.arrow_downward,
-                      size: 30,
-                      color: Color.fromARGB(255, 18, 206, 24),
-                    ),
-                    'Income',
-                    _incomeMoney),
-                const VerticalDivider(
-                  color: Colors.white,
-                  thickness: 1,
+        padding: const EdgeInsets.all(12.0),
+        child: IntrinsicHeight(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: <Widget>[
+              Expanded(
+                child: StreamBuilder<List<Expense>>(
+                  stream: getAllIncomes(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 30),
+                        child: Center(
+                          child: SizedBox(
+                            width: 30,
+                            height: 30,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                              valueColor: AlwaysStoppedAnimation<Color>(
+                                Theme.of(context).primaryColor,
+                              ),
+                            ),
+                          ),
+                        ),
+                      );
+                    } else if (snapshot.hasError) {
+                      return Text('Error: ${snapshot.error}');
+                    } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                      return const Text('No data available');
+                    } else {
+                      List<Expense> expenses = snapshot.data!;
+                      double totalIncome = 0.0;
+
+                      for (Expense expense in expenses) {
+                        if (expense.amount! > 0) {
+                          totalIncome += expense.amount!;
+                        }
+                      }
+
+                      widget.incomeMoneyNotifier.value = totalIncome;
+
+                      return financeStatusComponent(
+                        const Icon(
+                          Icons.arrow_downward,
+                          size: 30,
+                          color: Color.fromARGB(255, 18, 206, 24),
+                        ),
+                        "Income",
+                        widget.incomeMoneyNotifier.value,
+                      );
+                    }
+                  },
                 ),
-                financeStatusComponent(
-                    const Icon(
-                      Icons.arrow_upward,
-                      size: 30,
-                      color: Colors.red,
-                    ),
-                    'Outcome',
-                    _outcomeMoney),
-              ],
-            ),
-          )),
+              ),
+              const VerticalDivider(
+                color: Colors.white,
+                thickness: 1,
+              ),
+              Expanded(
+                child: StreamBuilder<List<Expense>>(
+                  stream: Rx.combineLatest2(
+                    getAllExpenses(),
+                    getAllDebts(),
+                    (List<Expense> expenses, List<Expense> debts) {
+                      double totalAmount = expenses.fold(
+                        0,
+                        (previousValue, element) =>
+                            previousValue + element.amount!,
+                      );
+                      totalAmount += debts.fold(
+                        0,
+                        (previousValue, element) =>
+                            previousValue + element.amount!,
+                      );
+                      return [Expense(amount: totalAmount)];
+                    },
+                  ),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 30),
+                        child: Center(
+                          child: SizedBox(
+                            width: 30,
+                            height: 30,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                              valueColor: AlwaysStoppedAnimation<Color>(
+                                Theme.of(context).primaryColor,
+                              ),
+                            ),
+                          ),
+                        ),
+                      );
+                    } else if (snapshot.hasError) {
+                      return Text('Error: ${snapshot.error}');
+                    } else if (!snapshot.hasData) {
+                      return const Text('No data available');
+                    } else {
+                      List<Expense> totalAmountExpense = snapshot.data!;
+                      double? totalAmount = totalAmountExpense.isNotEmpty
+                          ? totalAmountExpense.first.amount
+                          : 0;
+                      widget.outcomeMoneyNotifier.value = totalAmount!;
+                      return financeStatusComponent(
+                        const Icon(
+                          Icons.arrow_upward,
+                          size: 30,
+                          color: Colors.red,
+                        ),
+                        "Outcome",
+                        widget.outcomeMoneyNotifier.value,
+                      );
+                    }
+                  },
+                ),
+              ),
+
+              // financeStatusComponent(
+              //   const Icon(
+              //     Icons.arrow_upward,
+              //     size: 30,
+              //     color: Colors.red,
+              //   ),
+              //   'Outcome',
+              //   _outcomeMoneyNotifier.value,
+              // ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 
-  Row financeStatusComponent(Icon icon, String title, int value) {
+  Row financeStatusComponent(Icon icon, String title, double value) {
     return Row(
       children: [
         icon,
@@ -356,17 +479,15 @@ class _FinancialStatusCardState extends State<FinancialStatusCard> {
                 color: Color(0xFFF2F2F2),
                 fontSize: 12,
                 fontWeight: FontWeight.w400,
-                height: 0.12,
               ),
             ),
-            const SizedBox(height: 20.0),
+            const SizedBox(height: 8.0),
             Text(
               '\$ $value',
               style: const TextStyle(
                 color: Colors.white,
                 fontSize: 18,
                 fontWeight: FontWeight.w600,
-                height: 0.08,
               ),
             )
           ],
