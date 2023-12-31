@@ -31,10 +31,12 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     double totalAmount = 0;
-    setState(() {
-      totalAmount = _incomeMoneyNotifier.value - _outcomeMoneyNotifier.value;
-    });
-    print(totalAmount);
+    void onTotalAmountChanged(double amount) {
+      setState(() {
+        totalAmount = amount;
+      });
+    }
+
     var iconMoney = Container(
         width: 40,
         height: 40,
@@ -68,11 +70,15 @@ class _HomePageState extends State<HomePage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
-              myWallet(amount: totalAmount),
+              myWallet(
+                  amount: totalAmount,
+                  incomeMoneyNotifier: _incomeMoneyNotifier,
+                  outcomeMoneyNotifier: _outcomeMoneyNotifier),
               // financeStatus(),
               FinancialStatusCard(
                 incomeMoneyNotifier: _incomeMoneyNotifier,
                 outcomeMoneyNotifier: _outcomeMoneyNotifier,
+                onTotalAmountChanged: onTotalAmountChanged,
               ),
               introductionCard(iconMoney, context),
               callToAction(iconMoney, context),
@@ -193,79 +199,96 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Card myWallet({required double amount}) {
+  Card myWallet({
+    required double amount,
+    required ValueNotifier<double> incomeMoneyNotifier,
+    required ValueNotifier<double> outcomeMoneyNotifier,
+  }) {
     return Card(
       color: const Color(0x943066BE),
       child: Padding(
-          padding: const EdgeInsets.all(12.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              const Row(
-                children: [
-                  Text(
-                    'My Wallet',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500,
+        padding: const EdgeInsets.all(12.0),
+        child: ValueListenableBuilder<double>(
+          valueListenable: incomeMoneyNotifier,
+          builder: (context, incomeValue, _) {
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                const Row(
+                  children: [
+                    Text(
+                      'My Wallet',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                      ),
                     ),
-                  ),
-                  Expanded(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        Text(
-                          'view ',
-                          style: TextStyle(
-                            color: Color(0xFF030303),
-                            fontSize: 14,
-                            fontWeight: FontWeight.w700,
-                          ),
-                        )
-                      ],
-                    ),
-                  )
-                ],
-              ),
-              const Divider(
-                color: Colors.white,
-              ),
-              Row(
-                children: [
-                  Container(
-                    width: 40,
-                    height: 40,
-                    decoration: ShapeDecoration(
-                      color: Colors.black.withOpacity(0.6),
-                      shape: const OvalBorder(),
-                    ),
-                    child: const Icon(
-                      Icons.wallet,
-                      color: Colors.white,
-                    ),
-                  ),
-                  Expanded(
+                    Expanded(
                       child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      Padding(
-                        padding: EdgeInsets.all(8.0),
-                        child: Text(
-                          '$amount\$',
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 14,
-                            fontWeight: FontWeight.w700,
-                          ),
-                        ),
-                      )
-                    ],
-                  ))
-                ],
-              )
-            ],
-          )),
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Text(
+                            'view ',
+                            style: TextStyle(
+                              color: Color(0xFF030303),
+                              fontSize: 14,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          )
+                        ],
+                      ),
+                    )
+                  ],
+                ),
+                const Divider(
+                  color: Colors.white,
+                ),
+                Row(
+                  children: [
+                    Container(
+                      width: 40,
+                      height: 40,
+                      decoration: ShapeDecoration(
+                        color: Colors.black.withOpacity(0.6),
+                        shape: const CircleBorder(),
+                      ),
+                      child: const Icon(
+                        Icons.wallet,
+                        color: Colors.white,
+                      ),
+                    ),
+                    Expanded(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: ValueListenableBuilder<double>(
+                              valueListenable: outcomeMoneyNotifier,
+                              builder: (context, outcomeValue, _) {
+                                double totalAmount = incomeValue - outcomeValue;
+                                return Text(
+                                  '$totalAmount\$',
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w700,
+                                  ),
+                                );
+                              },
+                            ),
+                          )
+                        ],
+                      ),
+                    )
+                  ],
+                )
+              ],
+            );
+          },
+        ),
+      ),
     );
   }
 
@@ -312,18 +335,61 @@ class FinancialStatusCard extends StatefulWidget {
     super.key,
     required this.incomeMoneyNotifier,
     required this.outcomeMoneyNotifier,
+    required this.onTotalAmountChanged,
   });
   ValueNotifier<double> incomeMoneyNotifier;
   ValueNotifier<double> outcomeMoneyNotifier;
+  Function(double) onTotalAmountChanged = (double amount) {};
 
   @override
   State<FinancialStatusCard> createState() => _FinancialStatusCardState();
 }
 
 class _FinancialStatusCardState extends State<FinancialStatusCard> {
-  Future<List<Expense>> fetchExpenses() async {
-    List<Expense> expenses = await getAllIncomes().first;
-    return expenses;
+  late Stream<List<Expense>> _expensesStream;
+
+  @override
+  void initState() {
+    super.initState();
+    _expensesStream = getAllIncomes();
+    _updateValues();
+  }
+
+  void _updateValues() {
+    _expensesStream.listen((expenses) {
+      double totalIncome = 0.0;
+
+      for (Expense expense in expenses) {
+        if (expense.amount! > 0) {
+          totalIncome += expense.amount!;
+        }
+      }
+
+      widget.incomeMoneyNotifier.value = totalIncome;
+      _updateOutcome();
+    });
+  }
+
+  void _updateOutcome() {
+    Rx.combineLatest2(
+      getAllExpenses(),
+      getAllDebts(),
+      (List<Expense> expenses, List<Expense> debts) {
+        double totalAmount = expenses.fold<double>(
+          0,
+          (previousValue, element) => previousValue + element.amount!,
+        );
+        totalAmount += debts.fold<double>(
+          0,
+          (previousValue, element) => previousValue + element.amount!,
+        );
+        return totalAmount;
+      },
+    ).listen((totalAmount) {
+      widget.outcomeMoneyNotifier.value = totalAmount;
+      widget
+          .onTotalAmountChanged(widget.incomeMoneyNotifier.value - totalAmount);
+    });
   }
 
   @override
@@ -337,51 +403,18 @@ class _FinancialStatusCardState extends State<FinancialStatusCard> {
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: <Widget>[
               Expanded(
-                child: StreamBuilder<List<Expense>>(
-                  stream: getAllIncomes(),
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 30),
-                        child: Center(
-                          child: SizedBox(
-                            width: 30,
-                            height: 30,
-                            child: CircularProgressIndicator(
-                              strokeWidth: 2,
-                              valueColor: AlwaysStoppedAnimation<Color>(
-                                Theme.of(context).primaryColor,
-                              ),
-                            ),
-                          ),
-                        ),
-                      );
-                    } else if (snapshot.hasError) {
-                      return Text('Error: ${snapshot.error}');
-                    } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                      return const Text('No data available');
-                    } else {
-                      List<Expense> expenses = snapshot.data!;
-                      double totalIncome = 0.0;
-
-                      for (Expense expense in expenses) {
-                        if (expense.amount! > 0) {
-                          totalIncome += expense.amount!;
-                        }
-                      }
-
-                      widget.incomeMoneyNotifier.value = totalIncome;
-
-                      return financeStatusComponent(
-                        const Icon(
-                          Icons.arrow_downward,
-                          size: 30,
-                          color: Color.fromARGB(255, 18, 206, 24),
-                        ),
-                        "Income",
-                        widget.incomeMoneyNotifier.value,
-                      );
-                    }
+                child: ValueListenableBuilder<double>(
+                  valueListenable: widget.incomeMoneyNotifier,
+                  builder: (context, incomeValue, _) {
+                    return financeStatusComponent(
+                      const Icon(
+                        Icons.arrow_downward,
+                        size: 30,
+                        color: Color.fromARGB(255, 18, 206, 24),
+                      ),
+                      "Income",
+                      incomeValue,
+                    );
                   },
                 ),
               ),
@@ -390,74 +423,21 @@ class _FinancialStatusCardState extends State<FinancialStatusCard> {
                 thickness: 1,
               ),
               Expanded(
-                child: StreamBuilder<List<Expense>>(
-                  stream: Rx.combineLatest2(
-                    getAllExpenses(),
-                    getAllDebts(),
-                    (List<Expense> expenses, List<Expense> debts) {
-                      double totalAmount = expenses.fold(
-                        0,
-                        (previousValue, element) =>
-                            previousValue + element.amount!,
-                      );
-                      totalAmount += debts.fold(
-                        0,
-                        (previousValue, element) =>
-                            previousValue + element.amount!,
-                      );
-                      return [Expense(amount: totalAmount)];
-                    },
-                  ),
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 30),
-                        child: Center(
-                          child: SizedBox(
-                            width: 30,
-                            height: 30,
-                            child: CircularProgressIndicator(
-                              strokeWidth: 2,
-                              valueColor: AlwaysStoppedAnimation<Color>(
-                                Theme.of(context).primaryColor,
-                              ),
-                            ),
-                          ),
-                        ),
-                      );
-                    } else if (snapshot.hasError) {
-                      return Text('Error: ${snapshot.error}');
-                    } else if (!snapshot.hasData) {
-                      return const Text('No data available');
-                    } else {
-                      List<Expense> totalAmountExpense = snapshot.data!;
-                      double? totalAmount = totalAmountExpense.isNotEmpty
-                          ? totalAmountExpense.first.amount
-                          : 0;
-                      widget.outcomeMoneyNotifier.value = totalAmount!;
-                      return financeStatusComponent(
-                        const Icon(
-                          Icons.arrow_upward,
-                          size: 30,
-                          color: Colors.red,
-                        ),
-                        "Outcome",
-                        widget.outcomeMoneyNotifier.value,
-                      );
-                    }
+                child: ValueListenableBuilder<double>(
+                  valueListenable: widget.outcomeMoneyNotifier,
+                  builder: (context, outcomeValue, _) {
+                    return financeStatusComponent(
+                      const Icon(
+                        Icons.arrow_upward,
+                        size: 30,
+                        color: Colors.red,
+                      ),
+                      "Outcome",
+                      outcomeValue,
+                    );
                   },
                 ),
               ),
-
-              // financeStatusComponent(
-              //   const Icon(
-              //     Icons.arrow_upward,
-              //     size: 30,
-              //     color: Colors.red,
-              //   ),
-              //   'Outcome',
-              //   _outcomeMoneyNotifier.value,
-              // ),
             ],
           ),
         ),
