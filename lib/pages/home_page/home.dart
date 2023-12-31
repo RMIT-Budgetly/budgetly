@@ -121,7 +121,7 @@ class _HomePageState extends State<HomePage> {
                       textAlign: TextAlign.left,
                       style: TextStyle(
                         color: Color(0xFF030303),
-                        fontSize: 12,
+                        fontSize: 18,
                         fontWeight: FontWeight.w600,
                       ),
                     ),
@@ -131,7 +131,7 @@ class _HomePageState extends State<HomePage> {
                       textAlign: TextAlign.left,
                       style: TextStyle(
                         color: Color(0xFF818181),
-                        fontSize: 10,
+                        fontSize: 13,
                         fontWeight: FontWeight.w400,
                       ),
                     ),
@@ -173,15 +173,15 @@ class _HomePageState extends State<HomePage> {
                       textAlign: TextAlign.left,
                       style: TextStyle(
                         color: Color(0xFF030303),
-                        fontSize: 12,
+                        fontSize: 18,
                         fontWeight: FontWeight.w600,
                       ),
                     ),
                     Text(
-                      'We can support you in managing your budget daily',
+                      'We can support you in achieve your goal',
                       style: TextStyle(
                         color: Color(0xFF818181),
-                        fontSize: 10,
+                        fontSize: 13,
                         fontWeight: FontWeight.w400,
                       ),
                     )
@@ -224,21 +224,6 @@ class _HomePageState extends State<HomePage> {
                         fontWeight: FontWeight.w500,
                       ),
                     ),
-                    Expanded(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          Text(
-                            'view ',
-                            style: TextStyle(
-                              color: Color(0xFF030303),
-                              fontSize: 14,
-                              fontWeight: FontWeight.w700,
-                            ),
-                          )
-                        ],
-                      ),
-                    )
                   ],
                 ),
                 const Divider(
@@ -272,7 +257,7 @@ class _HomePageState extends State<HomePage> {
                                   '$totalAmount\$',
                                   style: const TextStyle(
                                     color: Colors.white,
-                                    fontSize: 14,
+                                    fontSize: 16,
                                     fontWeight: FontWeight.w700,
                                   ),
                                 );
