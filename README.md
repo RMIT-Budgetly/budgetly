@@ -5,7 +5,9 @@
 </p>
 
 ## Project Overview
-Budgetly is designed to revolutionize personal financial management. In a world where financial demands constantly evolve, Budgetly offers a dynamic, user-friendly solution for effective budgeting and expense tracking. Our application caters to a diverse user base, from busy professionals to financial traders, providing tools tailored to each individual's financial needs.
+<p align="justify">
+    Budgetly is designed to revolutionize personal financial management. In a world where financial demands constantly evolve, Budgetly offers a dynamic, user-friendly solution for effective budgeting and expense tracking. Our application caters to a diverse user base, from busy professionals to financial traders, providing tools tailored to each individual's financial needs.
+</p>
 
 ## Getting Started
 
