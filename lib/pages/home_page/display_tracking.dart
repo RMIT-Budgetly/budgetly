@@ -38,6 +38,7 @@ class _DisplayTrackingState extends State<DisplayTracking> {
           TrackingSectionItem sectionItem = TrackingSectionItem(
             itemTitle: data['productName'],
             amount: data['price'],
+            progress: path == "goals" ? data['saved'] / data['price'] : null,
           );
           sectionItems.add(sectionItem);
         }

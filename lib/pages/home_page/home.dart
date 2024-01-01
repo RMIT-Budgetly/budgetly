@@ -11,6 +11,7 @@ import 'package:rxdart/rxdart.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
+  static double totalMoney = 0;
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -20,7 +21,6 @@ class _HomePageState extends State<HomePage> {
   final ValueNotifier<double> _incomeMoneyNotifier = ValueNotifier<double>(0.0);
   final ValueNotifier<double> _outcomeMoneyNotifier =
       ValueNotifier<double>(0.0);
-  static double totalMoney = 0;
 
   @override
   void dispose() {
@@ -254,7 +254,7 @@ class _HomePageState extends State<HomePage> {
                               valueListenable: outcomeMoneyNotifier,
                               builder: (context, outcomeValue, _) {
                                 double totalAmount = incomeValue - outcomeValue;
-                                totalMoney = totalAmount;
+                                HomePage.totalMoney = totalAmount;
                                 return Text(
                                   '$totalAmount\$',
                                   style: const TextStyle(

@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class GoalModel {
+  String goalId;
   String? imagePath;
   String? notes; // Make this property nullable
   double price;
@@ -10,6 +11,7 @@ class GoalModel {
   String? url;
 
   GoalModel({
+    required this.goalId,
     this.imagePath,
     this.notes,
     required this.price,

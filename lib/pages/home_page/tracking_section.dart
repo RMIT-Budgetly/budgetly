@@ -1,7 +1,19 @@
 // ignore_for_file: unused_field, unused_element
 
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+
+Color getRandomColor() {
+  final random = Random();
+  return Color.fromARGB(
+    255,
+    random.nextInt(256),
+    random.nextInt(256),
+    random.nextInt(256),
+  );
+}
 
 class TrackingSection extends StatefulWidget {
   final String sectionName;
@@ -69,7 +81,6 @@ class TrackingSectionItem extends StatefulWidget {
 
 class _TrackingSectionItemState extends State<TrackingSectionItem> {
   double _amount = 0;
-  double _progress = 0;
 
   void _changeAmount(double amount) {
     setState(() {
@@ -82,13 +93,11 @@ class _TrackingSectionItemState extends State<TrackingSectionItem> {
     if (progress < 0 || progress > 1) {
       throw Exception('Progress must be between 0 and 1');
     }
-    setState(() {
-      _progress = progress;
-    });
   }
 
   @override
   Widget build(BuildContext context) {
+    final Color color = getRandomColor();
     return Material(
       color: Colors.white,
       borderRadius: BorderRadius.circular(10),
@@ -132,10 +141,9 @@ class _TrackingSectionItemState extends State<TrackingSectionItem> {
                 height: 8,
               ),
               LinearProgressIndicator(
-                value: _progress,
+                value: widget.progress ?? 0,
                 backgroundColor: Colors.grey[300],
-                valueColor:
-                    const AlwaysStoppedAnimation<Color>(Color(0xFFE0533D)),
+                valueColor: AlwaysStoppedAnimation<Color>(color),
               ),
             ],
           ),

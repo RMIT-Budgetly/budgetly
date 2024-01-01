@@ -16,10 +16,11 @@ Stream<List<GoalModel>> getAllGoals() {
 
     for (var doc in snapshot.docs) {
       DocumentSnapshot document = await doc.reference.get();
-
+      String goalId = doc.id;
       if (document.exists) {
         Map<String, dynamic> data = document.data() as Map<String, dynamic>;
         GoalModel goal = GoalModel(
+          goalId: goalId,
           imagePath: data['imagePath'] ?? "",
           notes: data['notes'] ?? "",
           price: data['price'] ?? 0,

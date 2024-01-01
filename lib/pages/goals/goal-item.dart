@@ -31,7 +31,7 @@ class GoalItem extends StatelessWidget {
         child: InkWell(
           onTap: () {
             Navigator.push(context, MaterialPageRoute(builder: (context) {
-              return GoalItemDetail(model: model);
+              return GoalItemDetail(model: model, color: color);
             }));
           },
           child: Ink(
