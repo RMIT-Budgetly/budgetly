@@ -1,10 +1,11 @@
-# Budgetly
+# Budgetly: Personal Finance Assistant
 
 <p align="center">
-  <img src="assets/logo/budgetly-logo.jpg" alt="Logo" width="200"/>
+  <img src="assets/logo/budgetly-logo.jpg" alt="Logo" width="150"/>
 </p>
 
-A new Flutter project.
+## Project Overview
+Budgetly is designed to revolutionize personal financial management. In a world where financial demands constantly evolve, Budgetly offers a dynamic, user-friendly solution for effective budgeting and expense tracking. Our application caters to a diverse user base, from busy professionals to financial traders, providing tools tailored to each individual's financial needs.
 
 ## Getting Started
 
