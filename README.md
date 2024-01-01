@@ -1,4 +1,5 @@
 <div style="text-align: justify;">
+
 # Budgetly: Personal Finance Assistant
 
 <p align="center">
