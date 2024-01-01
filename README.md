@@ -1,4 +1,8 @@
-# personal_finance
+# Budgetly
+
+<p align="center">
+  <img src="assets/logo/budgetly-logo.jpg" alt="Logo" width="200"/>
+</p>
 
 A new Flutter project.
 
