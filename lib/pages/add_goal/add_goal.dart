@@ -26,19 +26,12 @@ class _AddSavingGoalScreenState extends State<AddSavingGoalScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: _buildAppBar(),
+      appBar: AppBar(
+        centerTitle: true,
+        title: const Text('Goal'),
+      ),
       body: _buildBody(),
       bottomNavigationBar: _buildNavigationBar(),
-    );
-  }
-
-  AppBar _buildAppBar() {
-    return AppBar(
-      title: const Text('Add Saving Goal',
-          style: TextStyle(fontWeight: FontWeight.bold)),
-      centerTitle: true,
-      shadowColor: Theme.of(context).colorScheme.shadow,
-      leading: IconButton(icon: const Icon(Icons.menu), onPressed: () {}),
     );
   }
 
@@ -50,17 +43,17 @@ class _AddSavingGoalScreenState extends State<AddSavingGoalScreen> {
         children: [
           _buildTextField(productNameController, 'Add the product\'s name',
               Icons.shopping_cart),
-          SizedBox(height: 10),
+          const SizedBox(height: 10),
           _buildTextField(priceController, 'Price', Icons.attach_money),
-          SizedBox(height: 10),
+          const SizedBox(height: 10),
           _buildDateSelector(),
-          SizedBox(height: 10),
+          const SizedBox(height: 10),
           _buildTextField(urlController, 'URL', Icons.link),
-          SizedBox(height: 10),
+          const SizedBox(height: 10),
           _buildTextField(notesController, 'Write notes', Icons.note),
-          SizedBox(height: 20),
+          const SizedBox(height: 20),
           _buildImageUploadSection(),
-          SizedBox(height: 20),
+          const SizedBox(height: 20),
           _buildSaveButton(),
         ],
       ),
@@ -74,7 +67,6 @@ class _AddSavingGoalScreenState extends State<AddSavingGoalScreen> {
       decoration: InputDecoration(
         labelText: label,
         prefixIcon: Icon(icon),
-        border: OutlineInputBorder(),
       ),
     );
   }

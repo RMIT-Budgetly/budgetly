@@ -1,29 +1,63 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:personal_finance/api/user-detail-api.dart';
+import 'package:personal_finance/models/userDetail.dart';
 
-class SideBar extends StatelessWidget {
+class SideBar extends StatefulWidget {
   const SideBar({super.key});
 
   @override
+  State<SideBar> createState() => _SideBarState();
+}
+
+class _SideBarState extends State<SideBar> {
+  @override
   Widget build(BuildContext context) {
-    return Drawer(
-      child: ListView(
-        padding: EdgeInsets.zero,
-        children: [
-          UserAccountsDrawerHeader(
-              currentAccountPicture: CircleAvatar(
-                // backgroundImage: AssetImage('assets/images/bocchi.jpg'),
-                child: ClipOval(
-                  child: Image.network(
-                    'https://cdn.vox-cdn.com/thumbor/PzidjXAPw5kMOXygTMEuhb634MM=/11x17:1898x1056/1200x800/filters:focal(807x387:1113x693)/cdn.vox-cdn.com/uploads/chorus_image/image/72921759/vlcsnap_2023_12_01_10h37m31s394.0.jpg',
-                    width: 90,
-                    height: 90,
-                    fit: BoxFit.cover,
+    return StreamBuilder<UserDetail>(
+      stream: streamSectionItems(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Padding(
+            // Loading data process
+            padding: const EdgeInsets.symmetric(vertical: 30),
+            child: Center(
+              child: SizedBox(
+                width: 30,
+                height: 30,
+                child: CircularProgressIndicator(
+                  strokeWidth: 2, // Set the stroke width
+                  valueColor: AlwaysStoppedAnimation<Color>(
+                    Theme.of(context).primaryColor, // Set your desired color
                   ),
                 ),
               ),
-              decoration: const BoxDecoration(
+            ),
+          );
+        } else if (snapshot.hasError) {
+          return Text('Error: ${snapshot.error}');
+        } else if (!snapshot.hasData) {
+          return const Text('No data available');
+        } else {
+          UserDetail userDetail = snapshot.data!;
+          return Drawer(
+            child: ListView(
+              padding: EdgeInsets.zero,
+              children: [
+                UserAccountsDrawerHeader(
+                    currentAccountPicture: CircleAvatar(
+                      // backgroundImage: AssetImage('assets/images/bocchi.jpg'),
+                      child: ClipOval(
+                        child: Image.network(
+                          userDetail.image_url,
+                          width: 90,
+                          height: 90,
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                    ),
+                    decoration: const BoxDecoration(
                 // gradient: LinearGradient(
                 //     begin: Alignment.topCenter,
                 //     end: Alignment.bottomCenter,
@@ -79,6 +113,9 @@ class SideBar extends StatelessWidget {
           ),
         ],
       ),
+          );
+        }
+      },
     );
   }
 }

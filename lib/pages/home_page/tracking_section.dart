@@ -32,7 +32,9 @@ class _TrackingSectionState extends State<TrackingSection> {
               ),
               const Spacer(),
               TextButton(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.pushNamed(context, '/goals');
+                },
                 child: const Text(
                   'View All',
                   style: TextStyle(
