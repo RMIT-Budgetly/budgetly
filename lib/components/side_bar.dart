@@ -58,52 +58,61 @@ class _SideBarState extends State<SideBar> {
                       ),
                     ),
                     decoration: const BoxDecoration(
-                      // gradient: LinearGradient(
-                      //     begin: Alignment.topCenter,
-                      //     end: Alignment.bottomCenter,
-                      //     stops: [0, 0.6],
-                      //     colors: [Colors.transparent, Colors.black]),
-                      image: DecorationImage(
-                          image: NetworkImage(
-                              'https://img.freepik.com/premium-photo/green-plant-with-dark-background_889227-5623.jpg'),
-                          fit: BoxFit.cover),
-                      color: Color(0x7F0000FF),
-                    ),
-                    accountName: Text(userDetail.username),
-                    accountEmail: Text(userDetail.email)),
-                ListTile(
-                  leading: const Icon(Icons.accessibility_outlined),
-                  title: const Text('About Us'),
-                  onTap: () {
-                    // Navigator.pop(context);
-                    print('About Us');
-                  },
-                ),
-                ListTile(
-                  leading: const Icon(Icons.tips_and_updates_rounded),
-                  title: const Text('Tips'),
-                  onTap: () {
-                    // Navigator.pop(context);
-                    print('Tips');
-                  },
-                ),
-                ListTile(
-                  leading: const Icon(Icons.settings),
-                  title: const Text('Setting'),
-                  onTap: () {
-                    // Navigator.pop(context);
-                  },
-                ),
-                ListTile(
-                  leading: const Icon(Icons.exit_to_app_rounded),
-                  title: const Text('Exit'),
-                  onTap: () {
-                    FirebaseAuth.instance.signOut();
-                    GoogleSignIn().signOut();
-                  },
-                ),
-              ],
-            ),
+                // gradient: LinearGradient(
+                //     begin: Alignment.topCenter,
+                //     end: Alignment.bottomCenter,
+                //     stops: [0, 0.6],
+                //     colors: [Colors.transparent, Colors.black]),
+                image: DecorationImage(
+                    image: NetworkImage(
+                        'https://img.freepik.com/premium-photo/green-plant-with-dark-background_889227-5623.jpg'),
+                    fit: BoxFit.cover),
+                color: Color(0x7F0000FF),
+              ),
+              accountName: const Text('Josh Hutcherson'),
+              accountEmail: const Text('joshHutcherson@rmit.edu.vn')),
+          ListTile(
+            leading: const Icon(Icons.accessibility_outlined),
+            title: const Text('About Us'),
+            onTap: () {
+              // Navigator.pop(context);
+              print('About Us');
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.tips_and_updates_rounded),
+            title: const Text('Tips'),
+            onTap: () {
+              // Navigator.pop(context);
+              print('Tips');
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.pie_chart_outline_rounded),
+            title: const Text('Chart'),
+            onTap: () {
+              // Navigator.pop(context);
+              Navigator.pushNamed(context, '/data_visualization');
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.settings),
+            title: const Text('Setting'),
+            onTap: () {
+              // Navigator.pop(context);
+              print('Setting');
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.exit_to_app_rounded),
+            title: const Text('Exit'),
+            onTap: () {
+              FirebaseAuth.instance.signOut();
+              GoogleSignIn().signOut();
+            },
+          ),
+        ],
+      ),
           );
         }
       },

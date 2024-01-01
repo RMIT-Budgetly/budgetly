@@ -87,7 +87,7 @@ class _HomePageState extends State<HomePage> {
                 collectionName: "goals",
                 title: "Saving Goal",
               ),
-              const DisplayTracking(collectionName: "plans", title: "Plan")
+              const DisplayTracking(collectionName: "plans", title: "Plan"),
             ],
           ),
         ),
