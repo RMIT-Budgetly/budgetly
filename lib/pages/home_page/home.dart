@@ -20,6 +20,7 @@ class _HomePageState extends State<HomePage> {
   final ValueNotifier<double> _incomeMoneyNotifier = ValueNotifier<double>(0.0);
   final ValueNotifier<double> _outcomeMoneyNotifier =
       ValueNotifier<double>(0.0);
+  static double totalMoney = 0;
 
   @override
   void dispose() {
@@ -253,6 +254,7 @@ class _HomePageState extends State<HomePage> {
                               valueListenable: outcomeMoneyNotifier,
                               builder: (context, outcomeValue, _) {
                                 double totalAmount = incomeValue - outcomeValue;
+                                totalMoney = totalAmount;
                                 return Text(
                                   '$totalAmount\$',
                                   style: const TextStyle(

@@ -45,11 +45,11 @@ class MyApp extends StatelessWidget {
         },
       ),
       routes: {
-        '/home': (context) => HomePage(),
+        '/home': (context) => const HomePage(),
         '/add_expenses': (context) => const AddExpensesPage(),
         '/add_goal': (context) => AddSavingGoalScreen(),
         '/weekly_plan_form': (context) => const WeeklyPlanForm(),
-        '/goals': (context) => Goal(),
+        '/goals': (context) => const Goal(),
       },
     );
   }

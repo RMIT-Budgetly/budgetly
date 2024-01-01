@@ -80,20 +80,20 @@ class _AddSavingGoalScreenState extends State<AddSavingGoalScreen> {
           firstDate: DateTime(2000),
           lastDate: DateTime(2101),
         );
-        if (picked != null && picked != selectedDate)
+        if (picked != null && picked != selectedDate) {
           setState(() {
             selectedDate = picked;
             timeToBuyController.text =
                 "${selectedDate.toLocal()}".split(' ')[0];
           });
+        }
       },
       child: AbsorbPointer(
         child: TextField(
           controller: timeToBuyController,
-          decoration: InputDecoration(
+          decoration: const InputDecoration(
             labelText: 'Estimated time to buy',
             prefixIcon: Icon(Icons.calendar_today),
-            border: OutlineInputBorder(),
           ),
         ),
       ),
@@ -112,9 +112,9 @@ class _AddSavingGoalScreenState extends State<AddSavingGoalScreen> {
         ),
         child: _image != null
             ? Image.file(File(_image!.path), fit: BoxFit.cover)
-            : Column(
+            : const Column(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: const [
+                children: [
                   Icon(Icons.camera_alt, size: 50),
                   Text('Tap to upload an image of the product'),
                 ],
@@ -129,6 +129,11 @@ class _AddSavingGoalScreenState extends State<AddSavingGoalScreen> {
       height: 48,
       child: ElevatedButton(
         onPressed: _saveGoal,
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Theme.of(context).primaryColor,
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        ),
         child: const Text(
           'Save',
           style: TextStyle(
@@ -136,11 +141,6 @@ class _AddSavingGoalScreenState extends State<AddSavingGoalScreen> {
             fontWeight: FontWeight.w700,
             color: Colors.white,
           ),
-        ),
-        style: ElevatedButton.styleFrom(
-          backgroundColor: Theme.of(context).primaryColor,
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         ),
       ),
     );
@@ -179,6 +179,7 @@ class _AddSavingGoalScreenState extends State<AddSavingGoalScreen> {
         .add({
       'productName': productNameController.text,
       'price': double.tryParse(priceController.text),
+      'saved': double.tryParse("0.0"),
       'timeToBuy': selectedDate,
       'url': urlController.text,
       'notes': notesController.text,
