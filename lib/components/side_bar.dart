@@ -54,6 +54,14 @@ class SideBar extends StatelessWidget {
             },
           ),
           ListTile(
+            leading: const Icon(Icons.pie_chart_outline_rounded),
+            title: const Text('Chart'),
+            onTap: () {
+              // Navigator.pop(context);
+              Navigator.pushNamed(context, '/data_visualization');
+            },
+          ),
+          ListTile(
             leading: const Icon(Icons.settings),
             title: const Text('Setting'),
             onTap: () {
