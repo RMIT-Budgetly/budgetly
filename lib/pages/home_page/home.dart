@@ -366,6 +366,10 @@ class _FinancialStatusCardState extends State<FinancialStatusCard> {
           0,
           (previousValue, element) => previousValue + element.amount!,
         );
+        // totalAmount += debts.fold<double>(
+        //   0,
+        //   (previousValue, element) => previousValue + element.amount!,
+        // );
         return totalAmount;
       },
     ).listen((totalAmount) {
