@@ -282,13 +282,21 @@ class _HomePageState extends State<HomePage> {
   NavigationBar navigationBar(BuildContext context) {
     return NavigationBar(
       destinations: [
-        const NavigationDestination(
-          icon: Icon(Icons.home),
+        NavigationDestination(
+          icon: IconButton(
+            icon: const Icon(Icons.home),
+            onPressed: () {},
+          ),
           label: 'Home',
         ),
-        const NavigationDestination(
-          icon: Icon(Icons.calendar_today_outlined),
-          label: 'Calendar',
+        NavigationDestination(
+          icon: IconButton(
+            icon: const Icon(Icons.pie_chart),
+            onPressed: () {
+              Navigator.pushNamed(context, '/data_visualization');
+            },
+          ),
+          label: 'Chart',
         ),
         NavigationDestination(
           icon: IconButton(
@@ -304,12 +312,18 @@ class _HomePageState extends State<HomePage> {
           ),
           label: 'Add',
         ),
-        const NavigationDestination(
-          icon: Icon(Icons.wallet),
-          label: 'Wallet',
+        NavigationDestination(
+          icon: IconButton(
+            icon: const Icon(Icons.history),
+            onPressed: () {},
+          ),
+          label: 'History',
         ),
-        const NavigationDestination(
-          icon: Icon(Icons.perm_identity),
+        NavigationDestination(
+          icon: IconButton(
+            icon: const Icon(Icons.perm_identity),
+            onPressed: () {},
+          ),
           label: 'Profile',
         ),
       ],
