@@ -14,12 +14,13 @@ enum Priority {
 
 class Plan {
   Plan({
+    required this.id,
     required this.taskName,
     required this.budget,
     required this.date,
     required this.category,
     required this.priority,
-  }) : id = uuid.v4();
+  });
 
   final String id;
   final String taskName;

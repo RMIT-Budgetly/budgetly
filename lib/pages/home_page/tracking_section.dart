@@ -5,7 +5,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:personal_finance/models/expense.dart';
-import 'package:personal_finance/models/goalModel.dart';
+import 'package:personal_finance/models/goal_model.dart';
 import 'package:personal_finance/models/plan.dart';
 import 'package:personal_finance/pages/goals/goal-item-detail.dart';
 
@@ -39,6 +39,10 @@ class _TrackingSectionState extends State<TrackingSection> {
       Navigator.pushNamed(context, '/goals');
     }
 
+    void handleViewAllPlan() {
+      Navigator.pushNamed(context, '/plans');
+    }
+
     return Padding(
       padding: const EdgeInsets.only(bottom: 16, left: 8, right: 8),
       child: Column(
@@ -55,6 +59,8 @@ class _TrackingSectionState extends State<TrackingSection> {
                 onPressed: () {
                   if (widget.sectionName == "Saving Goal") {
                     handleViewAllGoals();
+                  } else {
+                    handleViewAllPlan();
                   }
                 },
                 child: const Text(

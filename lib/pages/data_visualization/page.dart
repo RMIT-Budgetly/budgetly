@@ -46,14 +46,6 @@ class _DataVisualizationPageState extends State<DataVisualizationPage> {
     });
   }
 
-  // Map model: Category: Expense
-  final Map<String, double> testData = {
-    'food': 215,
-    'transport': 60,
-    'entertainment': 147,
-    'others': 65,
-  };
-
   // Get all values from the map and sum them up
   double getTotal(Map<dynamic, double> expenseData) {
     double total = 0;

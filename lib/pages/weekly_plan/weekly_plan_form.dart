@@ -63,23 +63,16 @@ class WeeklyPlanFormState extends State<WeeklyPlanForm> {
   void onSubmit() {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
-      var a = Plan(
-        taskName: _inputTaskName,
-        budget: double.tryParse(_inputBudget)!,
-        date: _selectedDate!,
-        category: _selectedCategory!,
-        priority: _selectedPriority!,
-      );
       FirebaseFirestore.instance
           .collection('users')
           .doc(user!.uid)
           .collection('plans')
           .add({
-        'productName': a.taskName,
-        'price': a.budget,
-        'date': a.date,
-        'category': a.category.name,
-        'priority': a.priority.name,
+        'productName': _inputTaskName,
+        'price': double.tryParse(_inputBudget)!,
+        'date': _selectedDate!,
+        'category': _selectedCategory!,
+        'priority': _selectedPriority!,
       });
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(

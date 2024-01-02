@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:personal_finance/models/goalModel.dart';
+import 'package:personal_finance/models/goal_model.dart';
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:personal_finance/pages/goals/goal-item-detail.dart';

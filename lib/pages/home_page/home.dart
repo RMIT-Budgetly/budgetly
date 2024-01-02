@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:personal_finance/api/debt-api.dart';
-import 'package:personal_finance/api/expense-api.dart';
-import 'package:personal_finance/api/income-api.dart';
+import 'package:personal_finance/api/debt_api.dart';
+import 'package:personal_finance/api/expense_api.dart';
+import 'package:personal_finance/api/income_api.dart';
 import 'package:personal_finance/components/side_bar.dart';
 import 'package:personal_finance/components/tracking_selection.dart';
 import 'package:personal_finance/models/expense.dart';

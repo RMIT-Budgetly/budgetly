@@ -7,6 +7,7 @@ import 'package:personal_finance/pages/data_visualization/page.dart';
 import 'package:personal_finance/pages/user_authentication/auth_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:personal_finance/pages/user_authentication/splash.dart';
+import 'package:personal_finance/pages/weekly_plan/view_plan.dart';
 import 'firebase_options.dart';
 import 'package:personal_finance/pages/home_page/home.dart';
 import 'package:personal_finance/pages/weekly_plan/weekly_plan_form.dart';
@@ -51,7 +52,8 @@ class MyApp extends StatelessWidget {
         '/add_goal': (context) => AddSavingGoalScreen(),
         '/weekly_plan_form': (context) => const WeeklyPlanForm(),
         '/goals': (context) => const Goal(),
-        '/data_visualization': (context) => DataVisualizationPage(),
+        '/plans': (context) => const ViewPlan(),
+        '/data_visualization': (context) => const DataVisualizationPage(),
       },
     );
   }
