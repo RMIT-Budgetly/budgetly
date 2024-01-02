@@ -1,7 +1,23 @@
 // ignore_for_file: unused_field, unused_element
 
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:personal_finance/models/expense.dart';
+import 'package:personal_finance/models/goalModel.dart';
+import 'package:personal_finance/models/plan.dart';
+import 'package:personal_finance/pages/goals/goal-item-detail.dart';
+
+Color getRandomColor() {
+  final random = Random();
+  return Color.fromARGB(
+    255,
+    random.nextInt(256),
+    random.nextInt(256),
+    random.nextInt(256),
+  );
+}
 
 class TrackingSection extends StatefulWidget {
   final String sectionName;
@@ -19,6 +35,10 @@ class TrackingSection extends StatefulWidget {
 class _TrackingSectionState extends State<TrackingSection> {
   @override
   Widget build(BuildContext context) {
+    void handleViewAllGoals() {
+      Navigator.pushNamed(context, '/goals');
+    }
+
     return Padding(
       padding: const EdgeInsets.only(bottom: 16, left: 8, right: 8),
       child: Column(
@@ -33,7 +53,9 @@ class _TrackingSectionState extends State<TrackingSection> {
               const Spacer(),
               TextButton(
                 onPressed: () {
-                  Navigator.pushNamed(context, '/goals');
+                  if (widget.sectionName == "Saving Goal") {
+                    handleViewAllGoals();
+                  }
                 },
                 child: const Text(
                   'View All',
@@ -57,38 +79,69 @@ class _TrackingSectionState extends State<TrackingSection> {
 }
 
 class TrackingSectionItem extends StatefulWidget {
-  final String itemTitle;
-  final double? amount;
-  final double? progress;
-  const TrackingSectionItem(
-      {super.key, required this.itemTitle, this.amount, this.progress});
-
+  const TrackingSectionItem({super.key, this.goal, this.plan});
+  final GoalModel? goal;
+  final Plan? plan;
   @override
   State<TrackingSectionItem> createState() => _TrackingSectionItemState();
 }
 
 class _TrackingSectionItemState extends State<TrackingSectionItem> {
-  double _amount = 0;
-  double _progress = 0;
-
-  void _changeAmount(double amount) {
-    setState(() {
-      _amount = amount;
-    });
-  }
-
   void _changeProgress(double progress) {
     // Check whether progress is is valid
     if (progress < 0 || progress > 1) {
       throw Exception('Progress must be between 0 and 1');
     }
-    setState(() {
-      _progress = progress;
-    });
   }
 
   @override
   Widget build(BuildContext context) {
+    final Color color = getRandomColor();
+    Widget content;
+
+    if (widget.plan != null) {
+      content = Row(
+        children: [
+          Icon(
+            Icons.flag,
+            color: widget.plan!.priority == Priority.High
+                ? Colors.red
+                : widget.plan!.priority == Priority.Medium
+                    ? Colors.yellow
+                    : Colors.green,
+          ),
+          const Spacer(),
+          widget.plan!.category.getIcon(),
+        ],
+      );
+
+      // Align(
+      //   alignment: Alignment.bottomRight,
+      //   child: widget.plan!.category.getIcon(),
+      // );
+    } else {
+      content = LinearProgressIndicator(
+        value: widget.goal!.saved / widget.goal!.price ?? 0,
+        backgroundColor: Colors.grey[300],
+        valueColor: AlwaysStoppedAnimation<Color>(color),
+      );
+    }
+
+    Widget arrow = const Icon(
+      Icons.arrow_forward_ios_rounded,
+      size: 16,
+      color: Colors.grey,
+    );
+    if (widget.plan != null) {
+      arrow = const SizedBox();
+    }
+
+    void handleViewDetailGoal() {
+      Navigator.push(context, MaterialPageRoute(builder: (context) {
+        return GoalItemDetail(model: widget.goal!, color: color);
+      }));
+    }
+
     return Material(
       color: Colors.white,
       borderRadius: BorderRadius.circular(10),
@@ -96,7 +149,11 @@ class _TrackingSectionItemState extends State<TrackingSectionItem> {
       elevation: 4,
       clipBehavior: Clip.hardEdge,
       child: InkWell(
-        onTap: () {},
+        onTap: () {
+          if (widget.goal != null) {
+            handleViewDetailGoal();
+          }
+        },
         child: Ink(
           padding: const EdgeInsets.all(12),
           child: Column(
@@ -106,37 +163,31 @@ class _TrackingSectionItemState extends State<TrackingSectionItem> {
                 children: [
                   Expanded(
                     child: Text(
-                      widget.itemTitle,
+                      widget.goal == null
+                          ? widget.plan!.taskName
+                          : widget.goal!.productName,
                       maxLines: 1,
                       style: const TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w800,
                         overflow: TextOverflow.ellipsis,
+                        color: Color(0x7F0000FF),
                       ),
                     ),
                   ),
                   // const Spacer(),
-                  const Icon(
-                    Icons.arrow_forward_ios_rounded,
-                    size: 16,
-                    color: Colors.grey,
-                  ),
+                  arrow
                 ],
               ),
               Text(
-                "\$${widget.amount}",
+                "\$${widget.goal == null ? widget.plan!.budget : widget.goal!.price}",
                 textAlign: TextAlign.left,
                 style: Theme.of(context).textTheme.titleSmall,
               ),
               const SizedBox(
                 height: 8,
               ),
-              LinearProgressIndicator(
-                value: _progress,
-                backgroundColor: Colors.grey[300],
-                valueColor:
-                    const AlwaysStoppedAnimation<Color>(Color(0xFFE0533D)),
-              ),
+              content,
             ],
           ),
         ),

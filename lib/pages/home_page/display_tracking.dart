@@ -1,6 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:personal_finance/models/category.dart';
+import 'package:personal_finance/models/goalModel.dart';
+import 'package:personal_finance/models/plan.dart';
+import 'package:personal_finance/pages/goals/goal.dart';
 import 'package:personal_finance/pages/home_page/tracking_section.dart';
 
 class DisplayTracking extends StatefulWidget {
@@ -35,11 +39,34 @@ class _DisplayTrackingState extends State<DisplayTracking> {
 
         if (document.exists) {
           Map<String, dynamic> data = document.data() as Map<String, dynamic>;
-          TrackingSectionItem sectionItem = TrackingSectionItem(
-            itemTitle: data['productName'],
-            amount: data['price'],
-          );
-          sectionItems.add(sectionItem);
+          if (path == "goals") {
+            TrackingSectionItem sectionItem = TrackingSectionItem(
+                goal: GoalModel(
+              goalId: document.id,
+              imagePath: data['imagePath'] ?? "",
+              notes: data['notes'] ?? "",
+              price: data['price'] ?? 0,
+              saved: data['saved'] ?? 0.0,
+              productName: data['productName'] ?? "",
+              timeToBuy:
+                  GoalModel.convertTimestampToDateTime(data['timeToBuy']),
+              url: data['url'] ?? "",
+            ));
+            sectionItems.add(sectionItem);
+          }
+          if (path == "plans") {
+            Plan plan = Plan(
+              taskName: data['productName'],
+              budget: data['price'],
+              date: Plan.convertTimestampToDateTime(data['date']),
+              category: categories
+                  .where((element) => element.name == data['category'])
+                  .first,
+              priority: Plan.convertStringToPriority(data['priority']),
+            );
+            TrackingSectionItem sectionItem = TrackingSectionItem(plan: plan);
+            sectionItems.add(sectionItem);
+          }
         }
       }
 

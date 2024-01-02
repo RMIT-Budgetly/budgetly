@@ -78,6 +78,11 @@ var categories = [
     type: Type.Expense,
   ),
   Category(
+    name: "Goal",
+    iconData: Icons.account_balance_wallet.codePoint,
+    type: Type.Expense,
+  ),
+  Category(
     name: "Other expenses",
     iconData: Icons.wallet.codePoint,
     type: Type.Expense,

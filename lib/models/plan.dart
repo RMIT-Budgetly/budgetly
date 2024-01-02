@@ -1,5 +1,6 @@
 // ignore_for_file: constant_identifier_names
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:personal_finance/models/category.dart';
 import 'package:uuid/uuid.dart';
 
@@ -26,4 +27,21 @@ class Plan {
   final DateTime date;
   final Category category;
   final Priority priority;
+
+  static DateTime convertTimestampToDateTime(Timestamp timestamp) {
+    return timestamp.toDate();
+  }
+
+  static Priority convertStringToPriority(String priorityString) {
+    switch (priorityString) {
+      case 'High':
+        return Priority.High;
+      case 'Medium':
+        return Priority.Medium;
+      case 'Low':
+        return Priority.Low;
+      default:
+        throw Exception('Invalid priority string: $priorityString');
+    }
+  }
 }
