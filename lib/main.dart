@@ -3,6 +3,7 @@ import 'package:personal_finance/pages/add_expenses_page/add_expenses.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:personal_finance/pages/add_goal/add_goal.dart';
 import 'package:personal_finance/pages/goals/goal.dart';
+import 'package:personal_finance/pages/data_visualization/page.dart';
 import 'package:personal_finance/pages/user_authentication/auth_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:personal_finance/pages/user_authentication/splash.dart';
@@ -50,6 +51,7 @@ class MyApp extends StatelessWidget {
         '/add_goal': (context) => AddSavingGoalScreen(),
         '/weekly_plan_form': (context) => const WeeklyPlanForm(),
         '/goals': (context) => const Goal(),
+        '/data_visualization': (context) => DataVisualizationPage(),
       },
     );
   }
