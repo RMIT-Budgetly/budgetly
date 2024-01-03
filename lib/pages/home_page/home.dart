@@ -359,36 +359,42 @@ class _FinancialStatusCardState extends State<FinancialStatusCard> {
   }
 
   void _updateValues() {
-    _expensesStream.listen((expenses) {
-      double totalIncome = 0.0;
+    Rx.combineLatest2(
+      getAllIncomes(),
+      getAllDebts(),
+      (List<Expense> incomes, List<Expense> debts) {
+        double totalIncome = 0.0;
 
-      for (Expense expense in expenses) {
-        if (expense.amount! > 0) {
-          totalIncome += expense.amount!;
+        for (Expense income in incomes) {
+          if (income.amount! > 0) {
+            totalIncome += income.amount!;
+          }
         }
-      }
 
-      widget.incomeMoneyNotifier.value = totalIncome;
-      _updateOutcome();
+        double totalDebts = 0.0;
+        for (Expense debt in debts) {
+          if (debt.amount! > 0) {
+            totalDebts += debt.amount!;
+          }
+        }
+
+        // Update the income notifier with the sum of incomes and debts
+        widget.incomeMoneyNotifier.value = totalIncome + totalDebts;
+        _updateOutcome();
+        return null;
+      },
+    ).listen((_) {
+      // Nothing to do here as the income notifier is already updated
     });
   }
 
   void _updateOutcome() {
-    Rx.combineLatest2(
-      getAllExpenses(),
-      getAllDebts(),
-      (List<Expense> expenses, List<Expense> debts) {
-        double totalAmount = expenses.fold<double>(
-          0,
-          (previousValue, element) => previousValue + element.amount!,
-        );
-        // totalAmount += debts.fold<double>(
-        //   0,
-        //   (previousValue, element) => previousValue + element.amount!,
-        // );
-        return totalAmount;
-      },
-    ).listen((totalAmount) {
+    getAllExpenses().listen((expenses) {
+      double totalAmount = expenses.fold<double>(
+        0,
+        (previousValue, element) => previousValue + element.amount!,
+      );
+
       widget.outcomeMoneyNotifier.value = totalAmount;
       widget
           .onTotalAmountChanged(widget.incomeMoneyNotifier.value - totalAmount);

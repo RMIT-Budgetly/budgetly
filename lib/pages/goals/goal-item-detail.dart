@@ -110,7 +110,7 @@ class _GoalItemDetailState extends State<GoalItemDetail> {
         'category':
             categories.where((element) => element.name == "Goal").first.name,
         'amount': number.toDouble(),
-        'description': widget.model.productName,
+        'description': "Save money for ${widget.model.productName}",
         'selectedDate': DateTime.now(),
         'reminderDate': DateTime.now(),
       });

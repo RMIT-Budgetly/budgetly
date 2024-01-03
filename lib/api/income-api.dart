@@ -18,6 +18,7 @@ Stream<List<Expense>> getAllIncomes() {
       if (document.exists) {
         Map<String, dynamic> data = document.data() as Map<String, dynamic>;
         Expense expense = Expense(
+          expenseId: doc.id,
           amount: (data["amount"] ?? 0).toDouble(),
           category: data["category"] ?? "",
           description: data["description"] ?? "",

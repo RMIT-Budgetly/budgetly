@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:personal_finance/pages/history/expense-history.dart';
+import 'package:personal_finance/pages/history/debts_history.dart';
+import 'package:personal_finance/pages/history/expense_history.dart';
+import 'package:personal_finance/pages/history/income_history.dart';
 
 class History extends StatefulWidget {
   const History({Key? key}) : super(key: key);
@@ -23,12 +25,13 @@ class _HistoryState extends State<History> {
     if (currentView == "Expenses" || currentView == null) {
       content = const ExpenseHistory();
     } else if (currentView == "Incomes") {
-      content = const Text("Incomes");
+      content = const IncomeHistory();
     } else if (currentView == "Debts") {
-      content = const Text("Debts");
+      content = const DebtHistory();
     } else {
       content = const Text("Expenses");
     }
+
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
