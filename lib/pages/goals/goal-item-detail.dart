@@ -1,9 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:personal_finance/api/goal-api.dart';
+import 'package:personal_finance/api/goal_api.dart';
 import 'package:personal_finance/models/category.dart';
-import 'package:personal_finance/models/goalModel.dart';
+import 'package:personal_finance/models/goal_model.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:personal_finance/pages/home_page/home.dart';

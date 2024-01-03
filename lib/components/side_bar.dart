@@ -2,8 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:personal_finance/api/user-detail-api.dart';
-import 'package:personal_finance/models/userDetail.dart';
+import 'package:personal_finance/api/user_detail_api.dart';
+import 'package:personal_finance/models/user_detail.dart';
 
 class SideBar extends StatefulWidget {
   const SideBar({super.key});

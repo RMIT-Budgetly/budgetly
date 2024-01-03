@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:personal_finance/models/category.dart';
-import 'package:personal_finance/models/goalModel.dart';
+import 'package:personal_finance/models/goal_model.dart';
 import 'package:personal_finance/models/plan.dart';
 import 'package:personal_finance/pages/goals/goal.dart';
 import 'package:personal_finance/pages/home_page/tracking_section.dart';
@@ -56,6 +56,7 @@ class _DisplayTrackingState extends State<DisplayTracking> {
           }
           if (path == "plans") {
             Plan plan = Plan(
+              id: document.id,
               taskName: data['productName'],
               budget: data['price'],
               date: Plan.convertTimestampToDateTime(data['date']),
