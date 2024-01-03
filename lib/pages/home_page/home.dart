@@ -118,7 +118,7 @@ class _HomePageState extends State<HomePage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Create your monthly plan',
+                      'Create your weekly plan',
                       textAlign: TextAlign.left,
                       style: TextStyle(
                         color: Color(0xFF030303),
@@ -315,7 +315,9 @@ class _HomePageState extends State<HomePage> {
         NavigationDestination(
           icon: IconButton(
             icon: const Icon(Icons.history),
-            onPressed: () {},
+            onPressed: () {
+              Navigator.pushNamed(context, '/history');
+            },
           ),
           label: 'History',
         ),
