@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:personal_finance/pages/add_goal/add_goal.dart';
 import 'package:personal_finance/pages/goals/goal.dart';
 import 'package:personal_finance/pages/data_visualization/page.dart';
+import 'package:personal_finance/pages/history/history.dart';
 import 'package:personal_finance/pages/user_authentication/auth_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:personal_finance/pages/user_authentication/splash.dart';
@@ -54,6 +55,7 @@ class MyApp extends StatelessWidget {
         '/goals': (context) => const Goal(),
         '/plans': (context) => const ViewPlan(),
         '/data_visualization': (context) => const DataVisualizationPage(),
+        '/history': (context) => const History(),
       },
     );
   }
