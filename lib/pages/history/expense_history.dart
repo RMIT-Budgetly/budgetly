@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:personal_finance/api/expense-api.dart';
+import 'package:personal_finance/api/expense_api.dart';
 import 'package:personal_finance/models/category.dart';
 import 'package:personal_finance/models/expense.dart';
 
