@@ -30,7 +30,7 @@ class AppTheme {
       contentPadding: EdgeInsets.all(16),
     ),
     disabledColor: grey2,
-    fontFamily: 'SF Pro Text',
+    fontFamily: 'Poppins',
     textTheme: const TextTheme(
       // display
       displayLarge: TextStyle(

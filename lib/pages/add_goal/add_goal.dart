@@ -31,7 +31,7 @@ class _AddSavingGoalScreenState extends State<AddSavingGoalScreen> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: const Text('Goal'),
+        title: const Text('Add New Goal'),
       ),
       body: _buildBody(),
       bottomNavigationBar: _buildNavigationBar(),
