@@ -1,5 +1,11 @@
+// Flutter framework imports
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+
+// Package imports (external libraries)
+import 'package:rxdart/rxdart.dart';
+
+// Project-relative imports
 import 'package:personal_finance/api/debt_api.dart';
 import 'package:personal_finance/api/expense_api.dart';
 import 'package:personal_finance/api/income_api.dart';
@@ -7,7 +13,7 @@ import 'package:personal_finance/components/side_bar.dart';
 import 'package:personal_finance/components/tracking_selection.dart';
 import 'package:personal_finance/models/expense.dart';
 import 'package:personal_finance/pages/home_page/display_tracking.dart';
-import 'package:rxdart/rxdart.dart';
+
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
