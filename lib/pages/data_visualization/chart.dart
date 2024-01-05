@@ -78,7 +78,7 @@ class _DataVisualizationPageState extends State<DataVisualizationPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Data Visualization'),
+        title: const Text('Monthly Expense Breakdown'),
       ),
       body: Container(
         // color: Colors.yellow[100],
