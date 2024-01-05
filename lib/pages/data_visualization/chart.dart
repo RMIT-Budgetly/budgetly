@@ -19,10 +19,16 @@ class _DataVisualizationPageState extends State<DataVisualizationPage> {
   late Map<String, Color> categoryColors;
 
   Stream<Map<String, double>> streamExpenses() {
+    var now = DateTime.now();
+    var firstDayLastMonth = DateTime(now.year, now.month - 1, 1);
+    var lastDayLastMonth = DateTime(now.year, now.month, 0);
+
     return FirebaseFirestore.instance
         .collection('users')
         .doc(user!.uid)
         .collection('expenses')
+        .where('selectedDate', isGreaterThanOrEqualTo: firstDayLastMonth)
+        .where('selectedDate', isLessThanOrEqualTo: lastDayLastMonth)
         .snapshots()
         .map((snapshot) => snapshot.docs.take(snapshot.docs.length))
         .asyncMap((docs) async {
