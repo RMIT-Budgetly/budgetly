@@ -5,7 +5,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 
 // Pages
-import 'package:personal_finance/pages/add_expenses_page/add_expenses.dart';
+import 'package:personal_finance/pages/add_expense/add_expense.dart';
 import 'package:personal_finance/pages/add_goal/add_goal.dart';
 import 'package:personal_finance/pages/goals/goal.dart';
 import 'package:personal_finance/pages/data_visualization/chart.dart';
@@ -40,6 +40,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Budgetly',
+      debugShowCheckedModeBanner: false,
       theme: AppTheme.lightTheme,
       // TODO: Implement dark mode
       home: _buildHome(),
