@@ -88,99 +88,83 @@ class _DataVisualizationPageState extends State<DataVisualizationPage> {
       appBar: AppBar(
         title: const Text('Data Visualization'),
       ),
-      body: Container(
-        // color: Colors.yellow[100],
-        padding: const EdgeInsets.all(8.0),
-        alignment: Alignment.center,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                const Text(
-                  'Total Expenses',
-                  style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
+      body: SingleChildScrollView(
+        child: Container(
+          // color: Colors.yellow[100],
+          padding: const EdgeInsets.all(8.0),
+          alignment: Alignment.center,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  const Text(
+                    'Total Expenses',
+                    style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
-                ),
-                // Current date
-                Text(
-                  // Get current date but with month in form of text (April for example)
-                  // Also add the postfix for days (st, nd, rd, th)
-                  // Example: 1st January 2024
-                  '${DateTime.now().day}${getDayOfMonthSuffix(DateTime.now().day)} ${DateFormat.MMMM().format(DateTime.now())} ${DateTime.now().year}',
-                  style: const TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w400,
+                  // Current date
+                  Text(
+                    // Get current date but with month in form of text (April for example)
+                    // Also add the postfix for days (st, nd, rd, th)
+                    // Example: 1st January 2024
+                    '${DateTime.now().day}${getDayOfMonthSuffix(DateTime.now().day)} ${DateFormat.MMMM().format(DateTime.now())} ${DateTime.now().year}',
+                    style: const TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w400,
+                    ),
                   ),
-                ),
-              ],
-            ),
-            // SizedBox.square(
-            //   dimension: MediaQuery.of(context).size.width * 0.8,
-            //   child: Padding(
-            //     padding: const EdgeInsets.all(16.0),
-            //     child: displayPieChart(total, testData),
-            //   ),
-            // ),
-            // SingleChildScrollView(
-            //   child: Column(
-            //       children: testData.entries
-            //           .map((e) => Container(
-            //                 margin: const EdgeInsets.symmetric(vertical: 6.0),
-            //                 child: expenseItem(e.key, e.value),
-            //               ))
-            //           .toList()),
-            // ),
-            StreamBuilder<Map<String, double>>(
-              stream: streamExpenses(),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Padding(
-                    // Loading data process
-                    padding: const EdgeInsets.symmetric(vertical: 30),
-                    child: Center(
-                      child: SizedBox(
-                        width: 30,
-                        height: 30,
-                        child: CircularProgressIndicator(
-                          strokeWidth: 2, // Set the stroke width
-                          valueColor: AlwaysStoppedAnimation<Color>(
-                            Theme.of(context)
-                                .primaryColor, // Set your desired color
+                ],
+              ),
+              StreamBuilder<Map<String, double>>(
+                stream: streamExpenses(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Padding(
+                      // Loading data process
+                      padding: const EdgeInsets.symmetric(vertical: 30),
+                      child: Center(
+                        child: SizedBox(
+                          width: 30,
+                          height: 30,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2, // Set the stroke width
+                            valueColor: AlwaysStoppedAnimation<Color>(
+                              Theme.of(context)
+                                  .primaryColor, // Set your desired color
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                  );
-                } else if (snapshot.hasError) {
-                  return Text('Error: ${snapshot.error}');
-                } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                  return const Text('No data available');
-                } else {
-                  // Display your UI using the fetched data
-                  final Map<String, double> expenseData = snapshot.data!;
-                  double total = getTotal(expenseData);
-                  categoryColors = expenseData.entries
-                      .map((e) => MapEntry(e.key, getNextColor()))
-                      .fold<Map<String, Color>>({}, (prev, element) {
-                    prev[element.key] = element.value;
-                    return prev;
-                  });
+                    );
+                  } else if (snapshot.hasError) {
+                    return Text('Error: ${snapshot.error}');
+                  } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                    return const Text('No data available');
+                  } else {
+                    // Display your UI using the fetched data
+                    final Map<String, double> expenseData = snapshot.data!;
+                    double total = getTotal(expenseData);
+                    categoryColors = expenseData.entries
+                        .map((e) => MapEntry(e.key, getNextColor()))
+                        .fold<Map<String, Color>>({}, (prev, element) {
+                      prev[element.key] = element.value;
+                      return prev;
+                    });
 
-                  return Column(
-                    children: [
-                      SizedBox.square(
-                        dimension: MediaQuery.of(context).size.width * 0.8,
-                        child: Padding(
-                          padding: const EdgeInsets.all(16.0),
-                          child: displayPieChart(total, expenseData),
+                    return Column(
+                      children: [
+                        SizedBox.square(
+                          dimension: MediaQuery.of(context).size.width * 0.8,
+                          child: Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: displayPieChart(total, expenseData),
+                          ),
                         ),
-                      ),
-                      SingleChildScrollView(
-                        child: Column(
+                        Column(
                             children: expenseData.entries
                                 .map((e) => Container(
                                       margin: const EdgeInsets.symmetric(
@@ -188,13 +172,13 @@ class _DataVisualizationPageState extends State<DataVisualizationPage> {
                                       child: expenseItem(e.key, e.value),
                                     ))
                                 .toList()),
-                      ),
-                    ],
-                  );
-                }
-              },
-            )
-          ],
+                      ],
+                    );
+                  }
+                },
+              )
+            ],
+          ),
         ),
       ),
     );
