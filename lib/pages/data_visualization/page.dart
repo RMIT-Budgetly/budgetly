@@ -79,6 +79,7 @@ class _DataVisualizationPageState extends State<DataVisualizationPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Data Visualization'),
+        centerTitle: true,
       ),
       body: Container(
         // color: Colors.yellow[100],

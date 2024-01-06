@@ -46,23 +46,22 @@ class _SideBarState extends State<SideBar> {
               padding: EdgeInsets.zero,
               children: [
                 UserAccountsDrawerHeader(
-                    currentAccountPicture: CircleAvatar(
-                      // backgroundImage: AssetImage('assets/images/bocchi.jpg'),
-                      child: ClipOval(
-                        child: Image.network(
-                          userDetail.image_url,
-                          width: 90,
-                          height: 90,
-                          fit: BoxFit.cover,
+                    currentAccountPicture: GestureDetector(
+                      onTap: () {
+                        Navigator.pushNamed(context, '/profile');
+                      },
+                      child: CircleAvatar(
+                        child: ClipOval(
+                          child: Image.network(
+                            userDetail.image_url,
+                            width: 90,
+                            height: 90,
+                            fit: BoxFit.cover,
+                          ),
                         ),
                       ),
                     ),
                     decoration: const BoxDecoration(
-                      // gradient: LinearGradient(
-                      //     begin: Alignment.topCenter,
-                      //     end: Alignment.bottomCenter,
-                      //     stops: [0, 0.6],
-                      //     colors: [Colors.transparent, Colors.black]),
                       image: DecorationImage(
                           image: NetworkImage(
                               'https://img.freepik.com/premium-photo/green-plant-with-dark-background_889227-5623.jpg'),
