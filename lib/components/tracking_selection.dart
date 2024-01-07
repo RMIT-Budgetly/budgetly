@@ -12,7 +12,7 @@ class TrackingSelection extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(
             vertical: 20, horizontal: 16), // Updated padding
-        margin: const EdgeInsets.all(16),
+        margin: const EdgeInsets.all(10),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -23,7 +23,7 @@ class TrackingSelection extends StatelessWidget {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 15),
             createButton(
               "assets/icons/transactions.svg",
               'Transaction',
@@ -31,7 +31,7 @@ class TrackingSelection extends StatelessWidget {
                 Navigator.pushNamed(context, '/add_expenses');
               },
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 15),
             createButton(
               "assets/icons/weekly_plan.svg",
               'Weekly Plan',
@@ -39,7 +39,7 @@ class TrackingSelection extends StatelessWidget {
                 Navigator.pushNamed(context, '/weekly_plan_form');
               },
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 15),
             createButton(
               "assets/icons/saving_goal.svg",
               'Saving Goal',
