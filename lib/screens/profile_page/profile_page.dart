@@ -15,7 +15,7 @@ class _ProfilePageState extends State<ProfilePage> {
     return Scaffold(
       backgroundColor: const Color(0xFFF8F9F9),
       appBar: AppBar(
-        title: const Text('Profile Page'),
+        title: const Text('Profile'),
         centerTitle: true,
       ),
       body: SingleChildScrollView(
