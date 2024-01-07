@@ -7,7 +7,7 @@ import "package:personal_finance/components/reminder_button.dart";
 import "package:personal_finance/components/select_photo.dart";
 import "package:personal_finance/components/submit_button.dart";
 import 'package:personal_finance/models/category.dart';
-import 'package:personal_finance/screens/add_expense/category_picker.dart';
+import 'package:personal_finance/widgets/category_picker.dart';
 
 final _firebase = FirebaseAuth.instance;
 

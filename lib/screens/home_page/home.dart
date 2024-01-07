@@ -6,9 +6,9 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:rxdart/rxdart.dart';
 
 // Project-relative imports
-import 'package:personal_finance/services/debt_api.dart';
-import 'package:personal_finance/services/expense_api.dart';
-import 'package:personal_finance/services/income_api.dart';
+import 'package:personal_finance/services/debt_service.dart';
+import 'package:personal_finance/services/expense_service.dart';
+import 'package:personal_finance/services/income_service.dart';
 import 'package:personal_finance/components/side_bar.dart';
 import 'package:personal_finance/components/tracking_selection.dart';
 import 'package:personal_finance/models/expense.dart';

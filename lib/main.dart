@@ -5,17 +5,17 @@ import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 
 // Pages
-import 'package:personal_finance/screens/add_expense/add_expense.dart';
-import 'package:personal_finance/screens/add_goal/add_goal.dart';
-import 'package:personal_finance/screens/goals/goal.dart';
-import 'package:personal_finance/screens/data_visualization/page.dart';
-import 'package:personal_finance/screens/history/history.dart';
-import 'package:personal_finance/screens/profile/page.dart';
-import 'package:personal_finance/screens/user_authentication/auth_screen.dart';
-import 'package:personal_finance/screens/user_authentication/splash.dart';
-import 'package:personal_finance/screens/weekly_plan/view_plan.dart';
+import 'package:personal_finance/screens/add_expense_page/add_expense_page.dart';
+import 'package:personal_finance/screens/add_goal_page/add_goal_page.dart';
+import 'package:personal_finance/screens/add_goal_page/goal.dart';
+import 'package:personal_finance/screens/data_visualization/monthly_breakdown.dart';
+import 'package:personal_finance/screens/history_pages/history_page.dart';
+import 'package:personal_finance/screens/profile_page/profile_page.dart';
+import 'package:personal_finance/screens/login_page/login_page.dart';
+import 'package:personal_finance/screens/login_page/splash_screen.dart';
+import 'package:personal_finance/screens/weekly_plan_page/view_plan.dart';
 import 'package:personal_finance/screens/home_page/home.dart';
-import 'package:personal_finance/screens/weekly_plan/weekly_plan_form.dart';
+import 'package:personal_finance/screens/weekly_plan_page/weekly_plan_form.dart';
 
 // Utilities
 import 'package:personal_finance/utils/app_theme.dart';

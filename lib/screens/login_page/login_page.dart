@@ -6,7 +6,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:personal_finance/widgets/user_image_picker.dart';
+import 'package:personal_finance/widgets/image_picker.dart';
 
 final _firebase = FirebaseAuth.instance;
 final _googleSignIn = GoogleSignIn();
