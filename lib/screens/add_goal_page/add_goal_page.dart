@@ -34,7 +34,6 @@ class _AddSavingGoalScreenState extends State<AddSavingGoalScreen> {
         title: const Text('Add New Goal'),
       ),
       body: _buildBody(),
-      bottomNavigationBar: _buildNavigationBar(),
     );
   }
 
@@ -69,7 +68,15 @@ class _AddSavingGoalScreenState extends State<AddSavingGoalScreen> {
       controller: controller,
       decoration: InputDecoration(
         labelText: label,
-        prefixIcon: Icon(icon),
+        prefixIcon: Icon(
+          icon,
+          color: const Color.fromARGB(90, 0, 0, 0),
+        ),
+        labelStyle: const TextStyle(
+            fontWeight: FontWeight.w500,
+            fontStyle: FontStyle.italic,
+            fontSize: 16,
+            color: Color.fromARGB(90, 0, 0, 0)),
       ),
     );
   }
@@ -96,7 +103,15 @@ class _AddSavingGoalScreenState extends State<AddSavingGoalScreen> {
           controller: timeToBuyController,
           decoration: const InputDecoration(
             labelText: 'Estimated time to buy',
-            prefixIcon: Icon(Icons.calendar_today),
+            labelStyle: TextStyle(
+                fontWeight: FontWeight.w500,
+                fontStyle: FontStyle.italic,
+                fontSize: 16,
+                color: Color.fromARGB(90, 0, 0, 0)),
+            prefixIcon: Icon(
+              Icons.calendar_today,
+              color: Color.fromARGB(90, 0, 0, 0),
+            ),
           ),
         ),
       ),
@@ -146,20 +161,6 @@ class _AddSavingGoalScreenState extends State<AddSavingGoalScreen> {
           ),
         ),
       ),
-    );
-  }
-
-  NavigationBar _buildNavigationBar() {
-    return NavigationBar(
-      destinations: const [
-        NavigationDestination(icon: Icon(Icons.home), label: 'Home'),
-        NavigationDestination(
-            icon: Icon(Icons.calendar_today_outlined), label: 'Calendar'),
-        NavigationDestination(icon: Icon(Icons.add_circle), label: 'Add'),
-        NavigationDestination(icon: Icon(Icons.wallet), label: 'Wallet'),
-        NavigationDestination(
-            icon: Icon(Icons.perm_identity), label: 'Profile'),
-      ],
     );
   }
 

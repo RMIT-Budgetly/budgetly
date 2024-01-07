@@ -93,7 +93,9 @@ class _HomePageState extends State<HomePage> {
                 collectionName: "goals",
                 title: "Saving Goal",
               ),
-              const DisplayTracking(collectionName: "plans", title: "Plan"),
+              const DisplayTracking(
+                collectionName: "plans", 
+                title: "Plan"),
             ],
           ),
         ),
@@ -306,7 +308,7 @@ class _HomePageState extends State<HomePage> {
               size: selectedIndex == 0 ? 35.0 : 30.0,
               color: selectedIndex == 0
                   ? Theme.of(context).primaryColor
-                  : Colors.grey),
+                  : Colors.white),
           selectedIcon: Icon(Icons.home,
               size: 35.0, color: Theme.of(context).primaryColor),
           label: '',
