@@ -1,9 +1,12 @@
+// Dart built-in libraries
 import 'dart:io';
+
+// Third-party package imports (external libraries)
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:path/path.dart' as path;
 
 final _firebase = FirebaseAuth.instance;
@@ -28,7 +31,7 @@ class _AddSavingGoalScreenState extends State<AddSavingGoalScreen> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: const Text('Goal'),
+        title: const Text('Add New Goal'),
       ),
       body: _buildBody(),
       bottomNavigationBar: _buildNavigationBar(),
@@ -197,5 +200,3 @@ class _AddSavingGoalScreenState extends State<AddSavingGoalScreen> {
     });
   }
 }
-
-void main() => runApp(MaterialApp(home: AddSavingGoalScreen()));

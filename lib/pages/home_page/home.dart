@@ -1,5 +1,11 @@
+// Flutter framework imports
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+
+// Package imports (external libraries)
+import 'package:rxdart/rxdart.dart';
+
+// Project-relative imports
 import 'package:personal_finance/api/debt_api.dart';
 import 'package:personal_finance/api/expense_api.dart';
 import 'package:personal_finance/api/income_api.dart';
@@ -7,7 +13,6 @@ import 'package:personal_finance/components/side_bar.dart';
 import 'package:personal_finance/components/tracking_selection.dart';
 import 'package:personal_finance/models/expense.dart';
 import 'package:personal_finance/pages/home_page/display_tracking.dart';
-import 'package:rxdart/rxdart.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -280,56 +285,118 @@ class _HomePageState extends State<HomePage> {
   }
 
   NavigationBar navigationBar(BuildContext context) {
+    // Determine the current route to manage the active state of NavigationBar items.
+    String currentRoute = ModalRoute.of(context)?.settings.name ?? '/';
+
+    // Define the selected index based on the current route.
+    int selectedIndex = _getSelectedIndex(currentRoute);
+
     return NavigationBar(
+      // Use NavigationBarTheme to customize the appearance of the NavigationBar.
+      backgroundColor: Colors.white, // Set a background color
+      height: 60.0, // Adjust the height for better touch targets
+      selectedIndex: selectedIndex, // Set the selected index
+      onDestinationSelected: (int index) {
+        // Call a function to handle navigation when an item is selected.
+        _onItemTapped(index, context);
+      },
       destinations: [
         NavigationDestination(
-          icon: IconButton(
-            icon: const Icon(Icons.home),
-            onPressed: () {},
-          ),
-          label: 'Home',
+          icon: Icon(Icons.home,
+              size: selectedIndex == 0 ? 35.0 : 30.0,
+              color: selectedIndex == 0
+                  ? Theme.of(context).primaryColor
+                  : Colors.grey),
+          selectedIcon: Icon(Icons.home,
+              size: 35.0, color: Theme.of(context).primaryColor),
+          label: '',
         ),
         NavigationDestination(
-          icon: IconButton(
-            icon: const Icon(Icons.pie_chart),
-            onPressed: () {
-              Navigator.pushNamed(context, '/data_visualization');
-            },
-          ),
-          label: 'Chart',
+          icon: Icon(Icons.pie_chart,
+              size: selectedIndex == 1 ? 35.0 : 30.0,
+              color: selectedIndex == 1
+                  ? Theme.of(context).primaryColor
+                  : Colors.grey),
+          selectedIcon: Icon(Icons.pie_chart,
+              size: 35.0, color: Theme.of(context).primaryColor),
+          label: '',
         ),
         NavigationDestination(
-          icon: IconButton(
-            icon: const Icon(Icons.add_circle),
-            onPressed: () {
-              // Navigator.pushNamed(context, '/add_expenses');
-              showDialog(
-                  context: context,
-                  builder: (context) {
-                    return const TrackingSelection();
-                  });
-            },
-          ),
-          label: 'Add',
+          icon: Icon(Icons.add_circle_outline,
+              size: selectedIndex == 2 ? 35.0 : 30.0,
+              color: selectedIndex == 2
+                  ? Theme.of(context).primaryColor
+                  : Colors.grey),
+          selectedIcon: Icon(Icons.add_circle,
+              size: 35.0, color: Theme.of(context).primaryColor),
+          label: '',
         ),
         NavigationDestination(
-          icon: IconButton(
-            icon: const Icon(Icons.history),
-            onPressed: () {
-              Navigator.pushNamed(context, '/history');
-            },
-          ),
-          label: 'History',
+          icon: Icon(Icons.history,
+              size: selectedIndex == 3 ? 35.0 : 30.0,
+              color: selectedIndex == 3
+                  ? Theme.of(context).primaryColor
+                  : Colors.grey),
+          selectedIcon: Icon(Icons.history,
+              size: 35.0, color: Theme.of(context).primaryColor),
+          label: '',
         ),
         NavigationDestination(
-          icon: IconButton(
-            icon: const Icon(Icons.perm_identity),
-            onPressed: () {},
-          ),
-          label: 'Profile',
+          icon: Icon(Icons.perm_identity,
+              size: selectedIndex == 4 ? 35.0 : 30.0,
+              color: selectedIndex == 4
+                  ? Theme.of(context).primaryColor
+                  : Colors.grey),
+          selectedIcon: Icon(Icons.perm_identity,
+              size: 35.0, color: Theme.of(context).primaryColor),
+          label: '',
         ),
       ],
     );
+  }
+
+// This function returns the index of the selected navigation item based on the route name.
+  int _getSelectedIndex(String currentRoute) {
+    switch (currentRoute) {
+      case '/home':
+        return 0;
+      case '/data_visualization':
+        return 1;
+      case '/add':
+        return 2;
+      case '/history':
+        return 3;
+      case '/profile':
+        return 4;
+      default:
+        return 0; // Default to home if the route is unknown
+    }
+  }
+
+// This function handles navigation when a NavigationBar item is tapped.
+  void _onItemTapped(int index, BuildContext context) {
+    switch (index) {
+      case 0:
+        Navigator.pushNamed(context, '/home');
+        break;
+      case 1:
+        Navigator.pushNamed(context, '/data_visualization');
+        break;
+      case 2:
+        showDialog(
+          context: context,
+          builder: (context) {
+            return const TrackingSelection();
+          },
+        );
+        break;
+      case 3:
+        Navigator.pushNamed(context, '/history');
+        break;
+      case 4:
+        // Add navigation logic for the profile
+        break;
+    }
   }
 }
 
