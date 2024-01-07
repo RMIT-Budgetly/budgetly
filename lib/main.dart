@@ -8,7 +8,7 @@ import 'firebase_options.dart';
 import 'package:personal_finance/pages/add_expense/add_expense.dart';
 import 'package:personal_finance/pages/add_goal/add_goal.dart';
 import 'package:personal_finance/pages/goals/goal.dart';
-import 'package:personal_finance/pages/data_visualization/chart.dart';
+import 'package:personal_finance/pages/data_visualization/page.dart';
 import 'package:personal_finance/pages/history/history.dart';
 import 'package:personal_finance/pages/user_authentication/auth_screen.dart';
 import 'package:personal_finance/pages/user_authentication/splash.dart';
