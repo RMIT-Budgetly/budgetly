@@ -394,7 +394,7 @@ class _HomePageState extends State<HomePage> {
         Navigator.pushNamed(context, '/history');
         break;
       case 4:
-        // Add navigation logic for the profile
+        Navigator.pushNamed(context, '/profile_page');
         break;
     }
   }
