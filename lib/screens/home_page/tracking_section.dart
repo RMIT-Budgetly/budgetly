@@ -7,7 +7,7 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:personal_finance/models/expense.dart';
 import 'package:personal_finance/models/goal_model.dart';
 import 'package:personal_finance/models/plan.dart';
-import 'package:personal_finance/pages/goals/goal-item-detail.dart';
+import 'package:personal_finance/screens/goals/goal-item-detail.dart';
 
 Color getRandomColor() {
   final random = Random();

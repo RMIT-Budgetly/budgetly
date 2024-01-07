@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:personal_finance/api/user_detail_api.dart';
+import 'package:personal_finance/services/user_detail_api.dart';
 import 'package:personal_finance/models/user_detail.dart';
 
 class ProfilePage extends StatefulWidget {

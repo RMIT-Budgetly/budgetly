@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:personal_finance/pages/history/debts_history.dart';
-import 'package:personal_finance/pages/history/expense_history.dart';
-import 'package:personal_finance/pages/history/income_history.dart';
+import 'package:personal_finance/screens/history/debts_history.dart';
+import 'package:personal_finance/screens/history/expense_history.dart';
+import 'package:personal_finance/screens/history/income_history.dart';
 
 class History extends StatefulWidget {
   const History({Key? key}) : super(key: key);

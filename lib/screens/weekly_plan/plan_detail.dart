@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:personal_finance/api/plan_api.dart';
+import 'package:personal_finance/services/plan_api.dart';
 import 'package:personal_finance/models/plan.dart';
 
 final user = FirebaseAuth.instance.currentUser;

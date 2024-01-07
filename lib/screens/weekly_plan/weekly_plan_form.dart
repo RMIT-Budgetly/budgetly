@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:personal_finance/models/category.dart';
-import 'package:personal_finance/pages/weekly_plan/category_picker.dart';
+import 'package:personal_finance/screens/weekly_plan/category_picker.dart';
 import 'package:personal_finance/models/plan.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
