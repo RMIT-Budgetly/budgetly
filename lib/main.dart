@@ -10,6 +10,7 @@ import 'package:personal_finance/pages/add_goal/add_goal.dart';
 import 'package:personal_finance/pages/goals/goal.dart';
 import 'package:personal_finance/pages/data_visualization/page.dart';
 import 'package:personal_finance/pages/history/history.dart';
+import 'package:personal_finance/pages/profile/page.dart';
 import 'package:personal_finance/pages/user_authentication/auth_screen.dart';
 import 'package:personal_finance/pages/user_authentication/splash.dart';
 import 'package:personal_finance/pages/weekly_plan/view_plan.dart';
@@ -54,6 +55,7 @@ class MyApp extends StatelessWidget {
         '/plans': (context) => const ViewPlan(),
         '/data_visualization': (context) => const DataVisualizationPage(),
         '/history': (context) => const History(),
+        '/profile': (context) => const ProfilePage(),
       },
     );
   }
