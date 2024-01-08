@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:personal_finance/services/income_service.dart';
-import 'package:personal_finance/models/category.dart';
-import 'package:personal_finance/models/expense.dart';
+import 'package:personal_finance/models/category_model.dart';
+import 'package:personal_finance/models/expense_model.dart';
 
 class IncomeHistory extends StatefulWidget {
   const IncomeHistory({Key? key}) : super(key: key);

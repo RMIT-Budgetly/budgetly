@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:personal_finance/models/category.dart';
+import 'package:personal_finance/models/category_model.dart';
 
 class CategoryPicker extends StatefulWidget {
   final void Function(Category selectedCategory) onCategorySelected;

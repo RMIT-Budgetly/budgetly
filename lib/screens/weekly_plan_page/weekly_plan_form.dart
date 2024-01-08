@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:personal_finance/models/category.dart';
+import 'package:personal_finance/models/category_model.dart';
 import 'package:personal_finance/widgets/category_picker.dart';
-import 'package:personal_finance/models/plan.dart';
+import 'package:personal_finance/models/plan_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 

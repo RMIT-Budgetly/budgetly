@@ -4,10 +4,10 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
-import 'package:personal_finance/models/expense.dart';
+import 'package:personal_finance/models/expense_model.dart';
 import 'package:personal_finance/models/goal_model.dart';
-import 'package:personal_finance/models/plan.dart';
-import 'package:personal_finance/screens/add_goal_page/goal-item-detail.dart';
+import 'package:personal_finance/models/plan_model.dart';
+import 'package:personal_finance/screens/add_goal_page/goal_item_detail.dart';
 
 Color getRandomColor() {
   final random = Random();

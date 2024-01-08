@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:personal_finance/services/goal_service.dart';
 import 'package:personal_finance/models/goal_model.dart';
-import 'package:personal_finance/screens/add_goal_page/goal-item.dart';
+import 'package:personal_finance/screens/add_goal_page/goal_item.dart';
 
 class Goal extends StatefulWidget {
   const Goal({super.key});

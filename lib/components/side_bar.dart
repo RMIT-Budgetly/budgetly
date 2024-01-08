@@ -3,7 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:personal_finance/services/user_service.dart';
-import 'package:personal_finance/models/user_detail.dart';
+import 'package:personal_finance/models/user_model.dart';
 
 class SideBar extends StatefulWidget {
   const SideBar({super.key});

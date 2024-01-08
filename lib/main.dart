@@ -14,7 +14,7 @@ import 'package:personal_finance/screens/profile_page/profile_page.dart';
 import 'package:personal_finance/screens/login_page/login_page.dart';
 import 'package:personal_finance/screens/login_page/splash_screen.dart';
 import 'package:personal_finance/screens/weekly_plan_page/view_plan.dart';
-import 'package:personal_finance/screens/home_page/home.dart';
+import 'package:personal_finance/screens/home_page/home_page.dart';
 import 'package:personal_finance/screens/weekly_plan_page/weekly_plan_form.dart';
 
 // Utilities

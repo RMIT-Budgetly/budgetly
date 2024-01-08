@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:personal_finance/services/user_service.dart';
-import 'package:personal_finance/models/user_detail.dart';
+import 'package:personal_finance/models/user_model.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});

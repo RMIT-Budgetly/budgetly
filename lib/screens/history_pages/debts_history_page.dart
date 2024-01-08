@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:personal_finance/services/debt_service.dart';
-import 'package:personal_finance/models/category.dart';
-import 'package:personal_finance/models/expense.dart';
-import 'package:personal_finance/screens/home_page/home.dart';
+import 'package:personal_finance/models/category_model.dart';
+import 'package:personal_finance/models/expense_model.dart';
+import 'package:personal_finance/screens/home_page/home_page.dart';
 
 class DebtHistory extends StatefulWidget {
   const DebtHistory({Key? key}) : super(key: key);

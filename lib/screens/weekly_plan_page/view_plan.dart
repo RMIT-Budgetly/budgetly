@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:personal_finance/services/plan_service.dart';
-import 'package:personal_finance/models/plan.dart';
+import 'package:personal_finance/models/plan_model.dart';
 import 'package:personal_finance/screens/weekly_plan_page/plan_detail.dart';
 
 class ViewPlan extends StatelessWidget {

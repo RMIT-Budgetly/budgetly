@@ -4,7 +4,7 @@ import "package:flutter/material.dart";
 import 'package:personal_finance/screens/add_expense_page/widgets/input_field.dart';
 import "package:personal_finance/components/select_photo.dart";
 import "package:personal_finance/components/submit_button.dart";
-import 'package:personal_finance/models/category.dart';
+import 'package:personal_finance/models/category_model.dart';
 import 'package:personal_finance/widgets/category_picker.dart';
 import 'package:personal_finance/screens/add_expense_page/widgets/date_time_picker.dart';
 

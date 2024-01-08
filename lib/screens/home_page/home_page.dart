@@ -11,7 +11,7 @@ import 'package:personal_finance/services/expense_service.dart';
 import 'package:personal_finance/services/income_service.dart';
 import 'package:personal_finance/components/side_bar.dart';
 import 'package:personal_finance/components/tracking_selection.dart';
-import 'package:personal_finance/models/expense.dart';
+import 'package:personal_finance/models/expense_model.dart';
 import 'package:personal_finance/screens/home_page/display_tracking.dart';
 
 class HomePage extends StatefulWidget {
