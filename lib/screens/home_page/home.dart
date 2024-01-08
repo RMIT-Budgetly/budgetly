@@ -58,10 +58,7 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       drawer: const SideBar(),
       appBar: AppBar(
-        title: const Text(
-          'Dashboard',
-          style: TextStyle(fontWeight: FontWeight.bold),
-        ),
+        title: const Text('Dashboard'),
         centerTitle: true,
         shadowColor: Theme.of(context).colorScheme.shadow,
         // leading: IconButton(
@@ -93,9 +90,7 @@ class _HomePageState extends State<HomePage> {
                 collectionName: "goals",
                 title: "Saving Goal",
               ),
-              const DisplayTracking(
-                collectionName: "plans", 
-                title: "Plan"),
+              const DisplayTracking(collectionName: "plans", title: "Plan"),
             ],
           ),
         ),

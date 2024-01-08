@@ -1,57 +1,44 @@
-// ignore_for_file: must_be_immutable
-
 import 'package:flutter/material.dart';
 
 class InputField extends StatelessWidget {
-  final Icon? prefixIcon;
+  Icon? prefixIcon;
   final String? hintText;
   final TextInputType? keyboardType;
   final Function()? onTap;
   final DateTime? selectedDate;
-  final TextFormField? validator;
-  void Function(String value) onSaveInputValue;
+  final String Function(String?)? validator; // Updated type for validator
+  final Function(String value) onSaveInputValue;
+
   InputField({
-    super.key,
-    this.prefixIcon,
+    Key? key,
+    Icon? prefixIcon,
     this.hintText,
     this.keyboardType,
     this.selectedDate,
-    this.validator,
+    this.validator, // Updated parameter
     this.onTap,
     required this.onSaveInputValue,
-  });
+  })  : prefixIcon = prefixIcon != null ? Icon(prefixIcon.icon, size: 20) : null,
+        super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.symmetric(vertical: 2.0, horizontal: 4.0),
       child: Row(children: [
-        Expanded(
-          flex: 1,
-          child: Container(
-            constraints: prefixIcon == null
-                ? const BoxConstraints(
-                    minWidth: 24,
-                    minHeight: 24,
-                  )
-                : const BoxConstraints(
-                    minWidth: 24,
-                    minHeight: 24,
-                  ),
+        if (prefixIcon != null)
+          Container(
+            constraints: const BoxConstraints(
+              minWidth: 24,
+              minHeight: 24,
+            ),
             child: prefixIcon,
           ),
-        ),
         Expanded(
-          flex: 5,
           child: Container(
             margin: const EdgeInsets.symmetric(vertical: 2.0, horizontal: 8.0),
             child: TextFormField(
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Please enter the required field';
-                }
-                return null;
-              },
+              onTap: onTap,
+              validator: validator, // Directly use validator
               keyboardType: keyboardType,
               decoration: InputDecoration(
                 border: InputBorder.none,
@@ -62,9 +49,7 @@ class InputField extends StatelessWidget {
                   fontWeight: FontWeight.normal,
                 ),
               ),
-              onSaved: (value) {
-                onSaveInputValue(value!);
-              },
+              onSaved: (value) => onSaveInputValue(value!),
             ),
           ),
         ),

@@ -13,6 +13,12 @@ class SideBar extends StatefulWidget {
 }
 
 class _SideBarState extends State<SideBar> {
+  final TextStyle listItemStyle = const TextStyle(
+    fontSize: 18,
+    fontWeight: FontWeight.w500,
+    color: Colors.black,
+  );
+
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<UserDetail>(
@@ -68,11 +74,28 @@ class _SideBarState extends State<SideBar> {
                           fit: BoxFit.cover),
                       color: Color(0x7F0000FF),
                     ),
-                    accountName: Text(userDetail.username),
-                    accountEmail: Text(userDetail.email)),
+                    accountName: Text(
+                      userDetail.username,
+                      style:  const TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w800,
+                        color: Colors.white,
+                      ),
+                    ),
+                    accountEmail: Text(
+                      userDetail.email,
+                      style: const TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w400,
+                        fontStyle: FontStyle.italic,
+                        color: Colors.white,
+                      ),
+                      )
+                    ),
                 ListTile(
                   leading: const Icon(Icons.accessibility_outlined),
                   title: const Text('About Us'),
+                  titleTextStyle: listItemStyle,
                   onTap: () {
                     // Navigator.pop(context);
                     print('About Us');
@@ -81,6 +104,7 @@ class _SideBarState extends State<SideBar> {
                 ListTile(
                   leading: const Icon(Icons.tips_and_updates_rounded),
                   title: const Text('Tips'),
+                  titleTextStyle: listItemStyle,
                   onTap: () {
                     // Navigator.pop(context);
                     print('Tips');
@@ -89,6 +113,7 @@ class _SideBarState extends State<SideBar> {
                 ListTile(
                   leading: const Icon(Icons.pie_chart_outline_rounded),
                   title: const Text('Chart'),
+                  titleTextStyle: listItemStyle,
                   onTap: () {
                     // Navigator.pop(context);
                     Navigator.pushNamed(context, '/data_visualization');
@@ -97,13 +122,15 @@ class _SideBarState extends State<SideBar> {
                 ListTile(
                   leading: const Icon(Icons.settings),
                   title: const Text('Setting'),
+                  titleTextStyle: listItemStyle,
                   onTap: () {
                     // Navigator.pop(context);
                   },
                 ),
                 ListTile(
                   leading: const Icon(Icons.exit_to_app_rounded),
-                  title: const Text('Exit'),
+                  title: const Text('Logout'),
+                  titleTextStyle: listItemStyle,
                   onTap: () {
                     FirebaseAuth.instance.signOut();
                     GoogleSignIn().signOut();
