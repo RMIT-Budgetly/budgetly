@@ -67,6 +67,7 @@ class _TrackingSectionState extends State<TrackingSection> {
                   'View All',
                   style: TextStyle(
                     color: Colors.blue,
+                    fontSize: 16
                   ),
                 ),
               ),

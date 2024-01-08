@@ -58,10 +58,7 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       drawer: const SideBar(),
       appBar: AppBar(
-        title: const Text(
-          'Dashboard',
-          style: TextStyle(fontWeight: FontWeight.bold),
-        ),
+        title: const Text('Dashboard'),
         centerTitle: true,
         shadowColor: Theme.of(context).colorScheme.shadow,
         // leading: IconButton(
@@ -306,7 +303,7 @@ class _HomePageState extends State<HomePage> {
               size: selectedIndex == 0 ? 35.0 : 30.0,
               color: selectedIndex == 0
                   ? Theme.of(context).primaryColor
-                  : Colors.grey),
+                  : Colors.white),
           selectedIcon: Icon(Icons.home,
               size: 35.0, color: Theme.of(context).primaryColor),
           label: '',
@@ -394,7 +391,7 @@ class _HomePageState extends State<HomePage> {
         Navigator.pushNamed(context, '/history');
         break;
       case 4:
-        // Add navigation logic for the profile
+        Navigator.pushNamed(context, '/profile_page');
         break;
     }
   }

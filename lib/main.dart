@@ -55,7 +55,7 @@ class MyApp extends StatelessWidget {
         '/plans': (context) => const ViewPlan(),
         '/data_visualization': (context) => const DataVisualizationPage(),
         '/history': (context) => const History(),
-        '/profile': (context) => const ProfilePage(),
+        '/profile_page': (context) => const ProfilePage(),
       },
     );
   }
