@@ -4,9 +4,10 @@ import 'dart:io';
 // Third-party package imports (external libraries)
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:personal_finance/constants/colors.dart';
+import 'package:path/path.dart' as path;
 
 final _firebase = FirebaseAuth.instance;
 
@@ -38,12 +39,12 @@ class _AddSavingGoalScreenState extends State<AddSavingGoalScreen> {
 
   Widget _buildBody() {
     return SingleChildScrollView(
-      padding: const EdgeInsets.all(20.0),
+      padding: const EdgeInsets.all(16.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          _buildTextField(
-              productNameController, 'Product\'s name', Icons.shopping_cart),
+          _buildTextField(productNameController, 'Add the product\'s name',
+              Icons.shopping_cart),
           const SizedBox(height: 10),
           _buildTextField(priceController, 'Price', Icons.attach_money),
           const SizedBox(height: 10),
@@ -65,22 +66,17 @@ class _AddSavingGoalScreenState extends State<AddSavingGoalScreen> {
       TextEditingController controller, String label, IconData icon) {
     return TextField(
       controller: controller,
-      maxLines: null, // Allows for multiple lines
-      keyboardType:
-          TextInputType.multiline, // Keyboard suitable for multiline input
       decoration: InputDecoration(
         labelText: label,
         prefixIcon: Icon(
           icon,
-          color: black,
-          size: 20,
+          color: const Color.fromARGB(90, 0, 0, 0),
         ),
         labelStyle: const TextStyle(
-          fontWeight: FontWeight.w400,
-          fontSize: 16,
-          color: black,
-        ),
-        border: InputBorder.none, // Remove the underline
+            fontWeight: FontWeight.w500,
+            fontStyle: FontStyle.italic,
+            fontSize: 16,
+            color: Color.fromARGB(90, 0, 0, 0)),
       ),
     );
   }
@@ -108,15 +104,14 @@ class _AddSavingGoalScreenState extends State<AddSavingGoalScreen> {
           decoration: const InputDecoration(
             labelText: 'Estimated time to buy',
             labelStyle: TextStyle(
-              fontWeight: FontWeight.w400,
-              fontSize: 16,
-              color: black,
-            ),
+                fontWeight: FontWeight.w500,
+                fontStyle: FontStyle.italic,
+                fontSize: 16,
+                color: Color.fromARGB(90, 0, 0, 0)),
             prefixIcon: Icon(
               Icons.calendar_today,
-              color: black,
+              color: Color.fromARGB(90, 0, 0, 0),
             ),
-            border: InputBorder.none, // Add this line to remove the underline
           ),
         ),
       ),
@@ -131,14 +126,14 @@ class _AddSavingGoalScreenState extends State<AddSavingGoalScreen> {
         height: 150,
         decoration: BoxDecoration(
           border: Border.all(color: Colors.grey),
-          borderRadius: BorderRadius.circular(10),
+          borderRadius: BorderRadius.circular(12),
         ),
         child: _image != null
             ? Image.file(File(_image!.path), fit: BoxFit.cover)
             : const Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(Icons.camera_alt, size: 40),
+                  Icon(Icons.camera_alt, size: 50),
                   Text('Tap to upload an image of the product'),
                 ],
               ),
@@ -153,9 +148,9 @@ class _AddSavingGoalScreenState extends State<AddSavingGoalScreen> {
       child: ElevatedButton(
         onPressed: _saveGoal,
         style: ElevatedButton.styleFrom(
-          backgroundColor: primaryPurple,
+          backgroundColor: Theme.of(context).primaryColor,
           shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         ),
         child: const Text(
           'Save',

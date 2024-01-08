@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:personal_finance/constants/colors.dart';
 
 class TrackingSelection extends StatelessWidget {
   const TrackingSelection({Key? key}) : super(key: key);
@@ -80,7 +79,7 @@ class TrackingSelection extends StatelessWidget {
               imagePath,
               width: 50,
               height: 50,
-              color: primaryPurple, // Customize the SVG icon color
+              color: const Color(0xFF007AFF), // Customize the SVG icon color
             ),
             const SizedBox(height: 10),
             Text(

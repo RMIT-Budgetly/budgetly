@@ -89,194 +89,186 @@ class WeeklyPlanFormState extends State<WeeklyPlanForm> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: const Text("Weekly Plan",
-            style: TextStyle(fontWeight: FontWeight.w500, fontSize: 23)),
+        title: const Text(
+          "Weekly Plan",
+          style: TextStyle(fontWeight: FontWeight.w500, fontSize: 23),
+        ),
       ),
       backgroundColor: Colors.white,
-      body: SingleChildScrollView(
+      body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 12),
         child: Form(
           key: _formKey,
           child: Column(
             children: [
-              TaskNameField(
-                onSaved: (newValue) => _inputTaskName = newValue!,
+              TextFormField(
+                decoration: const InputDecoration(
+                  border: InputBorder.none,
+                  hintText: 'Task Name',
+                ),
+                validator: (value) {
+                  if (value == null ||
+                      value.isEmpty ||
+                      value.trim().length == 1 ||
+                      value.trim().length > 100) {
+                    return 'Invalid Task Name. Please again';
+                  }
+                  return null;
+                },
+                onSaved: (newValue) {
+                  _inputTaskName = newValue!;
+                },
               ),
-              BudgetField(
-                onSaved: (newValue) => _inputBudget = newValue!,
+              Row(
+                children: [
+                  Expanded(
+                    child: TextFormField(
+                      keyboardType: TextInputType.number,
+                      decoration: const InputDecoration(
+                        hintText: 'Budget',
+                        border: InputBorder.none,
+                      ),
+                      validator: (value) {
+                        if (value == null ||
+                            value.isEmpty ||
+                            int.tryParse(value) == null ||
+                            int.tryParse(value)! <= 0) {
+                          return 'invalid budget!!';
+                        }
+                        return null;
+                      },
+                      onSaved: (newValue) {
+                        _inputBudget = newValue!;
+                      },
+                    ),
+                  ),
+                  Expanded(
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        IconButton(
+                          onPressed: onDatePicker,
+                          icon: const Icon(Icons.calendar_month),
+                          color: Theme.of(context).primaryColor,
+                        ),
+                        Text(_selectedDate == null
+                            ? "Pick a date"
+                            : formatter.format(_selectedDate!)), //
+                      ],
+                    ),
+                  )
+                ],
               ),
-              DatePickerRow(
-                selectedDate: _selectedDate,
-                onDatePicker: onDatePicker,
+              const SizedBox(
+                height: 10,
               ),
-              PriorityPicker(
-                selectedPriority: _selectedPriority,
-                onPriorityChanged: (newValue) =>
-                    setState(() => _selectedPriority = newValue),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  SizedBox(
+                    width: 120,
+                    child: DropdownButtonFormField<Priority>(
+                      value: _selectedPriority,
+                      items: [
+                        DropdownMenuItem(
+                          value: Priority.High,
+                          child: Row(
+                            children: [
+                              const Icon(
+                                Icons.flag,
+                                color: Colors.red,
+                              ),
+                              const SizedBox(width: 8),
+                              Text(
+                                Priority.High.name,
+                              ),
+                            ],
+                          ),
+                        ),
+                        DropdownMenuItem(
+                          value: Priority.Medium,
+                          child: Row(
+                            children: [
+                              const Icon(
+                                Icons.flag,
+                                color: Colors.yellow,
+                              ),
+                              const SizedBox(width: 8),
+                              Text(
+                                Priority.Medium.name,
+                              ),
+                            ],
+                          ),
+                        ),
+                        DropdownMenuItem(
+                          value: Priority.Low,
+                          child: Row(
+                            children: [
+                              const Icon(
+                                Icons.flag,
+                                color: Colors.green,
+                              ),
+                              const SizedBox(width: 8),
+                              Text(
+                                Priority.Low.name,
+                              ),
+                            ],
+                          ),
+                        )
+                      ],
+                      onChanged: (value) {
+                        setState(() {
+                          _selectedPriority = value;
+                        });
+                        // Perform any actions based on the selected priority level
+                      },
+                    ),
+                  ),
+                  const SizedBox(
+                    width: 50,
+                  ),
+                  // Open the Category Page
+                  OutlinedButton(
+                    onPressed: onShowCategoriesPicker,
+                    child: Row(
+                      children: [
+                        _selectedCategory == null
+                            ? const Icon(Icons.category)
+                            : _selectedCategory!.getIcon(),
+                        const SizedBox(
+                          width: 6,
+                        ),
+                        Text(
+                          _selectedCategory == null
+                              ? "Category"
+                              : (_selectedCategory!.name.length >
+                                      12 // Set your maximum character count
+                                  ? '${_selectedCategory!.name.substring(0, 12)}...' // Truncate text if longer than 15 characters
+                                  : _selectedCategory!.name),
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 1, // Display in a single line
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
               ),
-              CategoryButton(
-                selectedCategory: _selectedCategory,
-                onShowCategoriesPicker: onShowCategoriesPicker,
+              const SizedBox(
+                height: 20,
               ),
               ElevatedButton(
                 onPressed: onSubmit,
                 style: ElevatedButton.styleFrom(
-                    minimumSize: const Size.fromHeight(40)),
-                child: const Text("Save", style: TextStyle(fontSize: 17)),
-              ),
+                  minimumSize: const Size.fromHeight(40),
+                ),
+                child: const Text(
+                  "Save",
+                  style: TextStyle(fontSize: 17),
+                ),
+              )
             ],
           ),
         ),
-      ),
-    );
-  }
-}
-
-class TaskNameField extends StatelessWidget {
-  final Function(String?) onSaved;
-
-  const TaskNameField({Key? key, required this.onSaved}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return TextFormField(
-      decoration: const InputDecoration(
-          border: InputBorder.none, hintText: 'Task Name'),
-      validator: (value) {
-        if (value == null ||
-            value.isEmpty ||
-            value.trim().length == 1 ||
-            value.trim().length > 100) {
-          return 'Invalid Task Name. Please again';
-        }
-        return null;
-      },
-      onSaved: onSaved,
-    );
-  }
-}
-
-class BudgetField extends StatelessWidget {
-  final Function(String?) onSaved;
-
-  const BudgetField({Key? key, required this.onSaved}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return TextFormField(
-      keyboardType: TextInputType.number,
-      decoration:
-          const InputDecoration(hintText: 'Budget', border: InputBorder.none),
-      validator: (value) {
-        if (value == null ||
-            value.isEmpty ||
-            int.tryParse(value) == null ||
-            int.tryParse(value)! <= 0) {
-          return 'Invalid budget!';
-        }
-        return null;
-      },
-      onSaved: onSaved,
-    );
-  }
-}
-
-class DatePickerRow extends StatelessWidget {
-  final DateTime? selectedDate;
-  final VoidCallback onDatePicker;
-
-  const DatePickerRow({Key? key, this.selectedDate, required this.onDatePicker})
-      : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    var formatter = DateFormat.yMd();
-
-    return Row(
-      children: [
-        IconButton(
-          onPressed: onDatePicker,
-          icon: const Icon(Icons.calendar_month),
-          color: Theme.of(context).primaryColor,
-        ),
-        Text(selectedDate == null
-            ? "Pick a date"
-            : formatter.format(selectedDate!)),
-      ],
-    );
-  }
-}
-
-class PriorityPicker extends StatelessWidget {
-  final Priority? selectedPriority;
-  final ValueChanged<Priority?> onPriorityChanged;
-
-  const PriorityPicker(
-      {Key? key, this.selectedPriority, required this.onPriorityChanged})
-      : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return DropdownButtonFormField<Priority>(
-      value: selectedPriority,
-      items: Priority.values.map((priority) {
-        return DropdownMenuItem(
-          value: priority,
-          child: Row(
-            children: [
-              Icon(Icons.flag, color: _getPriorityColor(priority)),
-              const SizedBox(width: 8),
-              Text(priority.name),
-            ],
-          ),
-        );
-      }).toList(),
-      onChanged: onPriorityChanged,
-    );
-  }
-
-  Color _getPriorityColor(Priority priority) {
-    switch (priority) {
-      case Priority.High:
-        return Colors.red;
-      case Priority.Medium:
-        return Colors.yellow;
-      case Priority.Low:
-        return Colors.green;
-      default:
-        return Colors.black;
-    }
-  }
-}
-
-class CategoryButton extends StatelessWidget {
-  final Category? selectedCategory;
-  final VoidCallback onShowCategoriesPicker;
-
-  const CategoryButton(
-      {Key? key, this.selectedCategory, required this.onShowCategoriesPicker})
-      : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return OutlinedButton(
-      onPressed: onShowCategoriesPicker,
-      child: Row(
-        children: [
-          selectedCategory == null
-              ? const Icon(Icons.category)
-              : selectedCategory!.getIcon(),
-          const SizedBox(width: 6),
-          Text(
-            selectedCategory == null
-                ? "Category"
-                : (selectedCategory!.name.length > 12
-                    ? '${selectedCategory!.name.substring(0, 12)}...'
-                    : selectedCategory!.name),
-            overflow: TextOverflow.ellipsis,
-            maxLines: 1,
-          ),
-        ],
       ),
     );
   }
