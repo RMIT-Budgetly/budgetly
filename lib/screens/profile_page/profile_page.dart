@@ -153,7 +153,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     child: CircleAvatar(
                       radius: 50,
                       backgroundImage: NetworkImage(
-                          'https://www.pngitem.com/pimgs/m/146-1468479_my-profile-icon-blank-profile-picture-circle-hd.png'),
+                          'https://i.ibb.co/6gj4tnC/rmit-wallpaper.jpg'),
                     ),
                   ),
                 );

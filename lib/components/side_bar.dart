@@ -64,7 +64,7 @@ class _SideBarState extends State<SideBar> {
                     decoration: const BoxDecoration(
                       image: DecorationImage(
                           image: NetworkImage(
-                              'https://img.freepik.com/premium-photo/green-plant-with-dark-background_889227-5623.jpg'),
+                              'https://i.ibb.co/6gj4tnC/rmit-wallpaper.jpg'),
                           fit: BoxFit.cover),
                       color: Color(0x7F0000FF),
                     ),
