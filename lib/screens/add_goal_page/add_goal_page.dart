@@ -7,6 +7,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:personal_finance/constants/style.dart';
 import 'package:path/path.dart' as path;
 
 final _firebase = FirebaseAuth.instance;
@@ -70,13 +71,10 @@ class _AddSavingGoalScreenState extends State<AddSavingGoalScreen> {
         labelText: label,
         prefixIcon: Icon(
           icon,
-          color: const Color.fromARGB(90, 0, 0, 0),
+          color: black,
         ),
         labelStyle: const TextStyle(
-            fontWeight: FontWeight.w500,
-            fontStyle: FontStyle.italic,
-            fontSize: 16,
-            color: Color.fromARGB(90, 0, 0, 0)),
+            fontWeight: FontWeight.w400, fontSize: 16, color: black),
       ),
     );
   }
@@ -84,12 +82,33 @@ class _AddSavingGoalScreenState extends State<AddSavingGoalScreen> {
   Widget _buildDateSelector() {
     return GestureDetector(
       onTap: () async {
-        final DateTime? picked = await showDatePicker(
+        final DateTime? picked = await showDialog(
           context: context,
-          initialDate: selectedDate,
-          firstDate: DateTime(2000),
-          lastDate: DateTime(2101),
+          builder: (BuildContext context) {
+            return Theme(
+              data: ThemeData.light().copyWith(
+                colorScheme: ColorScheme.light(
+                  primary: primaryPurple, // Primary color for the header
+                  onPrimary: white, // Text color for elements on primary color
+                  surface: white, // Background color of the calendar
+                ),
+                dialogBackgroundColor: white, // Background color of the dialog
+                dialogTheme: DialogTheme(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(
+                        12), // Border radius for the dialog
+                  ),
+                ),
+              ),
+              child: DatePickerDialog(
+                initialDate: selectedDate,
+                firstDate: DateTime(2000),
+                lastDate: DateTime(2101),
+              ),
+            );
+          },
         );
+
         if (picked != null && picked != selectedDate) {
           setState(() {
             selectedDate = picked;
@@ -104,13 +123,13 @@ class _AddSavingGoalScreenState extends State<AddSavingGoalScreen> {
           decoration: const InputDecoration(
             labelText: 'Estimated time to buy',
             labelStyle: TextStyle(
-                fontWeight: FontWeight.w500,
-                fontStyle: FontStyle.italic,
-                fontSize: 16,
-                color: Color.fromARGB(90, 0, 0, 0)),
+              fontWeight: FontWeight.w400,
+              fontSize: 16,
+              color: Colors.black,
+            ),
             prefixIcon: Icon(
               Icons.calendar_today,
-              color: Color.fromARGB(90, 0, 0, 0),
+              color: Colors.black,
             ),
           ),
         ),
@@ -119,38 +138,88 @@ class _AddSavingGoalScreenState extends State<AddSavingGoalScreen> {
   }
 
   Widget _buildImageUploadSection() {
-    return GestureDetector(
-      onTap: _pickImage,
-      child: Container(
-        width: double.infinity,
-        height: 150,
-        decoration: BoxDecoration(
-          border: Border.all(color: Colors.grey),
-          borderRadius: BorderRadius.circular(12),
-        ),
-        child: _image != null
-            ? Image.file(File(_image!.path), fit: BoxFit.cover)
-            : const Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(Icons.camera_alt, size: 50),
-                  Text('Tap to upload an image of the product'),
-                ],
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        Expanded(
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: ElevatedButton.icon(
+              onPressed:
+                  _pickImageFromCamera, // Function to handle camera image capture
+              icon: const Icon(Icons.camera_alt, color: Colors.black),
+              label: const Text(
+                'Use Camera',
+                style: TextStyle(
+                  color: Colors.black, // Corrected to Colors.black
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500,
+                ),
               ),
-      ),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.white, // Button background color
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                elevation: 3, // Elevation for drop shadow
+                shadowColor: Colors.grey, // Shadow color
+                minimumSize: Size(double.infinity, 60), // Set a fixed height
+              ),
+            ),
+          ),
+        ),
+        Expanded(
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: ElevatedButton.icon(
+              onPressed:
+                  _pickImageFromGallery, // Function to handle image selection from gallery
+              icon: const Icon(Icons.photo_library, color: Colors.black),
+              label: const Text(
+                'Upload from Library',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: Colors.black, // Corrected to Colors.black
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.white, // Button background color
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                elevation: 3, // Elevation for drop shadow
+                shadowColor: Colors.grey, // Shadow color
+                minimumSize: Size(double.infinity, 60), // Set a fixed height
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 
+  Future<void> _pickImageFromCamera() async {
+    // Implement the functionality to capture image from camera
+  }
+
+  Future<void> _pickImageFromGallery() async {
+    // Implement the functionality to select image from gallery
+  }
+
   Widget _buildSaveButton() {
+    // Added context parameter
     return SizedBox(
       width: double.infinity,
-      height: 48,
+      height: 60,
       child: ElevatedButton(
         onPressed: _saveGoal,
         style: ElevatedButton.styleFrom(
-          backgroundColor: Theme.of(context).primaryColor,
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+          backgroundColor: primaryPurple, // Set to primaryPurple
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12), // Set border radius to 12
+          ),
         ),
         child: const Text(
           'Save',
@@ -164,13 +233,13 @@ class _AddSavingGoalScreenState extends State<AddSavingGoalScreen> {
     );
   }
 
-  Future<void> _pickImage() async {
-    final ImagePicker _picker = ImagePicker();
-    final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
-    setState(() {
-      _image = image;
-    });
-  }
+  // Future<void> _pickImage() async {
+  //   final ImagePicker _picker = ImagePicker();
+  //   final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+  //   setState(() {
+  //     _image = image;
+  //   });
+  // }
 
   Future<void> _saveGoal() async {
     final FirebaseFirestore firestore = FirebaseFirestore.instance;
