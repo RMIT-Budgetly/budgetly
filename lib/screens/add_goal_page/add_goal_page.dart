@@ -1,14 +1,9 @@
-// Dart built-in libraries
-import 'dart:io';
-
 // Third-party package imports (external libraries)
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:personal_finance/constants/style.dart';
-import 'package:path/path.dart' as path;
 
 final _firebase = FirebaseAuth.instance;
 
@@ -49,7 +44,7 @@ class _AddSavingGoalScreenState extends State<AddSavingGoalScreen> {
           const SizedBox(height: 10),
           _buildTextField(priceController, 'Price', Icons.attach_money),
           const SizedBox(height: 10),
-          _buildDateSelector(),
+          _buildDateSelector(timeToBuyController, 'Estimate time to buy', Icons.calendar_month_outlined),
           const SizedBox(height: 10),
           _buildTextField(urlController, 'URL', Icons.link),
           const SizedBox(height: 10),
@@ -75,11 +70,22 @@ class _AddSavingGoalScreenState extends State<AddSavingGoalScreen> {
         ),
         labelStyle: const TextStyle(
             fontWeight: FontWeight.w400, fontSize: 16, color: black),
+        // Customize the bottom border
+        border: UnderlineInputBorder(
+          borderSide: BorderSide(color: black, width: 0.5),
+        ),
+        enabledBorder: UnderlineInputBorder(
+          borderSide: BorderSide(color: black, width: 0.5),
+        ),
+        focusedBorder: UnderlineInputBorder(
+          borderSide: BorderSide(color: black, width: 1),
+        ),
       ),
     );
   }
 
-  Widget _buildDateSelector() {
+  Widget _buildDateSelector(
+      TextEditingController controller, String label, IconData icon) {
     return GestureDetector(
       onTap: () async {
         final DateTime? picked = await showDialog(
@@ -92,7 +98,8 @@ class _AddSavingGoalScreenState extends State<AddSavingGoalScreen> {
                   onPrimary: white, // Text color for elements on primary color
                   surface: white, // Background color of the calendar
                 ),
-                dialogBackgroundColor: white, // Background color of the dialog
+                dialogBackgroundColor:
+                    Colors.white, // Background color of the dialog
                 dialogTheme: DialogTheme(
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(
@@ -112,24 +119,33 @@ class _AddSavingGoalScreenState extends State<AddSavingGoalScreen> {
         if (picked != null && picked != selectedDate) {
           setState(() {
             selectedDate = picked;
-            timeToBuyController.text =
-                "${selectedDate.toLocal()}".split(' ')[0];
+            controller.text = "${selectedDate.toLocal()}".split(' ')[0];
           });
         }
       },
       child: AbsorbPointer(
         child: TextField(
-          controller: timeToBuyController,
-          decoration: const InputDecoration(
-            labelText: 'Estimated time to buy',
-            labelStyle: TextStyle(
+          controller: controller,
+          decoration: InputDecoration(
+            labelText: label,
+            labelStyle: const TextStyle(
               fontWeight: FontWeight.w400,
               fontSize: 16,
-              color: Colors.black,
+              color: black,
             ),
             prefixIcon: Icon(
-              Icons.calendar_today,
-              color: Colors.black,
+              icon,
+              color: black,
+            ),
+            // Customize the bottom border
+            border: UnderlineInputBorder(
+              borderSide: BorderSide(color: black, width: 0.5),
+            ),
+            enabledBorder: UnderlineInputBorder(
+              borderSide: BorderSide(color: black, width: 0.5),
+            ),
+            focusedBorder: UnderlineInputBorder(
+              borderSide: BorderSide(color: black, width: 1),
             ),
           ),
         ),
