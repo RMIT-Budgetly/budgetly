@@ -158,14 +158,14 @@ class _AuthScreenState extends State<AuthScreen> {
                         children: [
                           TextFormField(
                             decoration: InputDecoration(
-                              prefixIcon: Icon(
+                              prefixIcon: const Icon(
                                 Icons.mail,
                                 size: 22,
                                 color: Color.fromRGBO(
                                     0, 0, 0, 0.5), // RGBA color for the icon
                               ),
                               labelText: 'Email Address',
-                              labelStyle: TextStyle(
+                              labelStyle: const TextStyle(
                                 color: Color.fromRGBO(
                                     0, 0, 0, 0.5), // RGBA color for the text
                                 fontWeight: FontWeight.w500,
@@ -207,14 +207,14 @@ class _AuthScreenState extends State<AuthScreen> {
                           const SizedBox(height: 10),
                           TextFormField(
                             decoration: InputDecoration(
-                              prefixIcon: Icon(
+                              prefixIcon: const Icon(
                                 Icons.lock,
                                 size: 22,
                                 color: Color.fromRGBO(
                                     0, 0, 0, 0.5), // RGBA color for the icon
                               ),
                               labelText: 'Password',
-                              labelStyle: TextStyle(
+                              labelStyle: const TextStyle(
                                 color: Color.fromRGBO(
                                     0, 0, 0, 0.5), // RGBA color for the text
                                 fontWeight: FontWeight.w500,
@@ -261,7 +261,7 @@ class _AuthScreenState extends State<AuthScreen> {
                     height: 35,
                     alignment: Alignment.bottomRight,
                     child: TextButton(
-                      child: Text(
+                      child: const Text(
                         "Forgot Password?",
                         style: TextStyle(
                             color: black,
@@ -332,7 +332,7 @@ class _AuthScreenState extends State<AuthScreen> {
                           color: Colors.black.withOpacity(0.2), // Shadow color
                           spreadRadius: 1,
                           blurRadius: 5,
-                          offset: Offset(0, 2), // Changes position of shadow
+                          offset: const Offset(0, 2), // Changes position of shadow
                         ),
                       ],
                     ),
@@ -375,7 +375,7 @@ class _AuthScreenState extends State<AuthScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text(
+                      const Text(
                         "Don't have account ?",
                         style: TextStyle(
                           color: black,
@@ -393,7 +393,7 @@ class _AuthScreenState extends State<AuthScreen> {
                             _isSignin = false;
                           });
                         },
-                        child: Text(
+                        child: const Text(
                           'Sign Up',
                           style: TextStyle(
                             color: black,
