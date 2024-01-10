@@ -69,7 +69,7 @@ class _AddSavingGoalScreenState extends State<AddSavingGoalScreen> {
           color: black,
         ),
         labelStyle: const TextStyle(
-            fontWeight: FontWeight.w400, fontSize: 16, color: black),
+            fontWeight: FontWeight.w500, fontSize: 16, color: black),
         // Customize the bottom border
         border: UnderlineInputBorder(
           borderSide: BorderSide(color: black, width: 0.5),
@@ -129,7 +129,7 @@ class _AddSavingGoalScreenState extends State<AddSavingGoalScreen> {
           decoration: InputDecoration(
             labelText: label,
             labelStyle: const TextStyle(
-              fontWeight: FontWeight.w400,
+              fontWeight: FontWeight.w500,
               fontSize: 16,
               color: black,
             ),

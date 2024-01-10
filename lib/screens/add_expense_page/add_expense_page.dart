@@ -169,7 +169,7 @@ class _AddExpensesPageState extends State<AddExpensesPage> {
           decoration: InputDecoration(
             labelText: label,
             labelStyle: const TextStyle(
-              fontWeight: FontWeight.w400,
+              fontWeight: FontWeight.w500,
               fontSize: 16,
               color: black,
             ),
@@ -345,7 +345,7 @@ class CategoryButton extends StatelessWidget {
                         ? '${selectedCategory!.name.substring(0, 12)}...'
                         : selectedCategory!.name),
                 style: const TextStyle(
-                  fontWeight: FontWeight.w400,
+                  fontWeight: FontWeight.w500,
                   fontSize: 16,
                   color: Colors.black,
                 ),
