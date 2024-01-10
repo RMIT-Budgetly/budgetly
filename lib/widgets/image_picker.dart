@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:personal_finance/constants/style.dart';
 
 class UserImagePicker extends StatefulWidget {
   const UserImagePicker({
@@ -53,7 +54,9 @@ class _UserImagePickerState extends State<UserImagePicker> {
           label: Text(
             'Add Image',
             style: TextStyle(
-              color: Theme.of(context).colorScheme.primary,
+              color: black,
+              fontSize: 16,
+              fontWeight: FontWeight.w400,
             ),
           ),
         )
