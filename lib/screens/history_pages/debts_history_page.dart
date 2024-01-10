@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
@@ -100,7 +99,7 @@ class _DebtHistoryState extends State<DebtHistory> {
         List<Expense> debts = snapshot.data!;
 
         debts.sort((a, b) => b.selectedDate!.compareTo(a.selectedDate!));
-
+        
         return SingleChildScrollView(
           child: SizedBox(
             height: MediaQuery.of(context).size.height * 0.6,
