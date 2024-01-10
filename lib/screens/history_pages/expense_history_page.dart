@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:personal_finance/constants/style.dart';
 import 'package:personal_finance/services/expense_service.dart';
 import 'package:personal_finance/models/category_model.dart';
 import 'package:personal_finance/models/expense_model.dart';
@@ -56,7 +57,7 @@ class _ExpenseHistoryState extends State<ExpenseHistory> {
                 child: TextButton(
                   style: TextButton.styleFrom(
                     backgroundColor: const Color(0xFFE0E0E0),
-                    foregroundColor: Theme.of(context).primaryColor,
+                    foregroundColor: primaryPurple,
                   ),
                   onPressed: () {
                     setState(() {
@@ -71,7 +72,7 @@ class _ExpenseHistoryState extends State<ExpenseHistory> {
                 ),
               ),
               SizedBox(
-                height: 600,
+                height: 595,
                 child: ListView.builder(
                   itemCount: expenses.length,
                   itemBuilder: (context, index) {
@@ -91,15 +92,15 @@ class _ExpenseHistoryState extends State<ExpenseHistory> {
                                         expense.description!,
                                         style: TextStyle(
                                           fontSize: 16,
-                                          fontWeight: FontWeight.bold,
-                                          color: Theme.of(context).primaryColor,
+                                          fontWeight: FontWeight.w600,
+                                          color: black,
                                         ),
                                       ),
                                     ),
                                     const SizedBox(width: 10),
                                     IconTheme(
                                       data: IconThemeData(
-                                        color: Theme.of(context).primaryColor,
+                                        color: black,
                                       ),
                                       child: categories
                                           .where((element) =>
@@ -114,7 +115,7 @@ class _ExpenseHistoryState extends State<ExpenseHistory> {
                                   "-\$${expense.amount}",
                                   style: const TextStyle(
                                     fontSize: 16,
-                                    fontWeight: FontWeight.bold,
+                                    fontWeight: FontWeight.w600,
                                     color: Colors.redAccent,
                                   ),
                                 ),
@@ -128,7 +129,7 @@ class _ExpenseHistoryState extends State<ExpenseHistory> {
                                     .format(expense.selectedDate!),
                                 style: const TextStyle(
                                   fontSize: 16,
-                                  fontWeight: FontWeight.bold,
+                                  fontWeight: FontWeight.w500,
                                   color: Colors.grey,
                                 ),
                               ),
