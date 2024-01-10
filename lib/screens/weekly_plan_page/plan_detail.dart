@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:personal_finance/constants/style.dart';
 import 'package:personal_finance/services/plan_service.dart';
 import 'package:personal_finance/models/plan_model.dart';
 
@@ -82,10 +83,10 @@ class PlanDetail extends StatelessWidget {
         Container(
           width: double.infinity,
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          margin: const EdgeInsets.all(8),
+          margin: const EdgeInsets.all(16),
           decoration: BoxDecoration(
             color: Colors.white,
-            borderRadius: BorderRadius.circular(8),
+            borderRadius: BorderRadius.circular(12),
             boxShadow: [
               BoxShadow(
                 color: Colors.grey.withOpacity(0.5),
@@ -107,7 +108,7 @@ class PlanDetail extends StatelessWidget {
                         style: const TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
-                          color: Color(0x7F0000FF),
+                          color: primaryPurple,
                         ),
                       ),
                       const SizedBox(width: 8),
@@ -118,6 +119,7 @@ class PlanDetail extends StatelessWidget {
                             : plan!.priority == Priority.Medium
                                 ? Colors.yellow
                                 : Colors.green,
+                        size: 30,
                       ),
                     ],
                   ),
@@ -133,40 +135,28 @@ class PlanDetail extends StatelessWidget {
                 children: [
                   TextButton(
                     style: TextButton.styleFrom(
-                      backgroundColor: const Color.fromARGB(255, 149, 206, 154),
-                      shape: const CircleBorder(
-                          eccentricity: 0.2,
-                          side: BorderSide(
-                            color: Color.fromARGB(255, 140, 212, 146),
-                            width: 1,
-                            style: BorderStyle.solid,
-                          )), // Circle shape for the button
-                    ),
+                        // Removed circle background styling
+                        ),
                     onPressed: () {
                       onCompletePlan();
                     },
                     child: const Icon(
-                      Icons.check,
+                      Icons.check_circle, // Thicker check icon
                       color: Color.fromARGB(255, 50, 158, 53),
+                      size: 40.0, // Adjust size as needed
                     ),
                   ),
                   TextButton(
                     style: TextButton.styleFrom(
-                      backgroundColor: const Color.fromARGB(255, 243, 190, 186),
-                      shape: const CircleBorder(
-                          eccentricity: 0.2,
-                          side: BorderSide(
-                            color: Color.fromARGB(255, 243, 190, 186),
-                            width: 1,
-                            style: BorderStyle.solid,
-                          )), // Circle shape for the button
-                    ),
+                        // Removed circle background styling
+                        ),
                     onPressed: () {
                       onDeletePlan();
                     },
                     child: const Icon(
                       Icons.delete,
                       color: Colors.red,
+                      size: 40.0, // Adjust size as needed
                     ),
                   )
                 ],

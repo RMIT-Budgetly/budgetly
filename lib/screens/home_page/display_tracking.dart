@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:personal_finance/models/category_model.dart';
 import 'package:personal_finance/models/goal_model.dart';
 import 'package:personal_finance/models/plan_model.dart';
-import 'package:personal_finance/screens/add_goal_page/goal.dart';
 import 'package:personal_finance/screens/home_page/tracking_section.dart';
 
 class DisplayTracking extends StatefulWidget {

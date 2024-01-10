@@ -1,13 +1,9 @@
-import "package:cloud_firestore/cloud_firestore.dart";
-import "package:firebase_auth/firebase_auth.dart";
-import "package:flutter/material.dart";
-import "package:personal_finance/components/input_field.dart";
-import 'package:personal_finance/components/calendar_button.dart';
-import "package:personal_finance/components/reminder_button.dart";
-import "package:personal_finance/components/select_photo.dart";
-import "package:personal_finance/components/submit_button.dart";
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:personal_finance/models/category_model.dart';
 import 'package:personal_finance/widgets/category_picker.dart';
+import 'package:personal_finance/constants/style.dart';
 
 final _firebase = FirebaseAuth.instance;
 
@@ -28,183 +24,337 @@ class _AddExpensesPageState extends State<AddExpensesPage> {
   var inputBudget = '0';
   var note = "";
 
+  // Controllers
+  final amountController = TextEditingController();
+  final descriptionController = TextEditingController();
+  final transactionDateController = TextEditingController();
+  final reminderDateController = TextEditingController();
+
   void onSaved() async {
     _formKey.currentState!.save();
-    if (_selectedCategory!.type == Type.Expense) {
-      await FirebaseFirestore.instance
-          .collection('users')
-          .doc(_firebase.currentUser!.uid)
-          .collection('expenses')
-          .add({
-        'category': _selectedCategory!.name,
-        'amount': double.tryParse(inputBudget),
-        'description': note,
-        'selectedDate': selectedDate,
-        'reminderDate': reminderDate,
-      });
-    } else if (_selectedCategory!.type == Type.Income) {
-      await FirebaseFirestore.instance
-          .collection('users')
-          .doc(_firebase.currentUser!.uid)
-          .collection('incomes')
-          .add({
-        'category': _selectedCategory!.name,
-        'amount': double.tryParse(inputBudget),
-        'description': note,
-        'selectedDate': selectedDate,
-        'reminderDate': reminderDate,
-      });
-    } else {
-      await FirebaseFirestore.instance
-          .collection('users')
-          .doc(_firebase.currentUser!.uid)
-          .collection('debts')
-          .add({
-        'category': _selectedCategory!.name,
-        'amount': double.tryParse(inputBudget),
-        'description': note,
-        'selectedDate': selectedDate,
-        'reminderDate': reminderDate,
-      });
-    }
+    final userUid = _firebase.currentUser!.uid;
+    final collectionName = _selectedCategory!.type == Type.Expense
+        ? 'expenses'
+        : _selectedCategory!.type == Type.Income
+            ? 'incomes'
+            : 'debts';
+
+    await FirebaseFirestore.instance
+        .collection('users')
+        .doc(userUid)
+        .collection(collectionName)
+        .add({
+      'category': _selectedCategory!.name,
+      'amount': double.tryParse(amountController.text),
+      'description': descriptionController.text,
+      'selectedDate': transactionDateController,
+      'reminderDate': reminderDateController,
+    });
   }
 
-  void onBudgetInput(String value) {
-    inputBudget = value;
-  }
-
-  void onNoteInput(String value) {
-    note = value;
-  }
-
-  void onSelectedDate(DateTime value) {
-    selectedDate = value;
-  }
-
-  void onReminderDate(DateTime value) {
-    reminderDate = value;
-  }
-
-  void onShowCategoriesPicker() async {
-    final selectedCategory = await showModalBottomSheet<Category>(
-      useSafeArea: true,
-      isScrollControlled: true,
-      context: context,
-      builder: (context) {
-        return CategoryPicker(
-          onCategorySelected: (category) {
-            Navigator.pop(context, category); // Pass selected category back
-          },
-        );
-      },
-    );
-
-    if (selectedCategory != null) {
-      // Handle the selected category
-      setState(() {
-        _selectedCategory = selectedCategory;
-      });
-    }
+  void onCategorySelected(Category category) {
+    setState(() {
+      _selectedCategory = category;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Add Transactions"),
         centerTitle: true,
-        titleTextStyle: const TextStyle(
-          color: Colors.black,
-          fontSize: 16,
-          fontWeight: FontWeight.bold,
+        title: const Text('Add Transactions'),
+      ),
+      body: _buildBody(),
+    );
+  }
+
+  Widget _buildBody() {
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(16.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          CategoryButton(
+            selectedCategory: _selectedCategory,
+            onCategorySelected: onCategorySelected,
+          ),
+          const SizedBox(height: 10),
+          _buildTextField(amountController, "Amount", Icons.monetization_on),
+          const SizedBox(height: 10),
+          _buildTextField(descriptionController, "Description", Icons.note_add),
+          const SizedBox(height: 10),
+          _buildDateSelector(transactionDateController, "Transaction Date",
+              Icons.calendar_today_rounded),
+          const SizedBox(height: 10),
+          _buildDateSelector(reminderDateController, "Reminder Date",
+              Icons.access_time_outlined),
+          const SizedBox(height: 20),
+          _buildImageUploadSection(),
+          const SizedBox(height: 20),
+          _buildSaveButton(),
+        ],
+      ),
+    );
+  }
+
+  TextField _buildTextField(
+      TextEditingController controller, String label, IconData icon) {
+    return TextField(
+      controller: controller,
+      decoration: InputDecoration(
+        labelText: label,
+        prefixIcon: Icon(
+          icon,
+          color: black,
         ),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
+        labelStyle: const TextStyle(
+            fontWeight: FontWeight.w400, fontSize: 16, color: black),
+        // Customize the bottom border
+        border: UnderlineInputBorder(
+          borderSide: BorderSide(color: black, width: 0.5),
+        ),
+        enabledBorder: UnderlineInputBorder(
+          borderSide: BorderSide(color: black, width: 0.5),
+        ),
+        focusedBorder: UnderlineInputBorder(
+          borderSide: BorderSide(color: black, width: 1),
         ),
       ),
-      body: PageView(
-        children: [
-          Form(
-            key: _formKey,
-            child: SingleChildScrollView(
-              child: Container(
-                margin: const EdgeInsets.all(8.0),
-                padding: const EdgeInsets.all(2.0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Column(
-                      children: <Widget>[
-                        OutlinedButton(
-                          onPressed: onShowCategoriesPicker,
-                          child: Row(
-                            children: [
-                              _selectedCategory == null
-                                  ? const Icon(Icons.category)
-                                  : _selectedCategory!.getIcon(),
-                              const SizedBox(
-                                width: 6,
-                              ),
-                              Text(
-                                _selectedCategory == null
-                                    ? "Category"
-                                    : (_selectedCategory!.name.length >
-                                            20 // Set your maximum character count
-                                        ? '${_selectedCategory!.name.substring(0, 12)}...' // Truncate text if longer than 15 characters
-                                        : _selectedCategory!.name),
-                                overflow: TextOverflow.ellipsis,
-                                maxLines: 1, // Display in a single line
-                              ),
-                            ],
-                          ),
-                        ),
-                        InputField(
-                          prefixIcon:
-                              const Icon(Icons.monetization_on_outlined),
-                          hintText: "Amount",
-                          keyboardType: TextInputType.number,
-                          onSaveInputValue: onBudgetInput,
-                          // validator: null,
-                        ),
-                        InputField(
-                          prefixIcon: const Icon(Icons.note_add),
-                          hintText: "Description",
-                          onSaveInputValue: onNoteInput,
-                        ),
-                        CalendarButton(
-                          onDateSelected: onSelectedDate,
-                          initialDate: DateTime.now(),
-                        ),
-                        ReminderButton(
-                          initialDate: DateTime.now(),
-                          onDateSelected: onReminderDate,
-                        ),
-                        const Padding(
-                          padding: EdgeInsets.symmetric(vertical: 16.0),
-                        ),
-                        Container(
-                          margin: const EdgeInsets.only(top: 8.0),
-                          child: const PhotoUploadButton(),
-                        ),
-                      ],
-                    ),
-                    const Padding(
-                      padding: EdgeInsets.all(8.0),
-                    ),
-                    Column(
-                      children: <Widget>[
-                        SaveButton(onSaved: onSaved),
-                      ],
-                    ),
-                  ],
+    );
+  }
+
+  Widget _buildDateSelector(
+      TextEditingController controller, String label, IconData icon) {
+    return GestureDetector(
+      onTap: () async {
+        final DateTime? picked = await showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return Theme(
+              data: ThemeData.light().copyWith(
+                colorScheme: ColorScheme.light(
+                  primary: primaryPurple, // Primary color for the header
+                  onPrimary: white, // Text color for elements on primary color
+                  surface: white, // Background color of the calendar
                 ),
+                dialogBackgroundColor:
+                    Colors.white, // Background color of the dialog
+                dialogTheme: DialogTheme(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(
+                        12), // Border radius for the dialog
+                  ),
+                ),
+              ),
+              child: DatePickerDialog(
+                initialDate: selectedDate,
+                firstDate: DateTime(2000),
+                lastDate: DateTime(2101),
+              ),
+            );
+          },
+        );
+
+        if (picked != null && picked != selectedDate) {
+          setState(() {
+            selectedDate = picked;
+            controller.text = "${selectedDate?.toLocal()}".split(' ')[0];
+          });
+        }
+      },
+      child: AbsorbPointer(
+        child: TextField(
+          controller: controller,
+          decoration: InputDecoration(
+            labelText: label,
+            labelStyle: const TextStyle(
+              fontWeight: FontWeight.w500,
+              fontSize: 16,
+              color: black,
+            ),
+            prefixIcon: Icon(
+              icon,
+              color: black,
+            ),
+            // Customize the bottom border
+            border: UnderlineInputBorder(
+              borderSide: BorderSide(color: black, width: 0.5),
+            ),
+            enabledBorder: UnderlineInputBorder(
+              borderSide: BorderSide(color: black, width: 0.5),
+            ),
+            focusedBorder: UnderlineInputBorder(
+              borderSide: BorderSide(color: black, width: 1),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildImageUploadSection() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        Expanded(
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: ElevatedButton.icon(
+              onPressed:
+                  _pickImageFromCamera, // Function to handle camera image capture
+              icon: const Icon(Icons.camera_alt, color: Colors.black),
+              label: const Text(
+                'Use Camera',
+                style: TextStyle(
+                  color: Colors.black, // Corrected to Colors.black
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.white, // Button background color
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                elevation: 3, // Elevation for drop shadow
+                shadowColor: Colors.grey, // Shadow color
+                minimumSize: Size(double.infinity, 60), // Set a fixed height
               ),
             ),
           ),
-        ],
+        ),
+        Expanded(
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: ElevatedButton.icon(
+              onPressed:
+                  _pickImageFromGallery, // Function to handle image selection from gallery
+              icon: const Icon(Icons.photo_library, color: Colors.black),
+              label: const Text(
+                'Upload from Library',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: Colors.black, // Corrected to Colors.black
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.white, // Button background color
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                elevation: 3, // Elevation for drop shadow
+                shadowColor: Colors.grey, // Shadow color
+                minimumSize: Size(double.infinity, 60), // Set a fixed height
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Future<void> _pickImageFromCamera() async {
+    // Implement the functionality to capture image from camera
+  }
+
+  Future<void> _pickImageFromGallery() async {
+    // Implement the functionality to select image from gallery
+  }
+
+  Widget _buildSaveButton() {
+    // Added context parameter
+    return SizedBox(
+      width: double.infinity,
+      height: 60,
+      child: ElevatedButton(
+        onPressed: onSaved,
+        style: ElevatedButton.styleFrom(
+          backgroundColor: primaryPurple, // Set to primaryPurple
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12), // Set border radius to 12
+          ),
+        ),
+        child: const Text(
+          'Add',
+          style: TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.w700,
+            color: Colors.white,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class CategoryButton extends StatelessWidget {
+  final Category? selectedCategory;
+  final Function(Category) onCategorySelected;
+
+  CategoryButton({
+    required this.selectedCategory,
+    required this.onCategorySelected,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: () async {
+        final selectedCategory = await showModalBottomSheet<Category>(
+          useSafeArea: true,
+          isScrollControlled: true,
+          context: context,
+          builder: (context) {
+            return CategoryPicker(
+              onCategorySelected: (category) {
+                Navigator.pop(context, category); // Pass selected category back
+              },
+            );
+          },
+        );
+
+        if (selectedCategory != null) {
+          onCategorySelected(selectedCategory);
+        }
+      },
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 10, vertical: 15),
+        decoration: BoxDecoration(
+          border: Border(
+            bottom: BorderSide(
+              color: Colors.black, // Darker color for the bottom border
+              width: 0.5, // Increase the width for a thicker line
+            ),
+          ),
+        ),
+        child: Row(
+          children: [
+            Icon(
+              Icons.category, // Icon for the button
+              color: Colors.black,
+            ),
+            const SizedBox(width: 10), // Spacing between icon and text
+            Expanded(
+              child: Text(
+                selectedCategory == null
+                    ? 'Category'
+                    : (selectedCategory!.name.length > 20
+                        ? '${selectedCategory!.name.substring(0, 12)}...'
+                        : selectedCategory!.name),
+                style: const TextStyle(
+                  fontWeight: FontWeight.w500,
+                  fontSize: 16,
+                  color: Colors.black,
+                ),
+                overflow: TextOverflow.ellipsis,
+                maxLines: 1,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

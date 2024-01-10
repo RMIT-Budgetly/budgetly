@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:personal_finance/models/goal_model.dart';
 import 'dart:math';
-import 'package:flutter/material.dart';
 import 'package:personal_finance/screens/add_goal_page/goal_item_detail.dart';
 
 Color getRandomColor() {

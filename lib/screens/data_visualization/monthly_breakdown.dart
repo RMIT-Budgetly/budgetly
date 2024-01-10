@@ -3,8 +3,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:intl/intl.dart';
-import 'package:personal_finance/utils/color_utils.dart';
-import 'package:personal_finance/utils/date_formatter.dart';
+import 'package:personal_finance/components/tracking_selection.dart';
+import 'package:personal_finance/constants/style.dart';
 
 class DataVisualizationPage extends StatefulWidget {
   const DataVisualizationPage({super.key});
@@ -13,22 +13,45 @@ class DataVisualizationPage extends StatefulWidget {
   State<DataVisualizationPage> createState() => _DataVisualizationPageState();
 }
 
-class _DataVisualizationPageState extends State<DataVisualizationPage> {
+class _DataVisualizationPageState extends State<DataVisualizationPage>
+    with TickerProviderStateMixin {
   final user = FirebaseAuth.instance.currentUser;
 
   late Map<String, Color> categoryColors;
+  late TabController _tabController;
 
-  Stream<Map<String, double>> streamExpenses() {
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(
+        length: 2, vsync: this); // 'this' refers to TickerProviderStateMixin
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
+  }
+
+  Stream<Map<String, double>> streamExpenses(bool isCurrentMonth) {
     var now = DateTime.now();
-    var firstDayLastMonth = DateTime(now.year, now.month - 1, 1);
-    var lastDayLastMonth = DateTime(now.year, now.month, 0);
+    var firstDay;
+    var lastDay;
+
+    if (isCurrentMonth) {
+      firstDay = DateTime(now.year, now.month, 1);
+      lastDay = DateTime(now.year, now.month + 1, 0);
+    } else {
+      firstDay = DateTime(now.year, now.month - 1, 1);
+      lastDay = DateTime(now.year, now.month, 0);
+    }
 
     return FirebaseFirestore.instance
         .collection('users')
         .doc(user!.uid)
         .collection('expenses')
-        .where('selectedDate', isGreaterThanOrEqualTo: firstDayLastMonth)
-        .where('selectedDate', isLessThanOrEqualTo: lastDayLastMonth)
+        .where('selectedDate', isGreaterThanOrEqualTo: firstDay)
+        .where('selectedDate', isLessThanOrEqualTo: lastDay)
         .snapshots()
         .map((snapshot) => snapshot.docs.take(snapshot.docs.length))
         .asyncMap((docs) async {
@@ -63,12 +86,14 @@ class _DataVisualizationPageState extends State<DataVisualizationPage> {
 
   // Create a list of colors for the chart
   final List<Color> chartColors = [
-    const Color(0xFF4F42FF),
-    const Color(0xFFEE00C7),
-    const Color(0xFFFF1F88),
-    const Color(0xFFFF7D57),
-    const Color(0xFFFFC146),
-    const Color(0xFFF9F871),
+    const Color(0xFF6263fb),
+    const Color(0xFFbb4fe4),
+    const Color(0xFFf037c4),
+    const Color(0xFFff2e9e),
+    const Color(0xFFff4377),
+    const Color(0xFFff6552),
+    const Color(0xFFff872f),
+    const Color(0xffffa600),
   ];
 
   int colorIndex = 0;
@@ -84,193 +109,350 @@ class _DataVisualizationPageState extends State<DataVisualizationPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Data Visualization'),
+        title: const Text('Month Breakdown'),
         centerTitle: true,
+        bottom: TabBar(
+          controller: _tabController,
+          tabs: [
+            CustomTab(text: 'Last Month', isSelected: _tabController.index == 0),
+            CustomTab(text: 'This Month', isSelected: _tabController.index == 1),
+          ],
+          indicatorColor: Colors.transparent, // Hide the default indicator
+          onTap: (index) {
+            setState(() {}); // Update the UI when a tab is selected
+          },
+        ),
       ),
-      body: SingleChildScrollView(
-        child: Container(
-          // color: Colors.yellow[100],
-          padding: const EdgeInsets.all(8.0),
-          alignment: Alignment.center,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  const Text(
-                    'Total Expenses',
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  // Current date
-                  Text(
-                    // Get current date but with month in form of text (April for example)
-                    // Also add the postfix for days (st, nd, rd, th)
-                    // Example: 1st January 2024
-                    '${DateTime.now().day}${getDayOfMonthSuffix(DateTime.now().day)} ${DateFormat.MMMM().format(DateTime.now())} ${DateTime.now().year}',
-                    style: const TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w400,
-                    ),
-                  ),
-                ],
-              ),
-              StreamBuilder<Map<String, double>>(
-                stream: streamExpenses(),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return Padding(
-                      // Loading data process
-                      padding: const EdgeInsets.symmetric(vertical: 30),
-                      child: Center(
-                        child: SizedBox(
-                          width: 30,
-                          height: 30,
-                          child: CircularProgressIndicator(
-                            strokeWidth: 2, // Set the stroke width
-                            valueColor: AlwaysStoppedAnimation<Color>(
-                              Theme.of(context)
-                                  .primaryColor, // Set your desired color
-                            ),
-                          ),
-                        ),
-                      ),
-                    );
-                  } else if (snapshot.hasError) {
-                    return Text('Error: ${snapshot.error}');
-                  } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                    return const Text('No data available');
-                  } else {
-                    // Display your UI using the fetched data
-                    final Map<String, double> expenseData = snapshot.data!;
-                    double total = getTotal(expenseData);
-                    categoryColors = expenseData.entries
-                        .map((e) => MapEntry(e.key, getNextColor()))
-                        .fold<Map<String, Color>>({}, (prev, element) {
-                      prev[element.key] = element.value;
-                      return prev;
-                    });
+      body: TabBarView(
+        controller: _tabController,
+        children: [
+          buildExpenseView(false), // Last month
+          buildExpenseView(true), // Current month
+        ],
+      ),
+      bottomNavigationBar: navigationBar(context),
+    );
+  }
 
-                    return Column(
-                      children: [
-                        SizedBox.square(
-                          dimension: MediaQuery.of(context).size.width * 0.8,
-                          child: Padding(
-                            padding: const EdgeInsets.all(16.0),
-                            child: displayPieChart(total, expenseData),
-                          ),
-                        ),
-                        Column(
-                            children: expenseData.entries
-                                .map((e) => Container(
-                                      margin: const EdgeInsets.symmetric(
-                                          vertical: 6.0),
-                                      child: expenseItem(e.key, e.value),
-                                    ))
-                                .toList()),
-                      ],
-                    );
-                  }
-                },
-              )
-            ],
-          ),
+  Widget buildExpenseView(bool isCurrentMonth) {
+    // Formatting date for display
+    var now = DateTime.now();
+    var displayedMonth =
+        isCurrentMonth ? now : DateTime(now.year, now.month - 1);
+    var monthFormatter = DateFormat('MMMM yyyy');
+
+    return SingleChildScrollView(
+      child: Container(
+        padding: const EdgeInsets.all(8.0),
+        alignment: Alignment.center,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Text(
+              isCurrentMonth ? 'Expenses This Month' : 'Expenses Last Month',
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            Text(
+              monthFormatter.format(displayedMonth),
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.w400,
+              ),
+            ),
+            StreamBuilder<Map<String, double>>(
+              stream: streamExpenses(isCurrentMonth),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return CircularProgressIndicator();
+                } else if (snapshot.hasError) {
+                  return Text('Error: ${snapshot.error}');
+                } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                  return const Text('No data available');
+                } else {
+                  final expenseData = snapshot.data!;
+                  final total = getTotal(expenseData);
+
+                  return Column(
+                    children: [
+                      SizedBox(
+                        height: 200, // Adjust size as needed
+                        child: displayPieChart(total, expenseData),
+                      ),
+                      ...expenseData.entries
+                          .map((e) => expenseItem(e.key, e.value))
+                          .toList(),
+                    ],
+                  );
+                }
+              },
+            ),
+          ],
         ),
       ),
     );
   }
 
   Widget displayPieChart(double total, Map<String, double> expenseData) {
-    return Stack(
-      alignment: Alignment.center,
-      children: [
-        Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Text(
-              'Spent',
+    // Constructing the categoryColors map
+    categoryColors = Map.fromIterable(
+      expenseData.keys,
+      key: (item) => item,
+      value: (item) => getNextColor(),
+    );
+
+    return PieChart(
+      PieChartData(
+        sections: expenseData.entries.map((entry) {
+          final category = entry.key;
+          final amount = entry.value;
+          final color = categoryColors[category]!;
+          final percentage = (amount / total) * 100;
+          final isSmallSection =
+              percentage < 10; // Adjust this threshold as needed
+
+          return PieChartSectionData(
+            color: color,
+            value: amount,
+            title: isSmallSection ? '' : '${percentage.toStringAsFixed(0)}%',
+            radius: 50,
+            titleStyle: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+            ),
+            badgeWidget: isSmallSection
+                ? _buildBadgeWidget('${percentage.toStringAsFixed(0)}%', color)
+                : null,
+            badgePositionPercentageOffset: 1.2, // Adjust this value as needed
+          );
+        }).toList(),
+        centerSpaceRadius: 40,
+        sectionsSpace: 2,
+      ),
+    );
+  }
+
+  Widget _buildBadgeWidget(String text, Color color) {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+      decoration: BoxDecoration(
+        color: color,
+        borderRadius: BorderRadius.circular(4),
+      ),
+      child: Text(
+        text,
+        style: TextStyle(
+          color: Colors.white,
+          fontSize: 12,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildLabelWidget(String category, String percentage, Color color) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            padding: EdgeInsets.all(5),
+            decoration: BoxDecoration(
+              color: color,
+              borderRadius: BorderRadius.circular(5),
+            ),
+            child: Text(
+              percentage,
               style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w400,
+                color: Colors.white,
+                fontSize: 12,
               ),
             ),
-            Text(
-              '\$${total.toStringAsFixed(2)}',
-              style: const TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ],
-        ),
-        PieChart(
-          swapAnimationDuration: const Duration(milliseconds: 500),
-          swapAnimationCurve: Curves.easeInOut,
-          PieChartData(
-            sections: expenseData.entries
-                .map((e) => PieChartSectionData(
-                      color: categoryColors[e.key],
-                      value: e.value / total,
-                      title: '${((e.value / total) * 100).toStringAsFixed(0)}%',
-                      radius: 50,
-                      titleStyle: const TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
-                    ))
-                .toList(),
           ),
-        ),
-      ],
+          SizedBox(width: 4),
+          Text(
+            category,
+            style: TextStyle(
+              fontSize: 12,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ],
+      ),
     );
   }
 
   Widget expenseItem(String category, double amount) {
-    const Color textColor = Colors.white;
+    final textColor = Colors.white;
+    final categoryColor = categoryColors[category] ?? Colors.grey;
+
     return Container(
       height: 60,
       padding: const EdgeInsets.all(16.0),
+      margin: const EdgeInsets.symmetric(vertical: 4.0),
       decoration: BoxDecoration(
-          borderRadius: const BorderRadius.all(Radius.circular(8)),
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              darkenColorHSL(categoryColors[category]!),
-              lightenColorHSL(categoryColors[category]!),
-            ],
-          ),
-          boxShadow: [
-            BoxShadow(
-              color: categoryColors[category]!.withAlpha(150),
-              blurRadius: 8,
-              offset: const Offset(0, 2),
-            ),
-          ]),
+        borderRadius: BorderRadius.circular(12),
+        color: categoryColor,
+      ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(
             category,
-            style: const TextStyle(
-              color: textColor,
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-            ),
+            style: TextStyle(
+                color: textColor, fontSize: 18, fontWeight: FontWeight.bold),
           ),
           Text(
             '\$${amount.toStringAsFixed(2)}',
-            style: const TextStyle(
-              color: textColor,
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-            ),
+            style: TextStyle(
+                color: textColor, fontSize: 18, fontWeight: FontWeight.bold),
           ),
         ],
+      ),
+    );
+  }
+
+  Container navigationBar(BuildContext context) {
+    // Determine the current route to manage the active state of NavigationBar items.
+    String currentRoute = ModalRoute.of(context)?.settings.name ?? '/';
+
+    // Define the selected index based on the current route.
+    int selectedIndex = _getSelectedIndex(currentRoute);
+
+    return Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.5),
+              spreadRadius: 1,
+              blurRadius: 3,
+              offset: const Offset(0, 2), // Vertical offset
+            ),
+          ],
+        ),
+        child: NavigationBar(
+          backgroundColor: Colors.white, // Set a background color
+          height: 60.0, // Adjust the height for better touch targets
+          selectedIndex: selectedIndex, // Set the selected index
+          onDestinationSelected: (int index) {
+            // Call a function to handle navigation when an item is selected.
+            _onItemTapped(index, context);
+          },
+          destinations: const [
+            NavigationDestination(
+              icon: Icon(Icons.home, size: 30.0, color: Colors.grey),
+              selectedIcon: Icon(
+                Icons.home,
+                size: 35.0,
+                color: primaryPurple,
+              ),
+              label: '',
+            ),
+            NavigationDestination(
+              icon: Icon(Icons.pie_chart, size: 30.0, color: Colors.grey),
+              selectedIcon:
+                  Icon(Icons.pie_chart, size: 35.0, color: primaryPurple),
+              label: '',
+            ),
+            NavigationDestination(
+              icon: Icon(Icons.add_circle_outline,
+                  size: 30.0, color: Colors.grey),
+              selectedIcon:
+                  Icon(Icons.add_circle, size: 35.0, color: primaryPurple),
+              label: '',
+            ),
+            NavigationDestination(
+              icon: Icon(Icons.history, size: 30.0, color: Colors.grey),
+              selectedIcon:
+                  Icon(Icons.history, size: 35.0, color: primaryPurple),
+              label: '',
+            ),
+            NavigationDestination(
+              icon: Icon(Icons.perm_identity, size: 30.0, color: Colors.grey),
+              selectedIcon:
+                  Icon(Icons.perm_identity, size: 35.0, color: primaryPurple),
+              label: '',
+            ),
+          ],
+        ));
+  }
+
+// This function returns the index of the selected navigation item based on the route name.
+  int _getSelectedIndex(String currentRoute) {
+    switch (currentRoute) {
+      case '/home':
+        return 0;
+      case '/data_visualization':
+        return 1;
+      case '/add':
+        return 2;
+      case '/history':
+        return 3;
+      case '/profile':
+        return 4;
+      default:
+        return 0; // Default to home if the route is unknown
+    }
+  }
+
+// This function handles navigation when a NavigationBar item is tapped.
+  void _onItemTapped(int index, BuildContext context) {
+    switch (index) {
+      case 0:
+        Navigator.pushNamed(context, '/home');
+        break;
+      case 1:
+        Navigator.pushNamed(context, '/data_visualization');
+        break;
+      case 2:
+        showDialog(
+          context: context,
+          builder: (context) {
+            return const TrackingSelection();
+          },
+        );
+        break;
+      case 3:
+        Navigator.pushNamed(context, '/history');
+        break;
+      case 4:
+        Navigator.pushNamed(context, '/profile_page');
+        break;
+    }
+  }
+}
+
+class CustomTab extends StatelessWidget {
+  final String text;
+  final bool isSelected;
+
+  const CustomTab({
+    Key? key,
+    required this.text,
+    this.isSelected = false,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Tab(
+      child: Container(
+        width: double.infinity,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(0), // Rounded corners for tabs
+          color: isSelected ? primaryPurple : Colors.transparent,
+        ),
+        padding: EdgeInsets.symmetric(vertical: 10, horizontal: 16),
+        child: Text(
+          text,
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            color: isSelected ? Colors.white : Colors.black,
+          ),
+        ),
       ),
     );
   }

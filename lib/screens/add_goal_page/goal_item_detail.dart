@@ -7,6 +7,7 @@ import 'package:personal_finance/models/goal_model.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:personal_finance/screens/home_page/home_page.dart';
+import 'package:personal_finance/constants/style.dart';
 
 final user = FirebaseAuth.instance.currentUser;
 
@@ -123,118 +124,183 @@ class _GoalItemDetailState extends State<GoalItemDetail> {
 
   @override
   Widget build(BuildContext context) {
-    Text savedContent = Text(
-      widget.model.saved.toStringAsFixed(2),
-      style: const TextStyle(color: const Color.fromARGB(255, 250, 94, 83)),
-    );
     return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        backgroundColor: const Color.fromRGBO(244, 246, 246, 100),
-        title: const Text("Goal"),
+        appBar: AppBar(
+          centerTitle: true,
+          backgroundColor: Colors.white,
+          title: Text("Goal", style: TextStyle(color: Colors.black)),
+        ),
+        backgroundColor: Colors.grey[200],
+        body: Padding(
+          padding: EdgeInsets.all(16),
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                _buildImageSection(widget.model.imagePath!),
+                _buildContainer(
+                  child: Padding(
+                    padding: EdgeInsets.all(16),
+                    child: _buildInformationSection(),
+                  ),
+                ),
+                _buildContainer(
+                  child: Padding(
+                    padding: EdgeInsets.all(16),
+                    child: _buildProgressSection(),
+                  ),
+                ),
+                _buildSaveButton(),
+              ],
+            ),
+          ),
+        ));
+  }
+
+  Widget _buildContainer({required Widget child}) {
+    return Container(
+      width: double.infinity,
+      margin: EdgeInsets.all(8),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.5),
+            spreadRadius: 2,
+            blurRadius: 4,
+            offset: Offset(0, 2), // changes position of shadow
+          ),
+        ],
       ),
-      backgroundColor: const Color.fromARGB(249, 244, 246, 246),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Image.network(
-              widget.model.imagePath! != ""
-                  ? widget.model.imagePath!
-                  : "https://i.pinimg.com/originals/18/69/a4/1869a46592cbd3d0f9837ad6d3644cea.jpg",
-              width: double.infinity,
-              height: 300,
-              fit: BoxFit.cover,
-            ),
-            const SizedBox(height: 20),
-            Align(
-              alignment: Alignment.centerLeft,
-              child: Container(
-                margin: const EdgeInsets.only(left: 20),
-                child: Text(
-                  'Product: ${widget.model.productName}',
-                  textAlign: TextAlign.start,
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontFamily: GoogleFonts.poppins().fontFamily,
-                  ),
-                ),
-              ),
-            ),
-            const SizedBox(height: 12),
-            Align(
-              alignment: Alignment.centerLeft,
-              child: Container(
-                margin: const EdgeInsets.only(left: 20),
-                child: Text(
-                  'Price: \$${widget.model.price}',
-                  textAlign: TextAlign.start,
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontFamily: GoogleFonts.poppins().fontFamily,
-                  ),
-                ),
-              ),
-            ),
-            const SizedBox(height: 12),
-            Align(
-              alignment: Alignment.centerLeft,
-              child: Container(
-                margin: const EdgeInsets.only(left: 20),
-                child: Text(
-                  'Expected Date: ${DateFormat('dd-MM-yyyy').format(widget.model.timeToBuy)}',
-                  textAlign: TextAlign.start,
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontFamily: GoogleFonts.poppins().fontFamily,
-                  ),
-                ),
-              ),
-            ),
-            const SizedBox(height: 12),
-            Align(
-              alignment: Alignment.centerLeft,
-              child: Container(
-                margin: const EdgeInsets.only(left: 20),
-                child: Text(
-                  'External Link: ${widget.model.url}',
-                  textAlign: TextAlign.start,
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontFamily: GoogleFonts.poppins().fontFamily,
-                  ),
-                ),
-              ),
-            ),
-            Container(
-              margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-              child: Column(children: [
-                Align(
-                    alignment: Alignment.topRight,
-                    child: Text(
-                      "\$${widget.model.saved.toStringAsFixed(2)}/\$${widget.model.price.toStringAsFixed(2)}",
-                      textAlign: TextAlign.left,
-                      style: Theme.of(context).textTheme.titleSmall,
-                    )),
-                LinearProgressIndicator(
-                  minHeight: 20,
-                  borderRadius: BorderRadius.circular(10),
-                  value: widget.model.saved / widget.model.price,
-                  backgroundColor: Colors.grey[300],
-                  valueColor: AlwaysStoppedAnimation<Color>(widget.color),
-                ),
-              ]),
-            ),
-            const SizedBox(height: 30),
-            ElevatedButton(
-              onPressed: () {
-                handleUpdateGoal();
-              },
-              style: ElevatedButton.styleFrom(
-                minimumSize: const Size(380, 40),
-              ),
-              child: const Text("Update Goal"),
-            ),
-          ],
+      child: child,
+    );
+  }
+
+  Widget _buildImageSection(String imagePath) {
+    return Container(
+      width: double.infinity,
+      margin: EdgeInsets.all(8),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.5),
+            spreadRadius: 2,
+            blurRadius: 4,
+            offset: Offset(0, 2), // changes position of shadow
+          ),
+        ],
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(12),
+        child: Image.network(
+          imagePath,
+          width: double.infinity,
+          height: 300,
+          fit: BoxFit.cover,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildInformationSection() {
+    TextStyle headingStyle = TextStyle(
+      fontSize: 14,
+      fontWeight: FontWeight.bold,
+      color: grey1, // Assuming grey1 is defined
+    );
+    TextStyle infoStyle = TextStyle(
+      fontSize: 18,
+      color: black, // Assuming black is defined
+      fontWeight: FontWeight.w500,
+    );
+
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('Product:', style: headingStyle),
+              Text('${widget.model.productName}', style: infoStyle),
+              SizedBox(height: 12),
+              Text('Price:', style: headingStyle),
+              Text('\$${widget.model.price}', style: infoStyle),
+            ],
+          ),
+        ),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('Expected Date:', style: headingStyle),
+              Text('${DateFormat('dd-MM-yyyy').format(widget.model.timeToBuy)}',
+                  style: infoStyle),
+              SizedBox(height: 12),
+              Text('External Link:', style: headingStyle),
+              Text('${widget.model.url}', style: infoStyle),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildProgressSection() {
+    TextStyle headingStyle = TextStyle(
+      fontSize: 14,
+      fontWeight: FontWeight.bold,
+      color: grey1, // Assuming grey1 is defined
+    );
+    TextStyle infoStyle = TextStyle(
+      fontSize: 18,
+      color: black, // Assuming black is defined
+      fontWeight: FontWeight.w500,
+    );
+
+    double progress = widget.model.saved / widget.model.price;
+    String progressText =
+        "\$${widget.model.saved.toStringAsFixed(2)}/\$${widget.model.price.toStringAsFixed(2)} (${(progress * 100).toStringAsFixed(1)}%)";
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text('Your Progress', style: headingStyle),
+        SizedBox(height: 4),
+        Text(progressText, style: infoStyle),
+        SizedBox(height: 8),
+        LinearProgressIndicator(
+          minHeight: 20,
+          borderRadius: BorderRadius.circular(10),
+          value: progress,
+          backgroundColor: Colors.grey[300],
+          valueColor: AlwaysStoppedAnimation<Color>(widget.color),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildSaveButton() {
+    return Container(
+      width: double.infinity,
+      height: 60,
+      margin: EdgeInsets.all(8), // Define margin to match other components
+      child: ElevatedButton(
+        onPressed: handleUpdateGoal,
+        style: ElevatedButton.styleFrom(
+          backgroundColor: primaryPurple, // Assuming primaryPurple is defined
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+        ),
+        child: const Text(
+          'Update Goal',
+          style: TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.w700,
+            color: Colors.white,
+          ),
         ),
       ),
     );

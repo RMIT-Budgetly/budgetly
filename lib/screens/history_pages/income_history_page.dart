@@ -3,6 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:personal_finance/services/income_service.dart';
 import 'package:personal_finance/models/category_model.dart';
 import 'package:personal_finance/models/expense_model.dart';
+import 'package:personal_finance/constants/style.dart';
 
 class IncomeHistory extends StatefulWidget {
   const IncomeHistory({Key? key}) : super(key: key);
@@ -52,7 +53,7 @@ class _IncomeHistoryState extends State<IncomeHistory> {
               child: TextButton(
                 style: TextButton.styleFrom(
                   backgroundColor: const Color(0xFFE0E0E0),
-                  foregroundColor: Theme.of(context).primaryColor,
+                  foregroundColor: primaryPurple,
                 ),
                 onPressed: () {
                   setState(() {
@@ -66,10 +67,9 @@ class _IncomeHistoryState extends State<IncomeHistory> {
                 ),
               ),
             ),
-            const SizedBox(height: 10),
             SingleChildScrollView(
               child: SizedBox(
-                height: 600,
+                height: 595,
                 child: ListView.builder(
                   itemCount: incomes.length,
                   itemBuilder: (context, index) {
@@ -90,14 +90,14 @@ class _IncomeHistoryState extends State<IncomeHistory> {
                                         style: TextStyle(
                                           fontSize: 16,
                                           fontWeight: FontWeight.bold,
-                                          color: Theme.of(context).primaryColor,
+                                          color: black,
                                         ),
                                       ),
                                     ),
                                     const SizedBox(width: 10),
                                     IconTheme(
                                       data: IconThemeData(
-                                        color: Theme.of(context).primaryColor,
+                                        color: black,
                                       ),
                                       child: categories
                                           .where((element) =>

@@ -13,6 +13,7 @@ import 'package:personal_finance/components/side_bar.dart';
 import 'package:personal_finance/components/tracking_selection.dart';
 import 'package:personal_finance/models/expense_model.dart';
 import 'package:personal_finance/screens/home_page/display_tracking.dart';
+import 'package:personal_finance/constants/style.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -93,9 +94,7 @@ class _HomePageState extends State<HomePage> {
                 collectionName: "goals",
                 title: "Saving Goal",
               ),
-              const DisplayTracking(
-                collectionName: "plans", 
-                title: "Plan"),
+              const DisplayTracking(collectionName: "plans", title: "Plan"),
             ],
           ),
         ),
@@ -286,75 +285,66 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  NavigationBar navigationBar(BuildContext context) {
+  Container navigationBar(BuildContext context) {
     // Determine the current route to manage the active state of NavigationBar items.
     String currentRoute = ModalRoute.of(context)?.settings.name ?? '/';
 
     // Define the selected index based on the current route.
     int selectedIndex = _getSelectedIndex(currentRoute);
 
-    return NavigationBar(
-      // Use NavigationBarTheme to customize the appearance of the NavigationBar.
-      backgroundColor: Colors.white, // Set a background color
-      height: 60.0, // Adjust the height for better touch targets
-      selectedIndex: selectedIndex, // Set the selected index
-      onDestinationSelected: (int index) {
-        // Call a function to handle navigation when an item is selected.
-        _onItemTapped(index, context);
-      },
-      destinations: [
-        NavigationDestination(
-          icon: Icon(Icons.home,
-              size: selectedIndex == 0 ? 35.0 : 30.0,
-              color: selectedIndex == 0
-                  ? Theme.of(context).primaryColor
-                  : Colors.white),
-          selectedIcon: Icon(Icons.home,
-              size: 35.0, color: Theme.of(context).primaryColor),
-          label: '',
+    return Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.5),
+              spreadRadius: 1,
+              blurRadius: 3,
+              offset: const Offset(0, 2), // Vertical offset
+            ),
+          ],
         ),
-        NavigationDestination(
-          icon: Icon(Icons.pie_chart,
-              size: selectedIndex == 1 ? 35.0 : 30.0,
-              color: selectedIndex == 1
-                  ? Theme.of(context).primaryColor
-                  : Colors.grey),
-          selectedIcon: Icon(Icons.pie_chart,
-              size: 35.0, color: Theme.of(context).primaryColor),
-          label: '',
-        ),
-        NavigationDestination(
-          icon: Icon(Icons.add_circle_outline,
-              size: selectedIndex == 2 ? 35.0 : 30.0,
-              color: selectedIndex == 2
-                  ? Theme.of(context).primaryColor
-                  : Colors.grey),
-          selectedIcon: Icon(Icons.add_circle,
-              size: 35.0, color: Theme.of(context).primaryColor),
-          label: '',
-        ),
-        NavigationDestination(
-          icon: Icon(Icons.history,
-              size: selectedIndex == 3 ? 35.0 : 30.0,
-              color: selectedIndex == 3
-                  ? Theme.of(context).primaryColor
-                  : Colors.grey),
-          selectedIcon: Icon(Icons.history,
-              size: 35.0, color: Theme.of(context).primaryColor),
-          label: '',
-        ),
-        NavigationDestination(
-          icon: Icon(Icons.perm_identity,
-              size: selectedIndex == 4 ? 35.0 : 30.0,
-              color: selectedIndex == 4
-                  ? Theme.of(context).primaryColor
-                  : Colors.grey),
-          selectedIcon: Icon(Icons.perm_identity,
-              size: 35.0, color: Theme.of(context).primaryColor),
-          label: '',
-        ),
-      ],
-    );
+        child: NavigationBar(
+          backgroundColor: Colors.white, // Set a background color
+          height: 60.0, // Adjust the height for better touch targets
+          selectedIndex: selectedIndex, // Set the selected index
+          onDestinationSelected: (int index) {
+            // Call a function to handle navigation when an item is selected.
+            _onItemTapped(index, context);
+          },
+          destinations: const [
+            NavigationDestination(
+              icon: Icon(Icons.home, size: 30.0, color: Colors.grey),
+              selectedIcon: Icon(Icons.home, size: 35.0, color: primaryPurple,),
+              label: '',
+            ),
+            NavigationDestination(
+              icon: Icon(Icons.pie_chart, size: 30.0, color: Colors.grey),
+              selectedIcon:
+                  Icon(Icons.pie_chart, size: 35.0, color: primaryPurple),
+              label: '',
+            ),
+            NavigationDestination(
+              icon: Icon(Icons.add_circle_outline,
+                  size: 30.0, color: Colors.grey),
+              selectedIcon:
+                  Icon(Icons.add_circle, size: 35.0, color: primaryPurple),
+              label: '',
+            ),
+            NavigationDestination(
+              icon: Icon(Icons.history, size: 30.0, color: Colors.grey),
+              selectedIcon:
+                  Icon(Icons.history, size: 35.0, color: primaryPurple),
+              label: '',
+            ),
+            NavigationDestination(
+              icon: Icon(Icons.perm_identity, size: 30.0, color: Colors.grey),
+              selectedIcon:
+                  Icon(Icons.perm_identity, size: 35.0, color: primaryPurple),
+              label: '',
+            ),
+          ],
+        ));
   }
 
 // This function returns the index of the selected navigation item based on the route name.
