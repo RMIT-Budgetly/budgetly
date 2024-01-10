@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:personal_finance/models/category_model.dart';
 import 'package:personal_finance/widgets/category_picker.dart';
 import 'package:personal_finance/constants/style.dart';
+import 'package:intl/intl.dart';
 
 final _firebase = FirebaseAuth.instance;
 
@@ -17,40 +18,73 @@ class AddExpensesPage extends StatefulWidget {
 }
 
 class _AddExpensesPageState extends State<AddExpensesPage> {
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  DateTime? selectedDate;
-  DateTime? reminderDate;
+  DateTime? selectedDate = null;
+  DateTime? reminderDate = null;
   Category? _selectedCategory;
-  var inputBudget = '0';
-  var note = "";
 
   // Controllers
   final amountController = TextEditingController();
   final descriptionController = TextEditingController();
-  final transactionDateController = TextEditingController();
-  final reminderDateController = TextEditingController();
 
-  void onSaved() async {
-    _formKey.currentState!.save();
-    final userUid = _firebase.currentUser!.uid;
-    final collectionName = _selectedCategory!.type == Type.Expense
-        ? 'expenses'
-        : _selectedCategory!.type == Type.Income
-            ? 'incomes'
-            : 'debts';
+  Future<void> _saveTransaction() async {
+    if (_selectedCategory == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Please select a category')),
+      );
+      return;
+    }
 
-    await FirebaseFirestore.instance
-        .collection('users')
-        .doc(userUid)
-        .collection(collectionName)
-        .add({
-      'category': _selectedCategory!.name,
-      'amount': double.tryParse(amountController.text),
-      'description': descriptionController.text,
-      'selectedDate': transactionDateController,
-      'reminderDate': reminderDateController,
-    });
+    try {
+      final FirebaseFirestore firestore = FirebaseFirestore.instance;
+      final userUid = _firebase.currentUser!.uid;
+      final collectionName = _selectedCategory!.type == Type.Expense
+          ? 'expenses'
+          : _selectedCategory!.type == Type.Income
+              ? 'incomes'
+              : 'debts';
+
+      await firestore
+          .collection('users')
+          .doc(userUid)
+          .collection(collectionName)
+          .add({
+        'category': _selectedCategory!.name,
+        'amount': double.tryParse(amountController.text) ?? 0,
+        'description': descriptionController.text,
+        'selectedDate': selectedDate,
+        'reminderDate': reminderDate,
+      });
+
+      // Clear the form, reset dates, and clear controllers
+      amountController.clear();
+      descriptionController.clear();
+      setState(() {
+        _selectedCategory = null;
+        selectedDate = null; // Reset to null or some default value
+        reminderDate = null; // Reset to null or some default value
+      });
+      
+      _showCustomSnackBar('Transaction saved successfully');
+    } catch (e) {
+      _showCustomSnackBar('Error saving transaction: $e', isError: true);
+    }
   }
+
+  void _showCustomSnackBar(String message, {bool isError = false}) {
+  ScaffoldMessenger.of(context).showSnackBar(
+    SnackBar(
+      backgroundColor: isError ? Colors.red : primaryPurple, // Use red for errors
+      content: Text(
+        message,
+        style: const TextStyle(
+          fontSize: 16,
+          fontWeight: FontWeight.w600,
+          color: Colors.white,
+        ),
+      ),
+    ),
+  );
+}
 
   void onCategorySelected(Category category) {
     setState(() {
@@ -84,11 +118,21 @@ class _AddExpensesPageState extends State<AddExpensesPage> {
           const SizedBox(height: 10),
           _buildTextField(descriptionController, "Description", Icons.note_add),
           const SizedBox(height: 10),
-          _buildDateSelector(transactionDateController, "Transaction Date",
-              Icons.calendar_today_rounded),
+          _buildDateSelector(
+            context,
+            "Transaction Date",
+            Icons.calendar_today_rounded,
+            selectedDate,
+            (newDate) => selectedDate = newDate,
+          ),
           const SizedBox(height: 10),
-          _buildDateSelector(reminderDateController, "Reminder Date",
-              Icons.access_time_outlined),
+          _buildDateSelector(
+            context,
+            "Reminder Date",
+            Icons.access_time_outlined,
+            reminderDate,
+            (newDate) => reminderDate = newDate,
+          ),
           const SizedBox(height: 20),
           _buildImageUploadSection(),
           const SizedBox(height: 20),
@@ -125,7 +169,15 @@ class _AddExpensesPageState extends State<AddExpensesPage> {
   }
 
   Widget _buildDateSelector(
-      TextEditingController controller, String label, IconData icon) {
+      BuildContext context,
+      String label,
+      IconData icon,
+      DateTime? dateValue,
+      Function(DateTime) onDateSelected,) {
+    var formattedDate =
+        dateValue != null ? DateFormat('yyyy-MM-dd').format(dateValue) : '';
+    TextEditingController dateController =
+        TextEditingController(text: formattedDate);
     return GestureDetector(
       onTap: () async {
         final DateTime? picked = await showDialog(
@@ -148,7 +200,7 @@ class _AddExpensesPageState extends State<AddExpensesPage> {
                 ),
               ),
               child: DatePickerDialog(
-                initialDate: selectedDate,
+                initialDate: DateTime.now(),
                 firstDate: DateTime(2000),
                 lastDate: DateTime(2101),
               ),
@@ -156,16 +208,15 @@ class _AddExpensesPageState extends State<AddExpensesPage> {
           },
         );
 
-        if (picked != null && picked != selectedDate) {
+        if (picked != null && picked != dateValue) {
           setState(() {
-            selectedDate = picked;
-            controller.text = "${selectedDate?.toLocal()}".split(' ')[0];
+            onDateSelected(picked);
           });
         }
       },
       child: AbsorbPointer(
         child: TextField(
-          controller: controller,
+          controller: dateController,
           decoration: InputDecoration(
             labelText: label,
             labelStyle: const TextStyle(
@@ -270,7 +321,7 @@ class _AddExpensesPageState extends State<AddExpensesPage> {
       width: double.infinity,
       height: 60,
       child: ElevatedButton(
-        onPressed: onSaved,
+        onPressed: _saveTransaction,
         style: ElevatedButton.styleFrom(
           backgroundColor: primaryPurple, // Set to primaryPurple
           shape: RoundedRectangleBorder(
