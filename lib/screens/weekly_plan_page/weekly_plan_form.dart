@@ -9,6 +9,7 @@ import 'package:personal_finance/constants/style.dart';
 
 var formatter = DateFormat.yMd();
 var currencyFormatter = NumberFormat.currency(locale: 'vi_VN', symbol: '₫');
+final _firebase = FirebaseAuth.instance;
 
 class WeeklyPlanForm extends StatefulWidget {
   const WeeklyPlanForm({super.key});
@@ -19,37 +20,18 @@ class WeeklyPlanForm extends StatefulWidget {
 }
 
 class WeeklyPlanFormState extends State<WeeklyPlanForm> {
-  final _formKey = GlobalKey<FormState>();
-  var _inputTaskName = '';
-  var _inputBudget = '0';
   DateTime? _selectedDate;
   Category? _selectedCategory;
-  Priority? _selectedPriority = Priority.High;
+  Priority? _selectedPriority;
   final user = FirebaseAuth.instance.currentUser;
-
-  DateTime selectedDate = DateTime.now();
 
   final productNameController = TextEditingController();
   final priceController = TextEditingController();
-  final dateController = TextEditingController();
-  final priorityController = TextEditingController();
 
   void onCategorySelected(Category category) {
     setState(() {
       _selectedCategory = category;
     });
-  }
-
-  void onDatePicker() async {
-    DateTime now = DateTime.now();
-    DateTime end = DateTime(now.year, now.month + 1, now.day);
-    final chooseDate = await showDatePicker(
-        context: context, initialDate: now, firstDate: now, lastDate: end);
-    if (chooseDate != null) {
-      setState(() {
-        _selectedDate = chooseDate;
-      });
-    }
   }
 
   void onShowCategoriesPicker() async {
@@ -74,28 +56,57 @@ class WeeklyPlanFormState extends State<WeeklyPlanForm> {
     }
   }
 
-  void onSubmit() {
-    if (_formKey.currentState!.validate()) {
-      _formKey.currentState!.save();
-      FirebaseFirestore.instance
-          .collection('users')
-          .doc(user!.uid)
-          .collection('plans')
-          .add({
-        'productName': productNameController.text,
-        'price': double.tryParse(priceController.text)!,
-        'date': dateController,
-        'category': _selectedCategory!,
-        'priority': priorityController.text,
-      });
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Save successfully!'),
-          duration: Duration(seconds: 2),
-        ),
-      );
-      Navigator.pop(context);
+  void onSubmit() async {
+    if (_selectedCategory == null ||
+        _selectedPriority == null ||
+        _selectedDate == null) {
+      _showCustomSnackBar('Please complete all fields', isError: true);
+      return;
     }
+
+    try {
+      final FirebaseFirestore firestore = FirebaseFirestore.instance;
+      final userUid = user!.uid; // Ensure that the user is not null
+
+      await firestore.collection('users').doc(userUid).collection('plans').add({
+        'productName': productNameController.text,
+        'price': double.tryParse(priceController.text) ??
+            0.0, // Default to 0.0 if parsing fails
+        'date': _selectedDate, // Convert DateTime to Timestamp
+        'category': _selectedCategory!.name,
+        'priority': _selectedPriority
+            .toString()
+            .split('.')
+            .last, // Save only the enum value as String
+      });
+
+      // Clearing the form
+      productNameController.clear();
+      priceController.clear();
+      setState(() {
+        _selectedCategory = null;
+        _selectedPriority = null;
+        _selectedDate = null;
+      });
+
+      _showCustomSnackBar('Plan saved successfully!');
+    } catch (e) {
+      _showCustomSnackBar('Error saving plan: $e', isError: true);
+    }
+  }
+
+  void _showCustomSnackBar(String message, {bool isError = false}) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        backgroundColor: isError ? Colors.red : primaryPurple,
+        content: Text(
+          message,
+          style: const TextStyle(
+              fontSize: 16, fontWeight: FontWeight.w600, color: Colors.white),
+        ),
+        duration: Duration(seconds: 2),
+      ),
+    );
   }
 
   @override
@@ -112,7 +123,6 @@ class WeeklyPlanFormState extends State<WeeklyPlanForm> {
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 12),
         child: Form(
-          key: _formKey,
           child: Column(
             children: [
               _buildTextField(
@@ -126,7 +136,9 @@ class WeeklyPlanFormState extends State<WeeklyPlanForm> {
                 height: 10,
               ),
               _buildDateSelector(
-                  dateController, "Pick a Date", Icons.calendar_month_outlined),
+                  context,
+                  "Pick a Date",
+                  Icons.calendar_month_outlined,),
               const SizedBox(
                 height: 10,
               ),
@@ -208,47 +220,35 @@ class WeeklyPlanFormState extends State<WeeklyPlanForm> {
   }
 
   Widget _buildDateSelector(
-      TextEditingController controller, String label, IconData icon) {
+    BuildContext context,
+    String label,
+    IconData icon,
+  ) {
+    TextEditingController dateController = TextEditingController();
+
     return GestureDetector(
       onTap: () async {
-        final DateTime? picked = await showDialog(
+        final DateTime? picked = await showDatePicker(
           context: context,
-          builder: (BuildContext context) {
-            return Theme(
-              data: ThemeData.light().copyWith(
-                colorScheme: ColorScheme.light(
-                  primary: primaryPurple, // Primary color for the header
-                  onPrimary: white, // Text color for elements on primary color
-                  surface: white, // Background color of the calendar
-                ),
-                dialogBackgroundColor:
-                    Colors.white, // Background color of the dialog
-                dialogTheme: DialogTheme(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(
-                        12), // Border radius for the dialog
-                  ),
-                ),
-              ),
-              child: DatePickerDialog(
-                initialDate: selectedDate,
-                firstDate: DateTime(2000),
-                lastDate: DateTime(2101),
-              ),
-            );
-          },
+          initialDate: _selectedDate ?? DateTime.now(),
+          firstDate: DateTime(2000),
+          lastDate: DateTime(2101),
         );
 
-        if (picked != null && picked != selectedDate) {
+        if (picked != null && picked != _selectedDate) {
           setState(() {
-            selectedDate = picked;
-            controller.text = "${selectedDate.toLocal()}".split(' ')[0];
+            _selectedDate = picked;
+            dateController.text =
+                DateFormat('yyyy-MM-dd').format(_selectedDate!);
           });
         }
       },
       child: AbsorbPointer(
         child: TextField(
-          controller: controller,
+          controller: dateController
+            ..text = _selectedDate != null
+                ? DateFormat('yyyy-MM-dd').format(_selectedDate!)
+                : '',
           decoration: InputDecoration(
             labelText: label,
             labelStyle: const TextStyle(
@@ -260,7 +260,6 @@ class WeeklyPlanFormState extends State<WeeklyPlanForm> {
               icon,
               color: black,
             ),
-            // Customize the bottom border
             border: UnderlineInputBorder(
               borderSide: BorderSide(color: black, width: 0.5),
             ),
