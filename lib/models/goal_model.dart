@@ -3,7 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class GoalModel {
   String goalId;
   String? imagePath;
-  String? notes; // Make this property nullable
+  String? notes;
   double price;
   int saved;
   String productName;

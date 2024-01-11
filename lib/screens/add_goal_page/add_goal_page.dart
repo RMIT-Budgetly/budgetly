@@ -268,7 +268,7 @@ class _AddSavingGoalScreenState extends State<AddSavingGoalScreen> {
         .add({
       'productName': productNameController.text,
       'price': double.tryParse(priceController.text),
-      'saved': double.tryParse("0.0"),
+      'saved': 0,
       'timeToBuy': selectedDate,
       'url': urlController.text,
       'notes': notesController.text,
